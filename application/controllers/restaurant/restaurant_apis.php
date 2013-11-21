@@ -1325,7 +1325,7 @@ class restaurant_apis extends REST_Controller{
         $file_carousel;
         $file_introduce = array();
         
-        $base_path_restaurant = Common_enum::ROOT.Common_enumCommon_enum::DIR_RESTAURANT.$folder_name.'/images/';
+        $base_path_restaurant = Common_enum::ROOT.Common_enum::DIR_RESTAURANT.$folder_name.'/images/';
         
         $path_avatar    = $base_path_restaurant.'avatar/';
         $path_carousel  = $base_path_restaurant.'carousel/';
