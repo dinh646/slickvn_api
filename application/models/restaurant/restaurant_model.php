@@ -282,6 +282,19 @@ class Restaurant_model extends CI_Model{
     
     /**
      * 
+     * Get All Restaurant
+     * 
+     * Return: Collection Restaurant
+     * 
+     */
+    public function getAllRestaurant() {
+        
+        return $this->common_model->getCollection(Restaurant_enum::COLLECTION_RESTAURANT);
+        
+    }
+    
+    /**
+     * 
      * Get Collectin Restaurant by Id
      * 
      * @param String $id
