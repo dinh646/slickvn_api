@@ -1,6 +1,6 @@
 <?php 
 
-class RestaurantController extends CI_Controller {
+class Restaurant_controller extends CI_Controller {
 
 	/**
 	 * Index Page for this controller.
