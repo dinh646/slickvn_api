@@ -1,6 +1,6 @@
 <?php
 //include('db.php');
-$url="http://192.168.1.194/slickvn_api/include/modul_upload/upload_temp/";
+$url=$_GET['url']."include/modul_upload/upload_temp/";
 session_start();
 $session_id='1'; //$session id
 $path = "upload_temp/";
