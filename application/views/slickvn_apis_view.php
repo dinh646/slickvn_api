@@ -95,30 +95,25 @@
             
             <br/>
             
-            <p>APIs Coupon Restaurant</p>
+<!--            <p>APIs Coupon Restaurant</p>
             <code><a href="<?php echo $url?>index.php/restaurant/restaurant_apis/get_coupon_list/format/json">Danh sách nhà hàng quyến mãi</a></code>
             <code><a href="<?php echo $url?>index.php/restaurant/restaurant_apis/insert_coupon/format/json">Thêm nhà hàng quyến mãi</a></code>
             <code><a href="<?php echo $url?>index.php/restaurant/restaurant_apis/update_coupon/format/json">Sửa nhà hàng quyến mãi</a></code>
-            <code><a href="<?php echo $url?>index.php/restaurant/restaurant_apis/delete_coupon/format/json">Xóa nhà hàng quyến mãi</a></code>
+            <code><a href="<?php echo $url?>index.php/restaurant/restaurant_apis/delete_coupon/format/json">Xóa nhà hàng quyến mãi</a></code>-->
             
             <br/>
             
             <p>APIs Post</p>
             <code><a href="<?php echo $url?>index.php/restaurant/restaurant_apis/search_post/format/json">Search Post by title</a></code>
-            <code><a href="<?php echo $url?>index.php/restaurant/restaurant_apis/get_post_list/format/json">Danh sách bài đăng</a></code>
-            <code><a href="<?php echo $url?>index.php/restaurant/restaurant_apis/update_post/format/json">Thêm bài đăng</a></code>
+            <code><a href="<?php echo $url?>index.php/restaurant/restaurant_apis/get_post_list/format/json">Get list Post</a></code>
+            <code><a href="<?php echo $url?>index.php/restaurant/restaurant_apis/update_post/format/json">Update Post</a></code>
             
-            <p>APIs Subscribed Email</p>
-            <code><a href="<?php echo $url?>index.php/restaurant/restaurant_apis/get_email_list/format/json">Danh sách Email</a></code>
+<!--            <p>APIs Subscribed Email</p>
+            <code><a href="<?php echo $url?>index.php/restaurant/restaurant_apis/get_email_list/format/json">Get list email</a></code>
             <code><a href="<?php echo $url?>index.php/restaurant/restaurant_apis/insert_email/format/json">Thêm Email</a></code>
             <code><a href="<?php echo $url?>index.php/restaurant/restaurant_apis/update_email/format/json">Sửa Email</a></code>
-            <code><a href="<?php echo $url?>index.php/restaurant/restaurant_apis/delete_email/format/json">Xóa Email</a></code>
+            <code><a href="<?php echo $url?>index.php/restaurant/restaurant_apis/delete_email/format/json">Xóa Email</a></code>-->
             
-            <p>APIs Closed Member</p>
-            <code><a href="<?php echo $url?>index.php/restaurant/restaurant_apis/get_closed_member_list/format/json">Danh sách thành viên tích cực</a></code>
-            <code><a href="<?php echo $url?>index.php/restaurant/restaurant_apis/insert_closed_member/format/json">Thêm thành viên tích cực</a></code>
-            <code><a href="<?php echo $url?>index.php/restaurant/restaurant_apis/update_closed_member/format/json">Sửa thành viên tích cực</a></code>
-            <code><a href="<?php echo $url?>index.php/restaurant/restaurant_apis/delete_closed_member/format/json">Xóa thành viên tích cực</a></code>
 
 	</div>
         

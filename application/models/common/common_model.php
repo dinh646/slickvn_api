@@ -10,14 +10,20 @@ class Common_model extends CI_Model{
     public function __construct() {
         parent::__construct();
         
+        $mongodb = 'mongodb://';
+        $host_name = '192.168.1.194';
+        $port = '27017';
+        $database = 'slickvn';
+        
         $this->error = null;
         
         try{
             //  Connect to MogoDB
-            $this->connect = new MongoClient();
+            $this->connect = new Mongo($mongodb.$host_name.':'.$port);
 
             //  Connect to Restaurant DB
-            $this->slickvn_db = $this->connect->slickvn;
+            $this->slickvn_db = $this->connect->selectDB($database);
+//            $this->slickvn_db = $this->connect->slickvn;
             
         }catch ( MongoConnectionException $e ){
                 
