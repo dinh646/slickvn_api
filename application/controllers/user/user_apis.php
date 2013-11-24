@@ -38,9 +38,9 @@ class user_apis extends REST_Controller{
     public function get_all_user_get() {
         
         //  Get collection 
-        $get_collection = $this->User_model->getAllUser();
+        $get_collection = $this->user_model->getAllUser();
         
-        $error = $this->User_model->getError();
+        $error = $this->user_model->getError();
 //        echo $error;
         if($error == null){
         
@@ -99,9 +99,9 @@ class user_apis extends REST_Controller{
         $id = $this->get('id');
         
         //  Get collection 
-        $get_collection = $this->User_model->getUserById($id);
+        $get_collection = $this->user_model->getUserById($id);
         
-        $error = $this->User_model->getError();
+        $error = $this->user_model->getError();
 //        echo $error;
         if($error == null){
         
@@ -200,8 +200,8 @@ class user_apis extends REST_Controller{
                 
                 ) : array();
         
-        $this->User_model->updateUser($action, $id, $array_value);
-        $error = $this->User_model->getError();
+        $this->user_model->updateUser($action, $id, $array_value);
+        $error = $this->user_model->getError();
         
         if($error == null){
             $data =  array(
@@ -235,7 +235,7 @@ class user_apis extends REST_Controller{
         $email      = $this->post('email');
         $password   = $this->post('password');
         
-        $user = $this->User_model->login($email, $password);
+        $user = $this->user_model->login($email, $password);
         
         $results = array();
         
@@ -290,9 +290,9 @@ class user_apis extends REST_Controller{
     public function get_all_role_get() {
         
         //  Get collection 
-        $get_collection = $this->User_model->getAllRole();
+        $get_collection = $this->user_model->getAllRole();
         
-        $error = $this->User_model->getError();
+        $error = $this->user_model->getError();
         if($error == null){
         
             //  Array object
@@ -304,10 +304,10 @@ class user_apis extends REST_Controller{
                 //  Create JSONObject
                 $jsonobject = array( 
 
-                            RoleEnum::ID                    => $value['_id']->{'$id'},
-                            RoleEnum::NAME                  => $value['name'],
-                            RoleEnum::DESC                  => $value['desc'],        
-                            RoleEnum::FUNCTION_LIST         => $value['function_list'],
+                            Role_enum::ID                    => $value['_id']->{'$id'},
+                            Role_enum::NAME                  => $value['name'],
+                            Role_enum::DESC                  => $value['desc'],        
+                            Role_enum::FUNCTION_LIST         => $value['function_list'],
                             Common_enum::CREATED_DATE        => $value['created_date']
 
                            );
@@ -345,9 +345,9 @@ class user_apis extends REST_Controller{
         $id = $this->get('id');
         
         //  Get collection 
-        $get_collection = $this->User_model->getRoleById($id);
+        $get_collection = $this->user_model->getRoleById($id);
         
-        $error = $this->User_model->getError();
+        $error = $this->user_model->getError();
         if($error == null){
         
             //  Array object
@@ -359,10 +359,10 @@ class user_apis extends REST_Controller{
                 //  Create JSONObject
                 $jsonobject = array( 
 
-                            RoleEnum::ID                    => $value['_id']->{'$id'},
-                            RoleEnum::NAME                  => $value['name'],
-                            RoleEnum::DESC                  => $value['desc'],        
-                            RoleEnum::FUNCTION_LIST         => $value['function_list'],
+                            Role_enum::ID                    => $value['_id']->{'$id'},
+                            Role_enum::NAME                  => $value['name'],
+                            Role_enum::DESC                  => $value['desc'],        
+                            Role_enum::FUNCTION_LIST         => $value['function_list'],
                             Common_enum::CREATED_DATE        => $value['created_date']
 
                            );
@@ -412,15 +412,15 @@ class user_apis extends REST_Controller{
         $created_date       = $this->post('created_date');
         
         $array_value = array(
-                        RoleEnum::NAME              => $name,
-                        RoleEnum::DESC              => $desc,        
-                        RoleEnum::FUNCTION_LIST     => explode(Common_enum::MARK, $function_list),
+                        Role_enum::NAME              => $name,
+                        Role_enum::DESC              => $desc,        
+                        Role_enum::FUNCTION_LIST     => explode(Common_enum::MARK, $function_list),
                         Common_enum::CREATED_DATE    => $created_date
                 
                 );
         
-        $this->User_model->updateRole($action, $id, $array_value);
-        $error = $this->User_model->getError();
+        $this->user_model->updateRole($action, $id, $array_value);
+        $error = $this->user_model->getError();
         
         if($error == null){
             $data =  array(
@@ -455,9 +455,9 @@ class user_apis extends REST_Controller{
     public function get_all_function_get() {
         
         //  Get collection 
-        $get_collection = $this->User_model->getAllFunction();
+        $get_collection = $this->user_model->getAllFunction();
         
-        $error = $this->User_model->getError();
+        $error = $this->user_model->getError();
         if($error == null){
         
             //  Array object
@@ -469,9 +469,9 @@ class user_apis extends REST_Controller{
                 //  Create JSONObject
                 $jsonobject = array( 
 
-                            FunctionEnum::ID                    => $value['_id']->{'$id'},
-                            FunctionEnum::NAME                  => $value['name'],
-                            FunctionEnum::DESC                  => $value['desc'],        
+                            function_enum::ID                    => $value['_id']->{'$id'},
+                            function_enum::NAME                  => $value['name'],
+                            function_enum::DESC                  => $value['desc'],        
                             Common_enum::CREATED_DATE            => $value['created_date']
 
                            );
@@ -509,9 +509,9 @@ class user_apis extends REST_Controller{
         $id = $this->get('id');
         
         //  Get collection 
-        $get_collection = $this->User_model->getFunctionById($id);
+        $get_collection = $this->user_model->getFunctionById($id);
         
-        $error = $this->User_model->getError();
+        $error = $this->user_model->getError();
         if($error == null){
         
             //  Array object
@@ -523,9 +523,9 @@ class user_apis extends REST_Controller{
                 //  Create JSONObject
                 $jsonobject = array( 
 
-                            RoleEnum::ID                    => $value['_id']->{'$id'},
-                            RoleEnum::NAME                  => $value['name'],
-                            RoleEnum::DESC                  => $value['desc'],        
+                            Role_enum::ID                    => $value['_id']->{'$id'},
+                            Role_enum::NAME                  => $value['name'],
+                            Role_enum::DESC                  => $value['desc'],        
                             Common_enum::CREATED_DATE        => $value['created_date']
 
                            );
@@ -573,14 +573,14 @@ class user_apis extends REST_Controller{
         $created_date       = $this->post('created_date');
         
         $array_value = array(
-                        RoleEnum::NAME              => $name,
-                        RoleEnum::DESC              => $desc,        
+                        Role_enum::NAME              => $name,
+                        Role_enum::DESC              => $desc,        
                         Common_enum::CREATED_DATE    => $created_date
                 
                 );
         
-        $this->User_model->updateFunction($action, $id, $array_value);
-        $error = $this->User_model->getError();
+        $this->user_model->updateFunction($action, $id, $array_value);
+        $error = $this->user_model->getError();
         
         if($error == null){
             $data =  array(

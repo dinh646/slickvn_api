@@ -743,7 +743,7 @@ class restaurant_apis extends REST_Controller{
                             $jsonobject = array( 
 
                                 Restaurant_enum::ID                         => $restaurant['_id']->{'$id'},
-                                Restaurant_enum::ID_USER                    => $restaurant['id_user'],
+//                                Restaurant_enum::ID_USER                    => $restaurant['id_user'],
                                 Restaurant_enum::ID_MENU_DISH               => $restaurant['id_menu_dish'],
                                 Restaurant_enum::ID_COUPON                  => $restaurant['id_coupon'],
 				Restaurant_enum::AVATAR                     => $restaurant['avatar'],

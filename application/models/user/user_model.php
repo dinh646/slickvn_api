@@ -28,7 +28,7 @@ class User_model extends CI_Model{
      * @return String $error
      */
     public function getError() {
-        return $this->Common_model->getError();
+        return $this->common_model->getError();
     }
     
     /**
@@ -39,7 +39,7 @@ class User_model extends CI_Model{
      * 
      */
     public function setError($e) {
-        return $this->Common_model->setError($e);
+        return $this->common_model->setError($e);
     }
     
     //----------------------------------------------------------------------//
@@ -71,7 +71,7 @@ class User_model extends CI_Model{
      * 
      */
     public function countUserLogByAction(array $where) {
-        return (sizeof( $this->Common_model->searchCollection(Userlogenum::COLLECTION_USER_LOG, $where) ));
+        return (sizeof( $this->common_model->searchCollection(Userlogenum::COLLECTION_USER_LOG, $where) ));
     }
     
     //----------------------------------------------------------------------//
@@ -89,7 +89,7 @@ class User_model extends CI_Model{
      */
     public function getAllUser() {
 
-        return $this->Common_model->getCollection(User_enum::COLLECTION_USER);
+        return $this->common_model->getCollection(User_enum::COLLECTION_USER);
         
     }
     
@@ -104,7 +104,7 @@ class User_model extends CI_Model{
      */
     public function getUserById($id) {
         
-        return $this->Common_model->getCollectionById(User_enum::COLLECTION_USER, $id);
+        return $this->common_model->getCollectionById(User_enum::COLLECTION_USER, $id);
         
     }
     
@@ -129,13 +129,13 @@ class User_model extends CI_Model{
             else{
                 // Connect collection User
                 $collection = User_enum::COLLECTION_USER;
-                $this->collection = $this->Common_model->getConnectDataBase()->$collection;
+                $this->collection = $this->common_model->getConnectDataBase()->$collection;
                 
                 //  Action insert
                 if( strcmp( strtolower($action), Common_enum::INSERT ) == 0 ) {
                     
                     //  Check email
-                    $check_email = $this->Common_model->checkExistValue(User_enum::COLLECTION_USER, array(User_enum::EMAIL => $array_value[User_enum::EMAIL]) );
+                    $check_email = $this->common_model->checkExistValue(User_enum::COLLECTION_USER, array(User_enum::EMAIL => $array_value[User_enum::EMAIL]) );
                     
                     if(sizeof($check_email) > 0){
                         $this->setError('Existing email'); return;
@@ -213,7 +213,7 @@ class User_model extends CI_Model{
                                 User_enum::PASSWORD => $pass,
                             );
         
-        $user = $this->Common_model->checkExistValue($collection, $array_value);
+        $user = $this->common_model->checkExistValue($collection, $array_value);
         
         return $user;
         
@@ -234,7 +234,7 @@ class User_model extends CI_Model{
      */
     public function getAllRole() {
 
-        return $this->Common_model->getCollection(Roleenum::COLLECTION_ROLE);
+        return $this->common_model->getCollection(Role_enum::COLLECTION_ROLE);
         
     }
     
@@ -249,7 +249,7 @@ class User_model extends CI_Model{
      */
     public function getRoleById($id) {
 
-        return $this->Common_model->getCollectionById(Roleenum::COLLECTION_ROLE, $id);
+        return $this->common_model->getCollectionById(Role_enum::COLLECTION_ROLE, $id);
         
     }
     
@@ -272,8 +272,8 @@ class User_model extends CI_Model{
             
             else{
                 // Connect collection User
-                $collection = Roleenum::COLLECTION_ROLE;
-                $this->collection = $this->Common_model->getConnectDataBase()->$collection;
+                $collection = Role_enum::COLLECTION_ROLE;
+                $this->collection = $this->common_model->getConnectDataBase()->$collection;
                 
                 //  Action insert
                 if( strcmp( strtolower($action), Common_enum::INSERT ) == 0 ) {
@@ -334,7 +334,7 @@ class User_model extends CI_Model{
      */
     public function getAllFunction() {
 
-        return $this->Common_model->getCollection(Functionenum::COLLECTION_FUNCTION);
+        return $this->common_model->getCollection(Function_enum::COLLECTION_FUNCTION);
         
     }
     
@@ -349,7 +349,7 @@ class User_model extends CI_Model{
      */
     public function getFunctionById($id) {
 
-        return $this->Common_model->getCollectionById(Function_enum::COLLECTION_FUNCTION, $id);
+        return $this->common_model->getCollectionById(Function_enum::COLLECTION_FUNCTION, $id);
         
     }
     
@@ -373,7 +373,7 @@ class User_model extends CI_Model{
             else{
                 // Connect collection Function
                 $collection = Function_enum::COLLECTION_FUNCTION;
-                $this->collection = $this->Common_model->getConnectDataBase()->$collection;
+                $this->collection = $this->common_model->getConnectDataBase()->$collection;
                 
                 //  Action insert
                 if( strcmp( strtolower($action), Common_enum::INSERT ) == 0 ) {
