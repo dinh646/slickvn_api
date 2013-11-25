@@ -11,7 +11,7 @@ class Common_model extends CI_Model{
         parent::__construct();
         
         $mongodb = 'mongodb://';
-        $host_name = '192.168.1.194';
+        $host_name = '192.168.1.151';
         $port = '27017';
         $database = 'slickvn';
         
@@ -280,7 +280,7 @@ class Common_model extends CI_Model{
                 $select_collection = $this->collection->find(array());
 
                 $array=iterator_to_array($select_collection);
-                return $array;
+                return (is_array($array)) ? $array : array();
             }
             
         }catch ( MongoConnectionException $e ){
@@ -318,7 +318,7 @@ class Common_model extends CI_Model{
                 $select_collection = $this->collection->find(array(Common_enum::_ID => new MongoId($id)));
 
                 $array = iterator_to_array($select_collection);
-                return $array;
+                return (is_array($array)) ? $array : array();
             }
             
         }catch ( MongoConnectionException $e ){
@@ -360,7 +360,7 @@ class Common_model extends CI_Model{
                 $select_collection = $this->collection->find( $value );
 
                 $array = iterator_to_array($select_collection);
-                return $array;
+                return (is_array($array)) ? $array : array();
             }
             
         }catch ( MongoConnectionException $e ){
@@ -406,7 +406,6 @@ class Common_model extends CI_Model{
                     $select_collection = $this->collection->find(array(Common_enum::_ID => new MongoId($id)));
 					
                     $array_ = iterator_to_array($select_collection);
-					
                     if(sizeof($array_) > 0){
 						$str_doc = $str_doc.', '.$array_[$id][Common_enum::NAME];
 					}
@@ -600,7 +599,7 @@ class Common_model extends CI_Model{
                 $select_collection = $this->collection->find()->sort( array($field_name => $order_by_key) );
 
                 $array=iterator_to_array($select_collection);
-                return $array;
+                return (is_array($array)) ? $array : array();
             }
             
         }catch ( MongoConnectionException $e ){

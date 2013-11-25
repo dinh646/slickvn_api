@@ -183,6 +183,83 @@ class restaurant_apis extends REST_Controller{
         
     }
     
+    /**
+     * 
+     *  API update Menu Dish
+     * 
+     *  Menthod: POST
+     * 
+     *  Response: JSONObject
+     * 
+     */
+    public function update_menu_dish_post() {
+        
+        //  Get param from client
+        
+        $action = $this->post('action');
+        
+        $id = $this->post('id');
+        $id_restaurant = $this->post('id_restaurant');
+        $str_dish_list = $this->post('dist_list');
+        $created_date = $this->post('created_date');
+        
+        (int)$is_insert = strcmp( strtolower($action), Common_enum::INSERT );
+        (int)$is_edit = strcmp( strtolower($action), Common_enum::EDIT );
+        
+        $array_dish_list = explode(Common_enum::MARK_DISH, $str_dish_list);
+        
+        $dish_list = array();
+        
+        if(is_array($array_dish_list)){
+            
+            foreach ($dish_list as $value) {
+                
+                $detail_dish = explode(Common_enum::MARK_DETAIL_DISH, $value);
+                
+                $name = $detail_dish[0];
+                $desc= $detail_dish[1];
+                $price = (int)$detail_dish[2];
+                $signature_dish = $detail_dish[3];
+                
+                $dish = array(
+                    Menu_dish_enum::NAME =>$name,
+                    Menu_dish_enum::DESC =>$desc,
+                    Menu_dish_enum::PRICE =>$price,
+                    Menu_dish_enum::SIGNATURE_DISH =>$signature_dish,
+                );
+                $dish_list [] = $dish;
+            }
+        }
+        
+        $array_value = array(
+          
+            Menu_dish_enum::ID_RESTAURANT =>$id_restaurant,
+            Menu_dish_enum::DISH_LIST => $dish_list,
+            Common_enum::CREATED_DATE => ($created_date != null) ? $created_date : $this->common_model->getCurrentDate()
+            
+            
+        );
+        
+        $this->restaurant_model->updateMenuDish($action, $id, $array_value);
+        $error = $this->restaurant_model->getError();
+        
+        if($error == null){
+            $data =  array(
+                   'Status'     =>'SUCCESSFUL',
+                   'Error'      =>$error
+            );
+            $this->response($data);
+        }
+        else{
+            $data =  array(
+                   'Status'     =>'FALSE',
+                   'Error'      =>$error
+            );
+            $this->response($data);
+        }
+        
+    }
+    
     //----------------------------------------------------//
     //                                                    //
     //  APIs Restaurant                                   //
@@ -210,6 +287,8 @@ class restaurant_apis extends REST_Controller{
 
         //  Key search
         $key = $this->get('key');
+        
+        $key = iconv('UTF-8', 'UTF-8//IGNORE', $key);
         
         //  Query
         $where = array(Restaurant_enum::NAME => new MongoRegex('/'.$key.'/i'));
@@ -1396,7 +1475,6 @@ class restaurant_apis extends REST_Controller{
         $action                  = $this->post('action'); 
         
         $id                      = $this->post('id'); 
-        $id_user                 = $this->post('id_user');
         $id_menu_dish            = $this->post('id_menu_dish');
         $id_coupon               = $this->post('id_coupon');
         $name                    = $this->post('name');
@@ -2070,7 +2148,7 @@ class restaurant_apis extends REST_Controller{
         $str_image_post = $this->post('array_image');                   //  image.jpg,image2.png,...
         $array_image_post = explode(Common_enum::MARK, $str_image_post); //  ['image.jpg', 'image2.png' ,...]
         
-        $file_avatar;
+        $file_avatar="";
         
         $base_path_post = Common_enum::ROOT.Common_enum::DIR_POST.$id_user.'/';
         
@@ -2082,12 +2160,12 @@ class restaurant_apis extends REST_Controller{
         for($i=0; $i<sizeof($array_image_post); $i++) {
             
             $file_temp = Common_enum::ROOT.Common_enum::PATH_TEMP.$array_image_post[$i];
-           // var_dump('temp ['.$i.'] = '.$file_temp);
-			
+            //file_exists('./include/modul_upload/upload_temp/content_21-11-2013_12-03-41_528d942d17bc6.jpg')
+            
             if (file_exists($file_temp)) {
                 
                 $path_image_post = $base_path_post.$array_image_post[$i];
-                
+                var_dump($path_image_post);
                 //  Move file from directory post
                 $move_file = $this->common_model->moveFileToDirectory($file_temp, $path_image_post);
                 
@@ -2097,18 +2175,18 @@ class restaurant_apis extends REST_Controller{
                         //$file_avatar = str_replace(Common_enum::ROOT,'' ,$path_image_post);
 						$file_avatar=$id_user."/".$array_image_post[$i];
                     }
-					else{
-					
-						var_dump('Temp :'.str_replace(Common_enum::ROOT, Common_enum::LOCALHOST ,$file_temp));
-						var_dump('Final :'.str_replace(Common_enum::ROOT, Common_enum::LOCALHOST ,$path_image_post));
-						var_dump('Content :'.$content);
-						
-						$content=str_replace(str_replace(Common_enum::ROOT, Common_enum::LOCALHOST ,$file_temp), 
-								str_replace(Common_enum::ROOT, Common_enum::LOCALHOST ,$path_image_post),
-								$content);
-						
-					
-					}
+                    else{
+
+//                            var_dump('Temp :'.str_replace(Common_enum::ROOT, Common_enum::LOCALHOST ,$file_temp));
+//                            var_dump('Final :'.str_replace(Common_enum::ROOT, Common_enum::LOCALHOST ,$path_image_post));
+//                            var_dump('Content :'.$content);
+
+                            $content=str_replace($file_temp, 
+                                                 $id_user."/".$array_image_post[$i],
+                                                 $content);
+
+
+                    }
                     
                 }
                 

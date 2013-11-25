@@ -22,7 +22,7 @@ class Common_enum {
     const MODE_USE                  = 'mode_use';
     const PRICE_PERSON              = 'price_person';
     const LANDSCAPE                 = 'landscape';
-    const CULINARY_STYLE       		= 'culinary_style';
+    const CULINARY_STYLE            = 'culinary_style';
     
     //  ACTION
     const SELECT                    = 'select';
@@ -32,7 +32,7 @@ class Common_enum {
     
     //  MORE
     const INTERVAL_NEWST_RESTAURANT = 7;
-    const DOMAIN_NAME               = 'http://192.168.1.194/slickvn_api/';
+    const DOMAIN_NAME               = 'http://192.168.1.151/';
     const URL_USER_PROFILE          = 'users_profile/';
     const URL_RESTAURANT_PROFILE    = 'restaurant_profile/';
     
@@ -54,6 +54,9 @@ class Common_enum {
     
     const MARK                      = ',';
     
+    const MARK_DETAIL_DISH          = '*100#';
+    const MARK_DISH                 = '*101#';
+    
     //  UPLOAD
     const FILE                      = 'file';
     
@@ -69,7 +72,7 @@ class Common_enum {
     const SHARE_ASSESSMENT          = 'SHARE_ASSESSMENT';
     const SHARE_COMMENT             = 'SHARE_COMMENT';
     
-    const LOCALHOST                 = 'http://localhost/slickvn_api/';
+    const LOCALHOST                 = 'http://localhost/';
     const PATH_TEMP                 = 'include/modul_upload/upload_temp/';
     
 }

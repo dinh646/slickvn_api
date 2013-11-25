@@ -190,7 +190,7 @@ class Restaurant_model extends CI_Model{
     
     /**
      * 
-     * Get Collectin Menu Dish
+     * Get Collection Menu Dish
      * 
      * Return: Array Collection Menu Dish
      * 
@@ -203,7 +203,7 @@ class Restaurant_model extends CI_Model{
     
     /**
      * 
-     * Get Collectin Menu Dish by Id
+     * Get Collection Menu Dish by Id
      * 
      * @param String $id
      * 
@@ -216,6 +216,20 @@ class Restaurant_model extends CI_Model{
         
     }
     
+    /**
+     * 
+     * Update Menu Dish
+     * 
+     * @param String $id
+     * @param Array $array_value
+     * 
+     * @param String $action:  insert | edit | delete
+     * 
+     * 
+     */
+    public function updateMenuDish($action, $id, $array_value) {
+        $this->common_model->updateCollection(Menu_dish_enum::COLLECTION_MENU_DISH, $action, $id, $array_value);
+    }
     
     //----------------------------------------------------------------------//
     //                                                                      //
@@ -295,7 +309,7 @@ class Restaurant_model extends CI_Model{
     
     /**
      * 
-     * Get Collectin Restaurant by Id
+     * Get Collection Restaurant by Id
      * 
      * @param String $id
      * 
@@ -350,7 +364,6 @@ class Restaurant_model extends CI_Model{
         
     }
     
-    
     //----------------------------------------------------------------------//
     //                                                                      //
     //                  FUNCTION FOR COLLECTION POST                        //
@@ -359,7 +372,7 @@ class Restaurant_model extends CI_Model{
     
     /**
      * 
-     * Get Collectin Post
+     * Get Collection Post
      * 
      * Return: Array Collection Post
      * 
@@ -372,7 +385,7 @@ class Restaurant_model extends CI_Model{
     
     /**
      * 
-     * Get Collectin Post by Id
+     * Get Collection Post by Id
      * 
      * @param String $id
      * 

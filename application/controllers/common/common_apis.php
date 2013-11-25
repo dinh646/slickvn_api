@@ -228,13 +228,27 @@ class common_apis extends REST_Controller{
         $name           = $this->post('name');
         $created_date   = $this->post('created_date');
         
+        (int)$is_insert = strcmp( strtolower($action), Common_enum::INSERT );
+        (int)$is_edit = strcmp( strtolower($action), Common_enum::EDIT );
         (int)$is_delete = strcmp( strtolower($action), Common_enum::DELETE );
         
+        if($is_insert == 0){
+            if($name == null){
+                $this->common_model->setError("Name is null");
+            }
+        }
+        if($is_edit == 0){
+            $get_name_by_id = $this->common_model->getValueFeildNameBaseCollectionById($collection, array($id));
+            
+            $get_name_by_id = substr($get_name_by_id, 2);
+            
+            $name = ($name == null) ? $get_name_by_id : $name;
+        }
         //  Array value
         $array_value = ($is_delete != 0) ? array(
             
             Common_enum::NAME            => $name,
-            Common_enum::CREATED_DATE    => $created_date      
+            Common_enum::CREATED_DATE    => ($created_date==null) ? $this->common_model->getCurrentDate() : $created_date
             
         ) : array();
         
@@ -244,7 +258,7 @@ class common_apis extends REST_Controller{
         $this->common_model->updateBaseCollection($action, $collection, $id, $array_value);
         
         $error = $this->common_model->getError();
-        
+        $nam = '';
         if( $error == null ){
 
             //  Response
