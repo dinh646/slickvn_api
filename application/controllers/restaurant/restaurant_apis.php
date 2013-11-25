@@ -83,7 +83,7 @@ class restaurant_apis extends REST_Controller{
                 if(($count) >= $position_start_get && ($count) <= $position_end_get){
 
                     //  Get User of Assessment
-                    $user = $this->Usermodel->getUserById($assessment['id_user']);
+                    $user = $this->user_model->getUserById($assessment['id_user']);
                     
                     //  Create JSONObject Restaurant
                     $jsonobject = array( 
@@ -102,12 +102,12 @@ class restaurant_apis extends REST_Controller{
                         AssessmentEnum::RATE_PRICE                  => $assessment['rate_price'],
                                 
                         //  Number LIKE of Assessment
-                        AssessmentEnum::NUMBER_LIKE                 => $this->Usermodel->countUserLogByAction(array ( 
+                        AssessmentEnum::NUMBER_LIKE                 => $this->user_model->countUserLogByAction(array ( 
                                                                                                                         UserLogEnum::ID_ASSESSMENT => $assessment['_id']->{'$id'}, 
                                                                                                                         UserLogEnum::ACTION        => Common_enum::LIKE_ASSESSMENT
                                                                                                                         )),
                         //  Number SHARE of Assessment
-                        AssessmentEnum::NUMBER_SHARE                => $this->Usermodel->countUserLogByAction(array ( 
+                        AssessmentEnum::NUMBER_SHARE                => $this->user_model->countUserLogByAction(array ( 
                                                                                                                         UserLogEnum::ID_ASSESSMENT => $assessment['_id']->{'$id'}, 
                                                                                                                         UserLogEnum::ACTION        => Common_enum::SHARE_ASSESSMENT
                                                                                                                         )),
@@ -641,13 +641,13 @@ class restaurant_apis extends REST_Controller{
 		//
         //  Edit field number_view: +1
         //
-        
-		
         //  Key search
         $key = $this->get('key');
         
+        $key_ = iconv('UTF-8', 'UTF-8//IGNORE', $key);
+        
         //  Query find collection Menu Dish by name
-        $where = array(Menu_dish_enum::DISH_LIST.'.'.Menu_dish_enum::NAME => new MongoRegex('/'.$key.'/i'));
+        $where = array(Menu_dish_enum::DISH_LIST.'.'.Menu_dish_enum::NAME => new MongoRegex('/'.$key_.'/i'));
         $list_menu_dish = $this->restaurant_model->searchMenuDish($where);
         
         //  List restaurant
@@ -1299,7 +1299,17 @@ class restaurant_apis extends REST_Controller{
                         Restaurant_enum::ADDRESS                    => $restaurant['address'].', '.$restaurant['district'].', '.$restaurant['city'],
                         Restaurant_enum::NUMBER_ASSESSMENT          => $this->restaurant_model->countAssessmentForRestaurant($restaurant['_id']->{'$id'}),
                         Restaurant_enum::RATE_POINT                 => $this->restaurant_model->getRatePoint(),
-                        Restaurant_enum::NUMBER_LIKE                => 0
+                        
+                        //  Number SHARE of Restaurant
+                        AssessmentEnum::NUMBER_LIKE                 => $this->user_model->countUserLogByAction(array ( 
+                                                                                                                        UserLogEnum::ID_ASSESSMENT => $assessment['_id']->{'$id'}, 
+                                                                                                                        UserLogEnum::ACTION        => Common_enum::LIKE_ASSESSMENT
+                                                                                                                        )),
+                        //  Number SHARE of Restaurant
+                        Restaurant_enum::NUMBER_SHARE                => $this->user_model->countUserLogByAction(array ( 
+                                                                                                                        UserLogEnum::ID_ASSESSMENT => $assessment['_id']->{'$id'}, 
+                                                                                                                        UserLogEnum::ACTION        => Common_enum::SHARE_ASSESSMENT
+                                                                                                                        )),
 
 
                     );
@@ -1491,7 +1501,7 @@ class restaurant_apis extends REST_Controller{
         $phone_number            = $this->post('phone_number');
         $working_time            = $this->post('working_time');
         $status_active           = $this->post('status_active');
-        
+        $dish_list               = $this->post('$dish_list');
         $favourite_list          = $this->post('favourite_list');
         $price_person_list       = $this->post('price_person_list');
         $culinary_style_list     = $this->post('culinary_style_list');
@@ -1507,7 +1517,16 @@ class restaurant_apis extends REST_Controller{
         $created_date            = $this->post('created_date');
         $is_delete               = $this->post('is_delete');
         
-        //  More
+        //  Get menu_dish
+        $menu_dish = array();
+        
+        $array_dish_list = explode(Common_enum::MARK_DISH, $dish_list);
+        
+        foreach ($menu_dish as $value) {
+            
+        }
+        
+        //  Get image from client
         $str_image_post = $this->post('array_image');                   //  image.jpg,image2.png,...
         $array_image_post = explode(Common_enum::MARK, $str_image_post); //  ['image.jpg', 'image2.png' ,...]
         
@@ -1542,22 +1561,27 @@ class restaurant_apis extends REST_Controller{
                 //  Move file from directory post
                 if($i == 0){
                   $move_file_avatar = $this->common_model->moveFileToDirectory($file_temp, $path_avatar.$array_image_post[$i]);
+                  if(!$move_file_avatar){
+                      $this->common_model->setError('Move file avatar '.$move_file_avatar);
+                  }
+                      
                   $file_avatar = $folder_name.'/images/avatar/'.$array_image_post[0];
                 }
                 else if($i==1){
                   $move_file_carousel = $this->common_model->moveFileToDirectory($file_temp, $path_carousel.$array_image_post[$i]);
+                  if(!$move_file_carousel){
+                      $this->common_model->setError('Move file carousel '.$move_file_carousel);
+                  }
                   $file_carousel = $folder_name.'/images/carousel/'.$array_image_post[1];
                   
                 }
                 else{
                   $move_file_introduce = $this->common_model->moveFileToDirectory($file_temp, $path_introduce.$array_image_post[$i]);
-//                  $introduce = str_replace(str_replace(Common_enum::ROOT, Common_enum::LOCALHOST ,$file_temp), 
-//                                            str_replace(Common_enum::ROOT, Common_enum::LOCALHOST ,$path_introduce.$array_image_post[$i]),
-//                                            $introduce);
-          var_dump($file_temp);
           
-          var_dump($introduce);
-          
+                  if(!$move_file_introduce){
+                      $this->common_model->setError('Move file introduce '.$move_file_introduce);
+                  }
+                  
                   $introduce = str_replace(str_replace(Common_enum::ROOT, Common_enum::DOMAIN_NAME ,$file_temp), 'folder_image_introduce_detail_page/'.$folder_name.'/images/introduce/'.$array_image_post[$i], $introduce);
                   
                   $file_introduce []= $folder_name.'/images/introduce/'.$array_image_post[$i];
@@ -1572,7 +1596,7 @@ class restaurant_apis extends REST_Controller{
         
         $array_value = array( 
 
-//            Restaurant_enum::ID                         => $id,
+            Restaurant_enum::ID                         => $id,
 //            Restaurant_enum::ID_USER                    => $id_user,
             Restaurant_enum::ID_MENU_DISH               => $id_menu_dish,
             Restaurant_enum::ID_COUPON                  => $id_coupon,
@@ -1581,7 +1605,7 @@ class restaurant_apis extends REST_Controller{
             Restaurant_enum::FOLDER_NAME                => $folder_name,
             Restaurant_enum::EMAIL                      => $email,
             Restaurant_enum::AVATAR                     => $file_avatar,
-            Restaurant_enum::APPROVAL_SHOW_CAROSUEL     => ($approval_show_carousel != null) ? (int)$approval_show_carousel : 1,
+            Restaurant_enum::APPROVAL_SHOW_CAROSUEL     => ($approval_show_carousel != null) ? (int)$approval_show_carousel : 0,
             Restaurant_enum::DESC                       => $desc,
             Restaurant_enum::ADDRESS                    => $address,
             Restaurant_enum::CITY                       => $city,
