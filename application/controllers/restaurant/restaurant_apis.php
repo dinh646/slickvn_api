@@ -1535,7 +1535,7 @@ class restaurant_apis extends REST_Controller{
         for($i=0; $i<sizeof($array_image_post); $i++) {
             
             $file_temp = Common_enum::ROOT.Common_enum::PATH_TEMP.$array_image_post[$i];
-           // var_dump('temp ['.$i.'] = '.$file_temp);
+            var_dump('temp ['.$i.'] = '.$file_temp);
    
             if (file_exists($file_temp)) {
                 
@@ -2148,7 +2148,7 @@ class restaurant_apis extends REST_Controller{
         $str_image_post = $this->post('array_image');                   //  image.jpg,image2.png,...
         $array_image_post = explode(Common_enum::MARK, $str_image_post); //  ['image.jpg', 'image2.png' ,...]
         
-        $file_avatar="";
+        $file_avatar;
         
         $base_path_post = Common_enum::ROOT.Common_enum::DIR_POST.$id_user.'/';
         
@@ -2161,7 +2161,7 @@ class restaurant_apis extends REST_Controller{
             
             $file_temp = Common_enum::ROOT.Common_enum::PATH_TEMP.$array_image_post[$i];
             //file_exists('./include/modul_upload/upload_temp/content_21-11-2013_12-03-41_528d942d17bc6.jpg')
-            
+//            var_dump(file_exists($file_temp));
             if (file_exists($file_temp)) {
                 
                 $path_image_post = $base_path_post.$array_image_post[$i];
@@ -2173,13 +2173,13 @@ class restaurant_apis extends REST_Controller{
 					
                     if($i==0){
                         //$file_avatar = str_replace(Common_enum::ROOT,'' ,$path_image_post);
-						$file_avatar=$id_user."/".$array_image_post[$i];
+                      $file_avatar=$id_user."/".$array_image_post[$i];
                     }
                     else{
 
-//                            var_dump('Temp :'.str_replace(Common_enum::ROOT, Common_enum::LOCALHOST ,$file_temp));
-//                            var_dump('Final :'.str_replace(Common_enum::ROOT, Common_enum::LOCALHOST ,$path_image_post));
-//                            var_dump('Content :'.$content);
+                            var_dump('Temp :'.str_replace(Common_enum::ROOT, Common_enum::LOCALHOST ,$file_temp));
+                            var_dump('Final :'.str_replace(Common_enum::ROOT, Common_enum::LOCALHOST ,$path_image_post));
+                            var_dump('Content :'.$content);
 
                             $content=str_replace($file_temp, 
                                                  $id_user."/".$array_image_post[$i],

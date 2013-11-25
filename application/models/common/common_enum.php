@@ -32,7 +32,7 @@ class Common_enum {
     
     //  MORE
     const INTERVAL_NEWST_RESTAURANT = 7;
-    const DOMAIN_NAME               = 'http://192.168.1.151/';
+    const DOMAIN_NAME               = 'http://192.168.1.194/slickvn_api_project_xinh/slickvn_api/';
     const URL_USER_PROFILE          = 'users_profile/';
     const URL_RESTAURANT_PROFILE    = 'restaurant_profile/';
     
