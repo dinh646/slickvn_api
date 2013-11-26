@@ -290,7 +290,7 @@ class restaurant_apis extends REST_Controller{
         $page = $this->get("page");
 
         //  Key search
-        $key = Encode_utf8::toUTF8($this->get('key'));
+        $key = str_replace('%20', ' ', $this->get('key'));
         
         $key = iconv('UTF-8', 'UTF-8//IGNORE', $key);
         //  Query
@@ -342,9 +342,9 @@ class restaurant_apis extends REST_Controller{
                             Restaurant_enum::NUMBER_ASSESSMENT          => $this->restaurant_model->countAssessmentForRestaurant($restaurant['_id']->{'$id'}),
                             Restaurant_enum::RATE_POINT                 => $this->restaurant_model->getRatePoint(),
 
-                            Restaurant_enum::FAVOURITE_LIST    		   => $this->common_model->getValueFeildNameBaseCollectionById(Common_enum::FAVOURITE_TYPE,   $restaurant['favourite_list']),
-                            Restaurant_enum::PRICE_PERSON_LIST      		   => $this->common_model->getValueFeildNameBaseCollectionById(Common_enum::PRICE_PERSON,   $restaurant['price_person_list']),
-                            Restaurant_enum::CULINARY_STYLE_LIST    		   => $this->common_model->getValueFeildNameBaseCollectionById(Common_enum::CULINARY_STYLE,   $restaurant['culinary_style_list']),
+                            Restaurant_enum::FAVOURITE_LIST    		=> $this->common_model->getValueFeildNameBaseCollectionById(Common_enum::FAVOURITE_TYPE,   $restaurant['favourite_list']),
+                            Restaurant_enum::PRICE_PERSON_LIST          => $this->common_model->getValueFeildNameBaseCollectionById(Common_enum::PRICE_PERSON,   $restaurant['price_person_list']),
+                            Restaurant_enum::CULINARY_STYLE_LIST    	=> $this->common_model->getValueFeildNameBaseCollectionById(Common_enum::CULINARY_STYLE,   $restaurant['culinary_style_list']),
 							
                             Restaurant_enum::NUMBER_LIKE                => 0,
                             Restaurant_enum::NUMBER_SHARE               => 0,
