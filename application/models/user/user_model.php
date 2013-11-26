@@ -71,7 +71,7 @@ class User_model extends CI_Model{
      * 
      */
     public function countUserLogByAction(array $where) {
-        return (sizeof( $this->common_model->searchCollection(Userlogenum::COLLECTION_USER_LOG, $where) ));
+        return (sizeof( $this->common_model->searchCollection(User_log_enum::COLLECTION_USER_LOG, $where) ));
     }
     
     //----------------------------------------------------------------------//

@@ -233,21 +233,29 @@ class restaurant_apis extends REST_Controller{
             }
         }
         
-        var_dump($dish_list);
-        
         $array_value = array(
-          
             Menu_dish_enum::ID_RESTAURANT =>$id_restaurant,
             Menu_dish_enum::DISH_LIST => $dish_list,
             Common_enum::CREATED_DATE => ($created_date != null) ? $created_date : $this->common_model->getCurrentDate()
-            
-            
         );
         
         $this->restaurant_model->updateMenuDish($action, $id, $array_value);
         $error = $this->restaurant_model->getError();
         
-        
+        if($is_insert == 0){
+            
+            $get_current_menu_dish = $this->common_model->getCollectionByField(Menu_dish_enum::COLLECTION_MENU_DISH, 
+                                                                               array(Menu_dish_enum::ID_RESTAURANT => $id_restaurant) );
+            
+            if(is_array($get_current_menu_dish)){
+                foreach ($get_current_menu_dish as $value) {
+                    
+                    //  Return id of current menu_dish
+                    return ($value['_id']->{'$id'});
+                }
+            }
+            
+        }
         
 //        if($error == null){
 //            $data =  array(
@@ -1298,9 +1306,8 @@ class restaurant_apis extends REST_Controller{
             $interval = $this->common_model->getInterval($created_date, $current_date);
 //            var_dump($created_date);
 //            var_dump($current_date);
-//            var_dump($interval);
+//            var_dump($interval_expired);
             if( (($interval <= Common_enum::INTERVAL_NEWST_RESTAURANT) && $interval >=0) && ($interval_expired >=0 && $is_delete == 0) ){
-                
                 $count ++ ;
                 
                 if(($count) >= $position_start_get && ($count) <= $position_end_get){
@@ -1316,15 +1323,15 @@ class restaurant_apis extends REST_Controller{
                         Restaurant_enum::NUMBER_ASSESSMENT          => $this->restaurant_model->countAssessmentForRestaurant($restaurant['_id']->{'$id'}),
                         Restaurant_enum::RATE_POINT                 => $this->restaurant_model->getRatePoint(),
                         
-                        //  Number SHARE of Restaurant
-                        AssessmentEnum::NUMBER_LIKE                 => $this->user_model->countUserLogByAction(array ( 
-                                                                                                                        UserLogEnum::ID_ASSESSMENT => $assessment['_id']->{'$id'}, 
-                                                                                                                        UserLogEnum::ACTION        => Common_enum::LIKE_ASSESSMENT
+                        //  Number LIKE of Restaurant
+                        Restaurant_enum::NUMBER_LIKE                 => $this->user_model->countUserLogByAction(array ( 
+                                                                                                                        User_log_enum::ID_RESTAURANT => $restaurant['_id']->{'$id'}, 
+                                                                                                                        User_log_enum::ACTION        => Common_enum::LIKE_RESTAURANT
                                                                                                                         )),
                         //  Number SHARE of Restaurant
                         Restaurant_enum::NUMBER_SHARE                => $this->user_model->countUserLogByAction(array ( 
-                                                                                                                        UserLogEnum::ID_ASSESSMENT => $assessment['_id']->{'$id'}, 
-                                                                                                                        UserLogEnum::ACTION        => Common_enum::SHARE_ASSESSMENT
+                                                                                                                        User_log_enum::ID_RESTAURANT => $restaurant['_id']->{'$id'}, 
+                                                                                                                        User_log_enum::ACTION        => Common_enum::SHARE_RESTAURANT
                                                                                                                         )),
 
 
@@ -1408,10 +1415,8 @@ class restaurant_apis extends REST_Controller{
             $interval = $this->common_model->getInterval($created_date, $current_date);
             
             if( ($interval > Common_enum::INTERVAL_NEWST_RESTAURANT) && ($interval_expired >=0 && $is_delete == 0) ){
-                
+                var_dump('sdf'.$interval_expired);
                 $count++;
-                
-                
                 
                 if(($count) >= $position_start_get && ($count) <= $position_end_get){
                     
@@ -1427,7 +1432,17 @@ class restaurant_apis extends REST_Controller{
                         Restaurant_enum::ADDRESS                    => $restaurant['address'].', '.$restaurant['district'].', '.$restaurant['city'],
                         Restaurant_enum::NUMBER_ASSESSMENT          => $this->restaurant_model->countAssessmentForRestaurant($restaurant['_id']->{'$id'}),
                         Restaurant_enum::RATE_POINT                 => $this->restaurant_model->getRatePoint(),
-                        Restaurant_enum::NUMBER_LIKE                => 0
+                        
+                        //  Number LIKE of Restaurant
+                        Restaurant_enum::NUMBER_LIKE                 => $this->user_model->countUserLogByAction(array ( 
+                                                                                                                        User_log_enum::ID_RESTAURANT => $restaurant['_id']->{'$id'}, 
+                                                                                                                        User_log_enum::ACTION        => Common_enum::LIKE_RESTAURANT
+                                                                                                                        )),
+                        //  Number SHARE of Restaurant
+                        Restaurant_enum::NUMBER_SHARE                => $this->user_model->countUserLogByAction(array ( 
+                                                                                                                        User_log_enum::ID_RESTAURANT => $restaurant['_id']->{'$id'}, 
+                                                                                                                        User_log_enum::ACTION        => Common_enum::SHARE_RESTAURANT
+                                                                                                                        )),
 
 
                     );
@@ -1501,7 +1516,9 @@ class restaurant_apis extends REST_Controller{
         $action                  = $this->post('action'); 
         
         $id                      = $this->post('id'); 
+        
         $id_menu_dish            = $this->post('id_menu_dish');
+        
         $id_coupon               = $this->post('id_coupon');
         $name                    = $this->post('name');
         $folder_name             = $this->post('folder_name');
@@ -1532,15 +1549,6 @@ class restaurant_apis extends REST_Controller{
         $end_date                = $this->post('end_date');
         $created_date            = $this->post('created_date');
         $is_delete               = $this->post('is_delete');
-        
-        //  Get menu_dish
-        $menu_dish = array();
-        
-        $array_dish_list = explode(Common_enum::MARK_DISH, $dish_list);
-        
-        foreach ($menu_dish as $value) {
-            
-        }
         
         //  Get image from client
         $str_image_post = $this->post('array_image');                   //  image.jpg,image2.png,...
@@ -1609,6 +1617,9 @@ class restaurant_apis extends REST_Controller{
         }
         
         (int)$is_insert = strcmp( strtolower($action), Common_enum::INSERT );
+        
+        //  Update menu_dish
+        $id_menu_dish = $this->update_menu_dish($action, $id, $id_restaurant, $str_dish_list, $created_date);
         
         $array_value = array( 
 
