@@ -1506,7 +1506,7 @@ class restaurant_apis extends REST_Controller{
         $working_time            = $this->post('working_time');
         $status_active           = $this->post('status_active');
         
-        $str_dish_list           = $this->post('dist_list');
+        $str_dish_list           = $this->post('dish_list');
         
         $favourite_list          = $this->post('favourite_list');
         $price_person_list       = $this->post('price_person_list');
@@ -1597,7 +1597,7 @@ class restaurant_apis extends REST_Controller{
         
         $array_value = array( 
 
-            Restaurant_enum::ID                         => $id,
+//            Restaurant_enum::ID                         => $id,
 //            Restaurant_enum::ID_USER                    => $id_user,
             Restaurant_enum::ID_MENU_DISH               => $id_menu_dish,
             Restaurant_enum::ID_COUPON                  => $id_coupon,
