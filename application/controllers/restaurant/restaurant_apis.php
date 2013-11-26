@@ -193,12 +193,10 @@ class restaurant_apis extends REST_Controller{
      *  Response: JSONObject
      * 
      */
-    public function update_menu_dish/*_post*/($action, $id, $id_restaurant, $str_dish_list, $created_date) {
+    public function update_menu_dish/*_post*/($action, $id, $str_dish_list, $created_date) {
         
         //  Get param from client
-        
 //        $action = $this->post('action');
-//        
 //        $id = $this->post('id');
 //        $id_restaurant = $this->post('id_restaurant');
 //        $str_dish_list = $this->post('dist_list');
@@ -240,22 +238,8 @@ class restaurant_apis extends REST_Controller{
         );
         
         $this->restaurant_model->updateMenuDish($action, $id, $array_value);
-        $error = $this->restaurant_model->getError();
-        
-        if($is_insert == 0){
-            
-            $get_current_menu_dish = $this->common_model->getCollectionByField(Menu_dish_enum::COLLECTION_MENU_DISH, 
-                                                                               array(Menu_dish_enum::ID_RESTAURANT => $id_restaurant) );
-            
-            if(is_array($get_current_menu_dish)){
-                foreach ($get_current_menu_dish as $value) {
-                    
-                    //  Return id of current menu_dish
-                    return ($value['_id']->{'$id'});
-                }
-            }
-            
-        }
+//        $error = $this->restaurant_model->getError();
+        return ($array_value['_id']->{'$id'});
         
 //        if($error == null){
 //            $data =  array(
@@ -1511,10 +1495,8 @@ class restaurant_apis extends REST_Controller{
         $id_coupon               = $this->post('id_coupon');
         $name                    = $this->post('name');
         $folder_name             = $this->post('folder_name');
-        
         $email                   = $this->post('email');
         $desc                   = $this->post('desc');
-        
         $approval_show_carousel  = $this->post('approval_show_carousel');
         $address                 = $this->post('address');
         $city                    = $this->post('city');
@@ -1523,7 +1505,9 @@ class restaurant_apis extends REST_Controller{
         $phone_number            = $this->post('phone_number');
         $working_time            = $this->post('working_time');
         $status_active           = $this->post('status_active');
+        
         $str_dish_list           = $this->post('dist_list');
+        
         $favourite_list          = $this->post('favourite_list');
         $price_person_list       = $this->post('price_person_list');
         $culinary_style_list     = $this->post('culinary_style_list');
@@ -1608,7 +1592,8 @@ class restaurant_apis extends REST_Controller{
         (int)$is_insert = strcmp( strtolower($action), Common_enum::INSERT );
         
         //  Update menu_dish
-        $id_menu_dish = $this->update_menu_dish($action, $id, $id_restaurant, $str_dish_list, $created_date);
+        $id_menu_dish_edit='';
+        $id_menu_dish = $this->update_menu_dish($action, $id_menu_dish_edit, $str_dish_list, $created_date);
         
         $array_value = array( 
 
@@ -2222,7 +2207,7 @@ class restaurant_apis extends REST_Controller{
                             var_dump('Content :'.$content);
 
                             $content=str_replace(str_replace(Common_enum::ROOT, Common_enum::DOMAIN_NAME ,$file_temp), 
-                                                 $id_user."/".$array_image_post[$i],
+                                                 'folder_image_post_replace/'.$id_user."/".$array_image_post[$i],
                                                  $content);
 
 
