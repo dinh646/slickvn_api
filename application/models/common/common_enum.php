@@ -55,7 +55,7 @@ class Common_enum {
     const MARK                      = ',';
     
     const MARK_DETAIL_DISH          = '*100#';
-    const MARK_DISH                 = '*101#';
+    const MARK_DISH                 = ' *101# ';
     
     //  UPLOAD
     const FILE                      = 'file';

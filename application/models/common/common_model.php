@@ -534,6 +534,44 @@ class Common_model extends CI_Model{
     }
     
     /**
+     * 
+     * Get Special a Field Collection by Id
+     * 
+     * @param String $collection_name
+     * @param String $id
+     * @param Array $array_value
+     * 
+     * 
+     **/
+    public function getSpecialField($collection_name, $field_name) {
+        
+        try{
+            if($collection_name == null){
+                $this->setError('Collection name is null'); return;
+            }
+            else{
+                
+                // Connect collection $collection_name
+                $collection = $collection_name;
+                $this->collection = $this->slickvn_db->$collection;
+                
+
+                    if($id == null){$this->setError('Is is null'); return;}
+                    
+                    $where = array( Common_enum::$field_name => 1);
+                    
+                    $this->collection ->find($where, $array_value );
+                
+                    
+            }
+        }catch ( MongoConnectionException $e ){
+                $this->setError($e->getMessage());
+        }catch ( MongoException $e ){
+                $this->setError($e->getMessage());
+        }
+    }
+    
+    /**
      *
      * Get Interval
      * 

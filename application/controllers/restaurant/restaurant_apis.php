@@ -25,6 +25,7 @@ class restaurant_apis extends REST_Controller{
         //  Load model COMMON
         $this->load->model('common/common_model');
         $this->load->model('common/common_enum');
+        $this->load->model('common/encode_utf8');
         
         //  Load model USER
         $this->load->model('user/user_model');
@@ -212,24 +213,27 @@ class restaurant_apis extends REST_Controller{
         
         if(is_array($array_dish_list)){
             
-            foreach ($dish_list as $value) {
-                
+            foreach ($array_dish_list as $value) {
                 $detail_dish = explode(Common_enum::MARK_DETAIL_DISH, $value);
                 
-                $name = $detail_dish[0];
-                $desc= $detail_dish[1];
-                $price = (int)$detail_dish[2];
-                $signature_dish = $detail_dish[3];
-                
-                $dish = array(
-                    Menu_dish_enum::NAME =>$name,
-                    Menu_dish_enum::DESC =>$desc,
-                    Menu_dish_enum::PRICE =>$price,
-                    Menu_dish_enum::SIGNATURE_DISH =>$signature_dish,
-                );
-                $dish_list [] = $dish;
+                if(is_array($detail_dish) && count($detail_dish) > 0){
+                    $name = $detail_dish[0];
+                    $desc= $detail_dish[1];
+                    $price = (int)$detail_dish[2];
+                    $signature_dish = $detail_dish[3];
+
+                    $dish = array(
+                        Menu_dish_enum::NAME =>$name,
+                        Menu_dish_enum::DESC =>$desc,
+                        Menu_dish_enum::PRICE =>$price,
+                        Menu_dish_enum::SIGNATURE_DISH =>$signature_dish,
+                    );
+                    $dish_list [] = $dish;
+                }
             }
         }
+        
+        var_dump($dish_list);
         
         $array_value = array(
           
@@ -286,10 +290,10 @@ class restaurant_apis extends REST_Controller{
         $page = $this->get("page");
 
         //  Key search
-        $key = $this->get('key');
+        $key = Encode_utf8::toUTF8($this->get('key'));
         
         $key = iconv('UTF-8', 'UTF-8//IGNORE', $key);
-        
+//        var_dump($key);
         //  Query
         $where = array(Restaurant_enum::NAME => new MongoRegex('/'.$key.'/i'));
         $list_restaurant = $this->restaurant_model->searchRestaurant($where);
