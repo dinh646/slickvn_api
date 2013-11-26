@@ -101,12 +101,10 @@ class Common_model extends CI_Model{
      */
     public function removeElementArrayNull(array $array) {
         
-        for($i=0; sizeof($array); $i++) {
-            
-            if($array[$i] == null){
-                unset($array[$i]);
+        foreach ($array as $key => $value) {
+            if($value == null){
+                unset($array[$key]);
             }
-            
         }
         return $array;
         

@@ -1513,7 +1513,7 @@ class restaurant_apis extends REST_Controller{
         $name                    = $this->post('name');
         $folder_name             = $this->post('folder_name');
         $email                   = $this->post('email');
-        $desc                   = $this->post('desc');
+        $desc                    = $this->post('desc');
         $approval_show_carousel  = $this->post('approval_show_carousel');
         $address                 = $this->post('address');
         $city                    = $this->post('city');

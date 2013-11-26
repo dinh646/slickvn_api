@@ -74,6 +74,81 @@ class User_model extends CI_Model{
         return (sizeof( $this->common_model->searchCollection(User_log_enum::COLLECTION_USER_LOG, $where) ));
     }
     
+    /**
+     * 
+     * Update Collection User Log
+     * 
+     * @param String $id
+     * @param Array $array_value
+     * 
+     * @param String $action:  insert | edit | delete
+     * 
+     **/
+    public function updateUserLog($action, $user_action, array $array_value) {
+        
+        try{
+            
+            if($action == null){ 
+                $this->setError('Action is null'); return;
+            }
+            
+            else{
+                // Connect collection User
+                $collection = User_log_enum::COLLECTION_USER_LOG;
+                $this->collection = $this->common_model->getConnectDataBase()->$collection;
+                
+                //  Action insert
+                if( strcmp( strtolower($action), Common_enum::INSERT ) == 0 ) {
+                    
+                    if(strcmp(strtoupper($user_action), Common_enum::LIKE ) || strcmp(strtoupper($user_action), Common_enum::SHARE )){
+                    
+                        //  Remove created_date
+                        unset($array_value['desc']);
+                        //  Remve desc
+                        unset($array_value['created_date']);
+                        $check = $this->common_model->checkExistValue($collection, $this->common_model->removeElementArrayNull($array_value) );
+                        if(sizeof($check) > 0){
+                            $this->setError('Was liked or share'); return;
+                        }
+                        
+                    }
+                    
+                    $this->collection ->insert( $array_value );
+                    
+                }
+
+                //  Action edit
+                else if( strcmp( strtolower($action), Common_enum::EDIT ) == 0 ){
+
+                    if($id == null){$this->setError('Is is null'); return;}
+                    $array_value[Common_enum::_ID] = new MongoId($id);
+                    
+                    $this->collection ->save( $array_value );
+                }
+
+                //  Action delete
+                else if( strcmp( strtolower($action), Common_enum::DELETE ) == 0 ){
+
+                    if($id == null){$this->setError('Id is null'); return;}
+                    $where = array(
+                                    Common_enum::_ID => new MongoId($id)
+                                );
+                    
+                    $this->collection ->remove( $where );
+                }
+                else{
+                    $this->setError('Action '.$action.' NOT support');
+                }
+                
+            }
+        }catch ( MongoConnectionException $e ){
+                $this->setError($e->getMessage());
+        }catch ( MongoException $e ){
+                $this->setError($e->getMessage());
+        }
+        
+    }
+    
     //----------------------------------------------------------------------//
     //                                                                      //
     //                  FUNCTION FOR COLLECTION USER                        //

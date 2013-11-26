@@ -64,6 +64,8 @@ class Common_enum {
     const LOGIN                     = 'LOGIN';
     const ASSESSMENT                = 'ASSESSMENT';
     const COMMENT                   = 'COMMENT';
+    const LIKE                      = 'LIKE';
+    const SHARE                     = 'SHARE';
     const VISIT_RESTAURANT          = 'VISIT_RESTAURANT';
     const LIKE_RESTAURANT           = 'LIKE_RESTAURANT';
     const LIKE_ASSESSMENT           = 'LIKE_ASSESSMENT';

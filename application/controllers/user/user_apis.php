@@ -19,6 +19,8 @@ class user_apis extends REST_Controller{
         $this->load->model('user/user_model');
         $this->load->model('user/user_enum');
         
+        $this->load->model('user/user_log_enum');
+        
     }
     
     //----------------------------------------------------//
@@ -196,13 +198,157 @@ class user_apis extends REST_Controller{
                         User_enum::LOCATION          => $location,
                         User_enum::AVATAR            => $avatar,
                         User_enum::ROLE_LIST         => ( ($is_insert == 0) ) ? array(User_enum::DEFAULT_ROLE_LIST) : explode(Common_enum::MARK, $role_list),
-                        Common_enum::CREATED_DATE    => $created_date
+                        Common_enum::CREATED_DATE    => ($created_date == null ) ? $this->common_model->getCurrentDate(): $created_date
                 
                 ) : array();
         
         $this->user_model->updateUser($action, $id, $array_value);
         $error = $this->user_model->getError();
         
+        if($error == null){
+            $data =  array(
+                   'Status'     =>'SUCCESSFUL',
+                   'Error'      =>$error
+            );
+            $this->response($data);
+        }
+        else{
+            $data =  array(
+                   'Status'     =>'FALSE',
+                   'Error'      =>$error
+            );
+            $this->response($data);
+        }
+    }
+    
+    //----------------------------------------------------//
+    //                                                    //
+    //  APIs User Log                                     //
+    //                                                    //
+    //----------------------------------------------------//
+    public function update_user_log_post() {
+        //  Get param from client
+        $id_user        = $this->post('id_user');
+        $id_restaurant  = $this->post('id_restaurant');
+        $id_assessment  = $this->post('id_assessment');
+        $id_comment     = $this->post('id_comment');
+        $id_post        = $this->post('id_post');
+        $action         = $this->post('action');
+        $desc           = $this->post('desc');
+        
+        $array_value = array(
+            
+                        User_log_enum::ID_USER              => $id_user,
+                        User_log_enum::ID_RESTAURANT        => $id_restaurant,        
+                        User_log_enum::ID_ASSESSMENT        => $id_assessment,
+                        User_log_enum::ID_COMMENT           => $id_comment,
+                        User_log_enum::ID_POST              => $id_post,
+                        User_log_enum::ACTION               => $action,
+                        User_log_enum::DESC                 => $desc,
+                        Common_enum::CREATED_DATE           => $this->common_model->getCurrentDate()
+                
+                );
+        
+        $this->user_model->updateUserLog($action, null/*id*/, $array_value);
+        $error = $this->user_model->getError();
+        
+        if($error == null){
+            $data =  array(
+                   'Status'     =>'SUCCESSFUL',
+                   'Error'      =>$error
+            );
+            $this->response($data);
+        }
+        else{
+            $data =  array(
+                   'Status'     =>'FALSE',
+                   'Error'      =>$error
+            );
+            $this->response($data);
+        }
+        
+    }
+    
+    /**
+     * 
+     * Like for Restaurant
+     * 
+     * Menthod: POST
+     * 
+     * @param String $id_user
+     * @param String $id_restaurant
+     * 
+     * Response: JSONObject
+     * 
+     */
+    public function like_restaurant_post() {
+        //  Get param from client
+        $id_user        = $this->post('id_user');
+        $id_restaurant  = $this->post('id_restaurant');
+        
+        if($id_user == null || $id_restaurant == null){return;}
+        
+        $array_value = array(
+                        User_log_enum::ID_USER              => $id_user,
+                        User_log_enum::ID_RESTAURANT        => $id_restaurant,        
+                        User_log_enum::ID_ASSESSMENT        => null,
+                        User_log_enum::ID_COMMENT           => null,
+                        User_log_enum::ID_POST              => null,
+                        User_log_enum::ACTION               => Common_enum::LIKE_RESTAURANT,
+                        User_log_enum::DESC                 => 'Like for a restaurant',
+                        Common_enum::CREATED_DATE           => $this->common_model->getCurrentDate()
+                );
+        
+        $this->user_model->updateUserLog(Common_enum::INSERT, Common_enum::LIKE, $array_value);
+        $error = $this->user_model->getError();
+        if($error == null){
+            $data =  array(
+                   'Status'     =>'SUCCESSFUL',
+                   'Error'      =>$error
+            );
+            $this->response($data);
+        }
+        else{
+            $data =  array(
+                   'Status'     =>'FALSE',
+                   'Error'      =>$error
+            );
+            $this->response($data);
+        }
+    }
+    
+    /**
+     * 
+     * Share for Restaurant
+     * 
+     * Menthod: POST
+     * 
+     * @param String $id_user
+     * @param String $id_restaurant
+     * 
+     * Response: JSONObject
+     * 
+     */
+    public function share_restaurant_post() {
+        //  Get param from client
+        $id_user        = $this->post('id_user');
+        $id_restaurant  = $this->post('id_restaurant');
+        
+        if($id_user == null || $id_restaurant == null){return;}
+        
+        $array_value = array(
+                        User_log_enum::ID_USER              => $id_user,
+                        User_log_enum::ID_RESTAURANT        => $id_restaurant,        
+                        User_log_enum::ID_ASSESSMENT        => null,
+                        User_log_enum::ID_COMMENT           => null,
+                        User_log_enum::ID_POST              => null,
+                        User_log_enum::ACTION               => Common_enum::SHARE_RESTAURANT,
+                        User_log_enum::DESC                 => 'Like for a restaurant',
+                        Common_enum::CREATED_DATE           => $this->common_model->getCurrentDate()
+                );
+        
+        $this->user_model->updateUserLog(Common_enum::INSERT, Common_enum::SHARE, $array_value);
+        $error = $this->user_model->getError();
         if($error == null){
             $data =  array(
                    'Status'     =>'SUCCESSFUL',
@@ -415,7 +561,7 @@ class user_apis extends REST_Controller{
                         Role_enum::NAME              => $name,
                         Role_enum::DESC              => $desc,        
                         Role_enum::FUNCTION_LIST     => explode(Common_enum::MARK, $function_list),
-                        Common_enum::CREATED_DATE    => $created_date
+                        Common_enum::CREATED_DATE    => ($created_date == null ) ? $this->common_model->getCurrentDate(): $created_date
                 
                 );
         
@@ -575,7 +721,7 @@ class user_apis extends REST_Controller{
         $array_value = array(
                         Role_enum::NAME              => $name,
                         Role_enum::DESC              => $desc,        
-                        Common_enum::CREATED_DATE    => $created_date
+                        Common_enum::CREATED_DATE    => ($created_date == null ) ? $this->common_model->getCurrentDate(): $created_date
                 
                 );
         
