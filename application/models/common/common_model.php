@@ -280,7 +280,7 @@ class Common_model extends CI_Model{
                 $select_collection = $this->collection->find(array());
 
                 $array=iterator_to_array($select_collection);
-                return $array;
+                return (is_array($array)) ? $array : array();
             }
             
         }catch ( MongoConnectionException $e ){
@@ -498,7 +498,7 @@ class Common_model extends CI_Model{
     
     /**
      * 
-     * Get  a Field Collection by Id
+     * Edit Special Field Collection
      * 
      * @param String $collection_name
      * @param String $id
@@ -506,7 +506,44 @@ class Common_model extends CI_Model{
      * 
      * 
      **/
-    public function getFieldId($collection_name, $field_name) {
+    public function editSpecialField($collection_name, $id, array $array_value) {
+        
+        try{
+            if($collection_name == null){
+                $this->setError('Collection name is null'); return;
+            }
+            else{
+                
+                // Connect collection $collection_name
+                $collection = $collection_name;
+                $this->collection = $this->slickvn_db->$collection;
+                
+
+                    if($id == null){$this->setError('Is is null'); return;}
+                    
+                    $where = array( Common_enum::_ID => new MongoId($id) );
+                    
+                    $this->collection ->update($where, $array_value );
+                
+            }
+        }catch ( MongoConnectionException $e ){
+                $this->setError($e->getMessage());
+        }catch ( MongoException $e ){
+                $this->setError($e->getMessage());
+        }
+    }
+    
+    /**
+     * 
+     * Get Special a Field Collection by Id
+     * 
+     * @param String $collection_name
+     * @param String $id
+     * @param Array $array_value
+     * 
+     * 
+     **/
+    public function getSpecialField($collection_name, $field_name) {
         
         try{
             if($collection_name == null){

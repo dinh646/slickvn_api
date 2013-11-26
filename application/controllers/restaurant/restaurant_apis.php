@@ -957,8 +957,6 @@ class restaurant_apis extends REST_Controller{
                 $is_delete = $restaurant['is_delete'];
 
                 if($interval_expired >= 0 && $is_delete == 0){
-
-
                     //  Create JSONObject Restaurant
                     $jsonobject = array( 
 
@@ -1002,15 +1000,10 @@ class restaurant_apis extends REST_Controller{
                         Restaurant_enum::END_DATE                   => $restaurant['end_date'],
                         Restaurant_enum::DESC                       => $restaurant['desc'],        
                         Common_enum::CREATED_DATE                   => $restaurant['created_date'] 
-
                     );
 
                     $results[] = $jsonobject;
-
-
                 }
-
-
             }
             //  Response
             $data =  array(
@@ -1515,7 +1508,6 @@ class restaurant_apis extends REST_Controller{
         $action                  = $this->post('action'); 
         
         $id                      = $this->post('id'); 
-        
         $id_coupon               = $this->post('id_coupon');
         $name                    = $this->post('name');
         $folder_name             = $this->post('folder_name');
@@ -1531,7 +1523,7 @@ class restaurant_apis extends REST_Controller{
         $phone_number            = $this->post('phone_number');
         $working_time            = $this->post('working_time');
         $status_active           = $this->post('status_active');
-        $dish_list               = $this->post('$dish_list');
+        $str_dish_list           = $this->post('dist_list');
         $favourite_list          = $this->post('favourite_list');
         $price_person_list       = $this->post('price_person_list');
         $culinary_style_list     = $this->post('culinary_style_list');
