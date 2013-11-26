@@ -267,7 +267,7 @@ class Restaurant_model extends CI_Model{
      */
     public function searchMenuDish($where) {
         
-        //  Collection Restaurant
+        //  Collection menu_dish
         $collection = Menu_dish_enum::COLLECTION_MENU_DISH;
         $list_restaurant = $this->common_model->searchCollection($collection, $where );
         

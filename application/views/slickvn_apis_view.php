@@ -85,6 +85,7 @@
             <p>APIs Restaurant</p>
             <code><a href="<?php echo $url?>index.php/restaurant/restaurant_apis/search_restaurant_by_id_base_collection/format/json">Search Restaurant by id base collection (favourite, price_person, mode_use, payment_type, landscape, other_cretiari)</a></code>
             <code><a href="<?php echo $url?>index.php/restaurant/restaurant_apis/search_restaurant_by_name/format/json">Search Restaurant by name</a></code>
+            <code><a href="<?php echo $url?>index.php/restaurant/restaurant_apis/search_restaurant_by_meal/format/json">Search Restaurant by mael type</a></code>
             <code><a href="<?php echo $url?>index.php/restaurant/restaurant_apis/get_detail_restaurant/format/json">Get Detail Restaurant</a></code>
             <code><a href="<?php echo $url?>index.php/restaurant/restaurant_apis/get_order_by_restaurant/format/json">Order by Restaurant by Creadted Date</a></code>
             <code><a href="<?php echo $url?>index.php/restaurant/restaurant_apis/get_newest_restaurant_list/format/json">Get newest Restaurant</a></code>

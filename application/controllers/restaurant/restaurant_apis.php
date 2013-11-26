@@ -232,7 +232,7 @@ class restaurant_apis extends REST_Controller{
         }
         
         $array_value = array(
-            Menu_dish_enum::ID_RESTAURANT =>$id_restaurant,
+            Menu_dish_enum::ID_RESTAURANT => '',
             Menu_dish_enum::DISH_LIST => $dish_list,
             Common_enum::CREATED_DATE => ($created_date != null) ? $created_date : $this->common_model->getCurrentDate()
         );
@@ -351,8 +351,16 @@ class restaurant_apis extends REST_Controller{
                             Restaurant_enum::PRICE_PERSON_LIST      		   => $this->common_model->getValueFeildNameBaseCollectionById(Common_enum::PRICE_PERSON,   $restaurant['price_person_list']),
                             Restaurant_enum::CULINARY_STYLE_LIST    		   => $this->common_model->getValueFeildNameBaseCollectionById(Common_enum::CULINARY_STYLE,   $restaurant['culinary_style_list']),
 							
-                            Restaurant_enum::NUMBER_LIKE                => 0,
-                            Restaurant_enum::NUMBER_SHARE               => 0,
+                            //  Number LIKE of Restaurant
+                            Restaurant_enum::NUMBER_LIKE                 => $this->user_model->countUserLogByAction(array ( 
+                                                                                                                            User_log_enum::ID_RESTAURANT => $restaurant['_id']->{'$id'}, 
+                                                                                                                            User_log_enum::ACTION        => Common_enum::LIKE_RESTAURANT
+                                                                                                                            )),
+                            //  Number SHARE of Restaurant
+                            Restaurant_enum::NUMBER_SHARE                => $this->user_model->countUserLogByAction(array ( 
+                                                                                                                        User_log_enum::ID_RESTAURANT => $restaurant['_id']->{'$id'}, 
+                                                                                                                        User_log_enum::ACTION        => Common_enum::SHARE_RESTAURANT
+                                                                                                                        )),
 
                             Restaurant_enum::RATE_SERVICE               => $this->restaurant_model->getRateService(),
                             Restaurant_enum::RATE_LANDSCAPE             => $this->restaurant_model->getRateLandscape(),
@@ -458,18 +466,26 @@ class restaurant_apis extends REST_Controller{
                             Restaurant_enum::ID_MENU_DISH               => $restaurant['id_menu_dish'],
                             Restaurant_enum::ID_COUPON                  => $restaurant['id_coupon'],
                             Restaurant_enum::NAME                       => $restaurant['name'],
-							Restaurant_enum::AVATAR                     => $restaurant['avatar'],
+                            Restaurant_enum::AVATAR                     => $restaurant['avatar'],
 
                             Restaurant_enum::NUMBER_VIEW                => $restaurant['number_view'],
                             Restaurant_enum::NUMBER_ASSESSMENT          => $this->restaurant_model->countAssessmentForRestaurant($restaurant['_id']->{'$id'}),
                             Restaurant_enum::RATE_POINT                 => $this->restaurant_model->getRatePoint(),
 
-							Restaurant_enum::FAVOURITE_LIST    		   => $this->common_model->getValueFeildNameBaseCollectionById(Common_enum::FAVOURITE_TYPE,   $restaurant['favourite_list']),
-							Restaurant_enum::PRICE_PERSON_LIST      		   => $this->common_model->getValueFeildNameBaseCollectionById(Common_enum::PRICE_PERSON,   $restaurant['price_person_list']),
-							Restaurant_enum::CULINARY_STYLE_LIST    		   => $this->common_model->getValueFeildNameBaseCollectionById(Common_enum::CULINARY_STYLE,   $restaurant['culinary_style_list']),
+                            Restaurant_enum::FAVOURITE_LIST    		=> $this->common_model->getValueFeildNameBaseCollectionById(Common_enum::FAVOURITE_TYPE,   $restaurant['favourite_list']),
+                            Restaurant_enum::PRICE_PERSON_LIST      	=> $this->common_model->getValueFeildNameBaseCollectionById(Common_enum::PRICE_PERSON,   $restaurant['price_person_list']),
+                            Restaurant_enum::CULINARY_STYLE_LIST    	=> $this->common_model->getValueFeildNameBaseCollectionById(Common_enum::CULINARY_STYLE,   $restaurant['culinary_style_list']),
 							
-                            Restaurant_enum::NUMBER_LIKE                => 0,
-                            Restaurant_enum::NUMBER_SHARE               => 0,
+                            //  Number LIKE of Restaurant
+                            Restaurant_enum::NUMBER_LIKE                => $this->user_model->countUserLogByAction(array ( 
+                                                                                                                            User_log_enum::ID_RESTAURANT => $restaurant['_id']->{'$id'}, 
+                                                                                                                            User_log_enum::ACTION        => Common_enum::LIKE_RESTAURANT
+                                                                                                                            )),
+                            //  Number SHARE of Restaurant
+                            Restaurant_enum::NUMBER_SHARE               => $this->user_model->countUserLogByAction(array ( 
+                                                                                                                        User_log_enum::ID_RESTAURANT => $restaurant['_id']->{'$id'}, 
+                                                                                                                        User_log_enum::ACTION        => Common_enum::SHARE_RESTAURANT
+                                                                                                                        )),
 
                             Restaurant_enum::RATE_SERVICE               => $this->restaurant_model->getRateService(),
                             Restaurant_enum::RATE_LANDSCAPE             => $this->restaurant_model->getRateLandscape(),
@@ -954,8 +970,16 @@ class restaurant_apis extends REST_Controller{
                         Restaurant_enum::NUMBER_ASSESSMENT          => $this->restaurant_model->countAssessmentForRestaurant($id),
                         Restaurant_enum::RATE_POINT                 => $this->restaurant_model->getRatePoint(),
                                 
-                        Restaurant_enum::NUMBER_LIKE                => 0,
-                        Restaurant_enum::NUMBER_SHARE               => 0,
+                        //  Number LIKE of Restaurant
+                        Restaurant_enum::NUMBER_LIKE                 => $this->user_model->countUserLogByAction(array ( 
+                                                                                                                        User_log_enum::ID_RESTAURANT => $restaurant['_id']->{'$id'}, 
+                                                                                                                        User_log_enum::ACTION        => Common_enum::LIKE_RESTAURANT
+                                                                                                                        )),
+                        //  Number SHARE of Restaurant
+                        Restaurant_enum::NUMBER_SHARE                => $this->user_model->countUserLogByAction(array ( 
+                                                                                                                        User_log_enum::ID_RESTAURANT => $restaurant['_id']->{'$id'}, 
+                                                                                                                        User_log_enum::ACTION        => Common_enum::SHARE_RESTAURANT
+                                                                                                                        )),
                                 
                         Restaurant_enum::RATE_SERVICE               => $this->restaurant_model->getRateService(),
                         Restaurant_enum::RATE_LANDSCAPE             => $this->restaurant_model->getRateLandscape(),
@@ -1592,8 +1616,7 @@ class restaurant_apis extends REST_Controller{
         (int)$is_insert = strcmp( strtolower($action), Common_enum::INSERT );
         
         //  Update menu_dish
-        $id_menu_dish_edit='';
-        $id_menu_dish = $this->update_menu_dish($action, $id_menu_dish_edit, $str_dish_list, $created_date);
+        $id_menu_dish = $this->update_menu_dish($action, null/*id_menu_dish*/, null/*id_restaurant*/, $str_dish_list, $created_date);
         
         $array_value = array( 
 
@@ -1637,6 +1660,8 @@ class restaurant_apis extends REST_Controller{
             Restaurant_enum::IS_DELETE                  => ($is_insert == 0 ) ? Restaurant_enum::DEFAULT_IS_DELETE : (int)$is_delete
                 
         );
+        
+        $this->restaurant_model->updateMenuDish(Common_enum::EDIT, $id_menu_dish, array(Menu_dish_enum::ID_RESTAURANT => $array_value['_id']->{'$id'}) );
         
         $this->restaurant_model->updateRestaurant($action, $id, $array_value);
         $error = $this->restaurant_model->getError();
