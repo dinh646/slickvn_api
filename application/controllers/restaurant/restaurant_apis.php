@@ -193,16 +193,16 @@ class restaurant_apis extends REST_Controller{
      *  Response: JSONObject
      * 
      */
-    public function update_menu_dish_post() {
+    public function update_menu_dish/*_post*/($action, $id, $id_restaurant, $str_dish_list, $created_date) {
         
         //  Get param from client
         
-        $action = $this->post('action');
-        
-        $id = $this->post('id');
-        $id_restaurant = $this->post('id_restaurant');
-        $str_dish_list = $this->post('dist_list');
-        $created_date = $this->post('created_date');
+//        $action = $this->post('action');
+//        
+//        $id = $this->post('id');
+//        $id_restaurant = $this->post('id_restaurant');
+//        $str_dish_list = $this->post('dist_list');
+//        $created_date = $this->post('created_date');
         
         (int)$is_insert = strcmp( strtolower($action), Common_enum::INSERT );
         (int)$is_edit = strcmp( strtolower($action), Common_enum::EDIT );
@@ -247,20 +247,22 @@ class restaurant_apis extends REST_Controller{
         $this->restaurant_model->updateMenuDish($action, $id, $array_value);
         $error = $this->restaurant_model->getError();
         
-        if($error == null){
-            $data =  array(
-                   'Status'     =>'SUCCESSFUL',
-                   'Error'      =>$error
-            );
-            $this->response($data);
-        }
-        else{
-            $data =  array(
-                   'Status'     =>'FALSE',
-                   'Error'      =>$error
-            );
-            $this->response($data);
-        }
+        
+        
+//        if($error == null){
+//            $data =  array(
+//                   'Status'     =>'SUCCESSFUL',
+//                   'Error'      =>$error
+//            );
+//            $this->response($data);
+//        }
+//        else{
+//            $data =  array(
+//                   'Status'     =>'FALSE',
+//                   'Error'      =>$error
+//            );
+//            $this->response($data);
+//        }
         
     }
     
@@ -290,8 +292,8 @@ class restaurant_apis extends REST_Controller{
         $page = $this->get("page");
 
         //  Key search
-        $key = str_replace("aaaa"," ",$this->get('key'));
-//        $key = Encode_utf8::toUTF8($this->get('key'));
+//        $key = str_replace("aaaa"," ",$this->get('key'));
+        $key = Encode_utf8::toUTF8($this->get('key'));
         
 //        $key = iconv('UTF-8', 'UTF-8//IGNORE', $key);
 //        $this->response(array(
