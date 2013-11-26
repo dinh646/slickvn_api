@@ -290,20 +290,20 @@ class restaurant_apis extends REST_Controller{
         $page = $this->get("page");
 
         //  Key search
-          $key = str_replace("aaaa"," ",$this->get('key'));
-//        $key = Encode_utf8::toUTF8($this->get('key'));
+        $key = str_replace("*101#"," ",$this->get('key'));
+        $key = Encode_utf8::toUTF8($this->get('key'));
         
 //        $key = iconv('UTF-8', 'UTF-8//IGNORE', $key);
-        $this->response(array(
-            
-                    'Status'     =>'SUCCESSFUL',
-                   'Total'      =>  1,
-                   'Results'    =>$key
-            
-                
-                )
-                
-                );return;
+//        $this->response(array(
+//            
+//                    'Status'     =>'SUCCESSFUL',
+//                   'Total'      =>  1,
+//                   'Results'    =>$key
+//            
+//                
+//                )
+//                
+//                );return;
         //  Query
         $where = array(Restaurant_enum::NAME => new MongoRegex('/'.$key.'/i'));
         $list_restaurant = $this->restaurant_model->searchRestaurant($where);
