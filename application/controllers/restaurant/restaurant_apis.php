@@ -673,7 +673,7 @@ class restaurant_apis extends REST_Controller{
         //  Query find collection Menu Dish by name
         $where = array(Menu_dish_enum::DISH_LIST.'.'.Menu_dish_enum::NAME => new MongoRegex('/'.$key_.'/i'));
         $list_menu_dish = $this->restaurant_model->searchMenuDish($where);
-        
+        var_dump($list_menu_dish);
         //  List restaurant
         $list_restaurant = array();
         
@@ -1661,9 +1661,10 @@ class restaurant_apis extends REST_Controller{
                 
         );
         
+        $this->restaurant_model->updateRestaurant($action, $id, $array_value);
+        
         $this->restaurant_model->updateMenuDish(Common_enum::EDIT, $id_menu_dish, array(Menu_dish_enum::ID_RESTAURANT => $array_value['_id']->{'$id'}) );
         
-        $this->restaurant_model->updateRestaurant($action, $id, $array_value);
         $error = $this->restaurant_model->getError();
         
         if($error == null){
