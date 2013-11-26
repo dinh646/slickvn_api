@@ -290,7 +290,7 @@ class restaurant_apis extends REST_Controller{
         $page = $this->get("page");
 
         //  Key search
-        $key = str_replace('aaa', ' ', $this->get('key'));
+        $key = str_replace(' ', 'aaa', $this->get('key'));
         
         $key = iconv('UTF-8', 'UTF-8//IGNORE', $key);
         //  Query
