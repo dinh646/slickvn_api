@@ -296,7 +296,7 @@ class restaurant_apis extends REST_Controller{
         $this->response(array(
             
                     'Status'     =>'SUCCESSFUL',
-                   'Total'      =>  sizeof($results),
+                   'Total'      =>  1,
                    'Results'    =>$key
             
                 
