@@ -293,6 +293,7 @@ class restaurant_apis extends REST_Controller{
         $key = Encode_utf8::toUTF8($this->get('key'));
         
         $key = iconv('UTF-8', 'UTF-8//IGNORE', $key);
+        $this->response(array($key));return;
         //  Query
         $where = array(Restaurant_enum::NAME => new MongoRegex('/'.$key.'/i'));
         $list_restaurant = $this->restaurant_model->searchRestaurant($where);
