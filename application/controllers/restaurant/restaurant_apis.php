@@ -1415,7 +1415,6 @@ class restaurant_apis extends REST_Controller{
             $interval = $this->common_model->getInterval($created_date, $current_date);
             
             if( ($interval > Common_enum::INTERVAL_NEWST_RESTAURANT) && ($interval_expired >=0 && $is_delete == 0) ){
-                var_dump('sdf'.$interval_expired);
                 $count++;
                 
                 if(($count) >= $position_start_get && ($count) <= $position_end_get){
@@ -1516,8 +1515,6 @@ class restaurant_apis extends REST_Controller{
         $action                  = $this->post('action'); 
         
         $id                      = $this->post('id'); 
-        
-        $id_menu_dish            = $this->post('id_menu_dish');
         
         $id_coupon               = $this->post('id_coupon');
         $name                    = $this->post('name');
