@@ -395,9 +395,8 @@ class user_apis extends REST_Controller{
                         User_enum::PHONE_NUMBER      => $value['phone_number'],
                         User_enum::ADDRESS           => $value['address'],
                         User_enum::LOCATION          => $value['location'],
-                        User_enum::AVATAR            => Common_enum::DOMAIN_NAME.User_enum::URL_AVATAR.$value['avatar'],
+                        User_enum::AVATAR            => $value['avatar'],
                         User_enum::ROLE_LIST         => $value['role_list'],
-                        User_enum::CLOSED_MEMBER     => $value['closed_member'],
             );
                         
         }
