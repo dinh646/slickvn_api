@@ -2221,7 +2221,7 @@ class restaurant_apis extends REST_Controller{
                             var_dump('Final :'.str_replace(Common_enum::ROOT, Common_enum::LOCALHOST ,$path_image_post));
                             var_dump('Content :'.$content);
 
-                            $content=str_replace($file_temp, 
+                            $content=str_replace(str_replace(Common_enum::ROOT, Common_enum::DOMAIN_NAME ,$file_temp), 
                                                  $id_user."/".$array_image_post[$i],
                                                  $content);
 
