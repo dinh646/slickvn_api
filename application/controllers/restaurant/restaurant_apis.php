@@ -2104,10 +2104,8 @@ class restaurant_apis extends REST_Controller{
         $page = $this->get("page");
         //  End
         $position_end_get   = ($page == 1)? $limit : ($limit * $page);
-        
         //  Start
         $position_start_get = ($page == 1)? $page : ( $position_end_get - ($limit - 1) );
-        
         $list_post = $this->restaurant_model->getAllPost();
         //  Array object post
         $results = array();
@@ -2118,12 +2116,9 @@ class restaurant_apis extends REST_Controller{
         foreach ($list_post as $post_){
             $count++;
             if(($count) >= $position_start_get && ($count) <= $position_end_get){
-
                 $count_resulte ++;
-             
                 //  Create JSONObject Post
                 $jsonobject = array( 
-                    
                            Post_enum::ID                     => $post_['_id']->{'$id'},
                            Post_enum::ID_USER                => $post_['id_user'],
                            Post_enum::TITLE                  => $post_['title'],
@@ -2133,23 +2128,16 @@ class restaurant_apis extends REST_Controller{
                            Post_enum::PRICE_PERSON_LIST      => $this->common_model->getValueFeildNameBaseCollectionById(Common_enum::PRICE_PERSON,   $post_['price_person_list']),
                            Post_enum::CULINARY_STYLE_LIST    => $this->common_model->getValueFeildNameBaseCollectionById(Common_enum::CULINARY_STYLE,   $post_['culinary_style_list']),
                            Post_enum::CONTENT                => $post_['content'],
-                           
                            Post_enum::NUMBER_ASSESSMENT     => $this->restaurant_model->countAssessmentForPost($post_['_id']->{'$id'}),
                            Post_enum::RATE_POINT            => $this->restaurant_model->getRatePoint(),
-                                   
                            Post_enum::NUMBER_VIEW            => $post_['number_view'],
 //                           Post_enum::NOTE                   => $post_['note'],
 //                           Post_enum::AUTHORS                => $post_['authors'],
                            Common_enum::CREATED_DATE         => $post_['created_date'],
-                           
                            );
-
                 $results[] = $jsonobject;
-
             }
-            
         }
-        
         //  Response
         $data =  array(
                'Status'     =>'SUCCESSFUL',
@@ -2177,9 +2165,7 @@ class restaurant_apis extends REST_Controller{
         $limit = $this->get("limit");
         //  Get page from client
         $page = $this->get("page");
-        
         $id = $this->get('id');
-        
         //  End
         $position_end_get   = ($page == 1)? $limit : ($limit * $page);
         //  Start

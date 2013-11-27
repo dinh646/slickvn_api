@@ -11,7 +11,7 @@
  *
  * @author Huynh
  */
-class Quote {
+class Quote_enum {
     
     //  More
     const COLLECTION_QUOTE = 'quote';
