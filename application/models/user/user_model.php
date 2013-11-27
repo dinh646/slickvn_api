@@ -233,11 +233,8 @@ class User_model extends CI_Model{
                 else if( strcmp( strtolower($action), Common_enum::DELETE ) == 0 ){
 
                     if($id == null){$this->setError('Id is null'); return;}
-                    $where = array(
-                                    Common_enum::_ID => new MongoId($id)
-                                );
                     
-                    $this->collection ->remove( $where );
+                    $this->common_model ->editSpecialField($collection, $id, array(User_enum::IS_DELETE =>1) );
                 }
                 else{
                     $this->setError('Action '.$action.' NOT support');
