@@ -151,26 +151,36 @@ class restaurant_apis extends REST_Controller{
      */
     public function get_all_menu_dish_get() {
         
+        //  Get limit from client
+        $limit = $this->get("limit");
+        
+        //  Get page from client
+        $page = $this->get("page");
+        
+        //  End
+        $position_end_get   = ($page == 1)? $limit : ($limit * $page);
+        
+        //  Start
+        $position_start_get = ($page == 1)? $page : ( $position_end_get - ($limit - 1) );
+        
         $list_menu_dish = $this->restaurant_model->getMenuDish();
         
         $results = array();
         
+        $count = 0;
         foreach ($list_menu_dish as $menu_dish) {
+            $count ++ ;
+            if(($count) >= $position_start_get && ($count) <= $position_end_get){
             
-            $jsonobject = array(
+                $jsonobject = array(
+                        Menu_dish_enum::ID                => $menu_dish['_id']->{'$id'},
+                        Menu_dish_enum::ID_RESTAURANT     => $menu_dish['id_restaurant'],
+                        Menu_dish_enum::DISH_LIST         => $menu_dish['dish_list'],        
+                        Common_enum::CREATED_DATE        => $menu_dish['created_date']
+                    );
+                $results [] = $jsonobject;
                 
-                    Menu_dish_enum::ID                => $menu_dish['_id']->{'$id'},
-                    Menu_dish_enum::ID_RESTAURANT     => $menu_dish['id_restaurant'],
-                    Menu_dish_enum::DISH_LIST         => $menu_dish['dish_list'],        
-//                    Menu_dish_enum::NAME              => $menu_dish['name'],
-//                    Menu_dish_enum::DESC              => $menu_dish['desc'],
-//                    Menu_dish_enum::PRICE             => $menu_dish['price'],
-//                    Menu_dish_enum::SIGNATURE_DISH    => $menu_dish['signature_dish'],
-//                    Menu_dish_enum::LINK_IMAGE        => $menu_dish['link_image'],
-                
-                    Common_enum::CREATED_DATE        => $menu_dish['created_date']
-                );
-            $results [] = $jsonobject;
+            }
                     
         }
         
@@ -1544,8 +1554,8 @@ class restaurant_apis extends REST_Controller{
         $str_image_post = $this->post('array_image');                   //  image.jpg,image2.png,...
         $array_image_post = explode(Common_enum::MARK, $str_image_post); //  ['image.jpg', 'image2.png' ,...]
         
-        $file_avatar;
-        $file_carousel;
+        $file_avatar='';
+        $file_carousel='';
         $file_introduce = array();
         
         $base_path_restaurant = Common_enum::ROOT.Common_enum::DIR_RESTAURANT.$folder_name.'/images/';
@@ -2042,13 +2052,19 @@ class restaurant_apis extends REST_Controller{
                            Post_enum::TITLE                  => $post['title'],
                            Post_enum::AVATAR                 => $post['avatar'],
                            Post_enum::ADDRESS                => $post['address'],
-                           Post_enum::FAVOURITE_TYPE_LIST    => $post['favourite_type_list'],
-                           Post_enum::PRICE_PERSON_LIST      => $post['price_person_list'],
-                           Post_enum::CULINARY_STYLE_LIST    => $post['culinary_style'],
+                                   
+                           Post_enum::FAVOURITE_TYPE_LIST    => $this->common_model->getValueFeildNameBaseCollectionById(Common_enum::FAVOURITE_TYPE,   $post['favourite_type_list']),
+                           Post_enum::PRICE_PERSON_LIST      => $this->common_model->getValueFeildNameBaseCollectionById(Common_enum::PRICE_PERSON,     $post['price_person_list']),
+                           Post_enum::CULINARY_STYLE_LIST    => $this->common_model->getValueFeildNameBaseCollectionById(Common_enum::CULINARY_STYLE,   $post['culinary_style_list']),
+                                   
                            Post_enum::CONTENT                => $post['content'],
+                           
+                           Post_enum::NUMBER_ASSESSMENT     => $this->restaurant_model->countAssessmentForPost($post['_id']->{'$id'}),
+                           Post_enum::RATE_POINT            => $this->restaurant_model->getRatePoint(),
+                                   
                            Post_enum::NUMBER_VIEW            => $post['number_view'],
-                           Post_enum::NOTE                   => $post['note'],
-                           Post_enum::AUTHORS                => $post['authors'],
+//                           Post_enum::NOTE                   => $post['note'],
+//                           Post_enum::AUTHORS                => $post['authors'],
                            Common_enum::CREATED_DATE         => $post['created_date'],
                            
                            );
@@ -2081,44 +2097,31 @@ class restaurant_apis extends REST_Controller{
      *  Response: JSONObject
      * 
      */    
-    public function get_post_list_get(){
-        
+    public function get_detail_post_get(){
         //  Get limit from client
         $limit = $this->get("limit");
-        
         //  Get page from client
         $page = $this->get("page");
-                
+        
+//        $id = $this->get
+        
         //  End
         $position_end_get   = ($page == 1)? $limit : ($limit * $page);
-        
         //  Start
         $position_start_get = ($page == 1)? $page : ( $position_end_get - ($limit - 1) );
-        
         $list_post = $this->restaurant_model->getAllPost();
-//        
         //  Array object post
         $results = array();
-        
         //  Count object post
         $count = 0;
-        
         //  Count resulte
         $count_resulte = 0;
-        
         foreach ($list_post as $post_){
-            
-			
-			
             $count++;
-
             if(($count) >= $position_start_get && ($count) <= $position_end_get){
-
                 $count_resulte ++;
-             
                 //  Create JSONObject Post
                 $jsonobject = array( 
-                    
                            Post_enum::ID                     => $post_['_id']->{'$id'},
                            Post_enum::ID_USER                => $post_['id_user'],
                            Post_enum::TITLE                  => $post_['title'],
@@ -2128,21 +2131,20 @@ class restaurant_apis extends REST_Controller{
                            Post_enum::PRICE_PERSON_LIST      => $this->common_model->getValueFeildNameBaseCollectionById(Common_enum::PRICE_PERSON,   $post_['price_person_list']),
                            Post_enum::CULINARY_STYLE_LIST    => $this->common_model->getValueFeildNameBaseCollectionById(Common_enum::CULINARY_STYLE,   $post_['culinary_style_list']),
                            Post_enum::CONTENT                => $post_['content'],
-                           //Post_enum::NUMBER_VIEW            => $post['number_view'],
-                           Post_enum::NOTE                   => $post_['note'],
-                           Post_enum::AUTHORS                => $post_['authors'],
+                           
+                           Post_enum::NUMBER_ASSESSMENT     => $this->restaurant_model->countAssessmentForPost($post['_id']->{'$id'}),
+                           Post_enum::RATE_POINT            => $this->restaurant_model->getRatePoint(),
+                                   
+                           Post_enum::NUMBER_VIEW            => $post['number_view'],
+//                           Post_enum::NOTE                   => $post_['note'],
+//                           Post_enum::AUTHORS                => $post_['authors'],
                            Common_enum::CREATED_DATE         => $post_['created_date'],
                            
                            );
-
                 $results[] = $jsonobject;
-
             }
-            
         }
-        
         //  Response
-//        $data = array();
         $data =  array(
                'Status'     =>'SUCCESSFUL',
                'Total'      =>$count_resulte,
@@ -2183,7 +2185,7 @@ class restaurant_apis extends REST_Controller{
         $favourite_type_list    = $this->post('favourite_type_list');
         $price_person_list      = $this->post('price_person_list');
         $culinary_style_list    = $this->post('culinary_style_list');
-		
+        $number_view             = $this->post('number_view');
         $content                = $this->post('content');
         $note                   = $this->post('note');
         $authors                = $this->post('authors');
@@ -2221,9 +2223,9 @@ class restaurant_apis extends REST_Controller{
                     }
                     else{
 
-                            var_dump('Temp :'.str_replace(Common_enum::ROOT, Common_enum::LOCALHOST ,$file_temp));
-                            var_dump('Final :'.str_replace(Common_enum::ROOT, Common_enum::LOCALHOST ,$path_image_post));
-                            var_dump('Content :'.$content);
+//                            var_dump('Temp :'.str_replace(Common_enum::ROOT, Common_enum::LOCALHOST ,$file_temp));
+//                            var_dump('Final :'.str_replace(Common_enum::ROOT, Common_enum::LOCALHOST ,$path_image_post));
+//                            var_dump('Content :'.$content);
 
                             $content=str_replace(str_replace(Common_enum::ROOT, Common_enum::DOMAIN_NAME ,$file_temp), 
                                                  'folder_image_post_replace/'.$id_user."/".$array_image_post[$i],
@@ -2252,7 +2254,8 @@ class restaurant_apis extends REST_Controller{
                         Post_enum::CULINARY_STYLE_LIST   => explode(Common_enum::MARK, $culinary_style_list),
             
                         Post_enum::CONTENT               => $content,
-                        //Post_enum::NUMBER_VIEW           => ($is_insert == 0) ? Post_enum::DEFAULT_NUMBER_VIEW : (int)$number_view,
+                        
+                        Post_enum::NUMBER_VIEW           => (int)$number_view,
                         Post_enum::NOTE                  => $note,
                         Post_enum::AUTHORS               => $authors,
                         Common_enum::CREATED_DATE        => $this->common_model->getCurrentDate()
