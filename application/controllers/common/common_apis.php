@@ -22,7 +22,7 @@ class common_apis extends REST_Controller{
         $this->load->model('common/information_inquiry_enum');
         $this->load->model('common/member_card_enum');
         $this->load->model('common/my_favourites_enum');
-        $this->load->model('common/quote');
+        $this->load->model('common/quote_enum');
         
         
     }
@@ -311,7 +311,7 @@ class common_apis extends REST_Controller{
      */
     public function get_quote_get() {
         
-        $collection = Quote::COLLECTION_QUOTE;
+        $collection = Quote_enum::COLLECTION_QUOTE;
         //  Get collection 
         $get_collection = $this->common_model->getCollection($collection);
         $error = $this->common_model->getError();
@@ -367,7 +367,7 @@ class common_apis extends REST_Controller{
         $array_value = array(
                         //  TODO
                 );
-        $this->common_model->updateCollection(Quote::COLLECTION_QUOTE, $action, $id, $array_value);
+        $this->common_model->updateCollection(Quote_enum::COLLECTION_QUOTE, $action, $id, $array_value);
         $error = $this->common_model->getError();
         if($error == null){
             $data =  array(
@@ -573,7 +573,7 @@ class common_apis extends REST_Controller{
     
     //----------------------------------------------------//
     //                                                    //
-    //  APIs Member Card                                        //
+    //  APIs Member Card                                  //
     //                                                    //
     //----------------------------------------------------//
     
@@ -645,6 +645,279 @@ class common_apis extends REST_Controller{
                         //  TODO
                 );
         $this->common_model->updateCollection(Member_card_enum::COLLECTION_MEMBER_CARD, $action, $id, $array_value);
+        $error = $this->common_model->getError();
+        if($error == null){
+            $data =  array(
+                   'Status'     =>'SUCCESSFUL',
+                   'Error'      =>$error
+            );
+            $this->response($data);
+        }
+        else{
+            $data =  array(
+                   'Status'     =>'FALSE',
+                   'Error'      =>$error
+            );
+            $this->response($data);
+        }
+    }
+    
+    //----------------------------------------------------//
+    //                                                    //
+    //  APIs My Favourite                                 //
+    //                                                    //
+    //----------------------------------------------------//
+    
+    /**
+     * 
+     * Get Collection My Favourite
+     * 
+     * Menthod: GET
+     * 
+     * Response: JSONObject
+     * 
+     */
+    public function get_my_favourite_get() {
+        
+        $collection = My_favourites_enum::COLLECTION_MY_FAVOURITES;
+        //  Get collection 
+        $get_collection = $this->common_model->getCollection($collection);
+        $error = $this->common_model->getError();
+        if($error == null){
+            //  Array object
+            $results = array();
+            //  Count object
+            $count = 0;
+            foreach ($get_collection as $value){
+                $count ++;
+                //  Create JSONObject
+                $jsonobject = array( 
+                    
+                    //  TODO
+                    
+                    );
+                    
+                $results[] = $jsonobject;
+            }
+            $data =  array(
+                   'Status'     =>'SUCCESSFUL',
+                   'Total'      =>$count,
+                   'Results'    =>$results
+            );
+            $this->response($data);
+            
+        }else{
+            $data =  array(
+                   'Status'     =>'FALSE',
+                   'Error'      =>$error
+            );
+            $this->response($data);
+        }
+    }
+    
+    /**
+     * 
+     * Update Collection My Favourite
+     * 
+     * Menthod: POST
+     * 
+     * Response: JSONObject
+     * 
+     */
+    public function update_my_favourite_post() {
+        //  Get param from client
+        $action                     = $this->post('action');
+        $id                         = $this->post('id');
+        
+        //  param
+        
+        $created_date               = $this->post('created_date');
+        $array_value = array(
+                        //  TODO
+                );
+        $this->common_model->updateCollection(My_favourites_enum::COLLECTION_MY_FAVOURITES, $action, $id, $array_value);
+        $error = $this->common_model->getError();
+        if($error == null){
+            $data =  array(
+                   'Status'     =>'SUCCESSFUL',
+                   'Error'      =>$error
+            );
+            $this->response($data);
+        }
+        else{
+            $data =  array(
+                   'Status'     =>'FALSE',
+                   'Error'      =>$error
+            );
+            $this->response($data);
+        }
+    }
+    
+    //----------------------------------------------------//
+    //                                                    //
+    //  APIs Booking                                      //
+    //                                                    //
+    //----------------------------------------------------//
+    
+    /**
+     * 
+     * Get Collection Booking
+     * 
+     * Menthod: GET
+     * 
+     * Response: JSONObject
+     * 
+     */
+    public function get_booking_get() {
+        
+        $collection = Booking_enum::COLLECTION_BOOKING_ENUM;
+        //  Get collection 
+        $get_collection = $this->common_model->getCollection($collection);
+        $error = $this->common_model->getError();
+        if($error == null){
+            //  Array object
+            $results = array();
+            //  Count object
+            $count = 0;
+            foreach ($get_collection as $value){
+                $count ++;
+                //  Create JSONObject
+                $jsonobject = array( 
+                    
+                    //  TODO
+                    
+                    );
+                    
+                $results[] = $jsonobject;
+            }
+            $data =  array(
+                   'Status'     =>'SUCCESSFUL',
+                   'Total'      =>$count,
+                   'Results'    =>$results
+            );
+            $this->response($data);
+            
+        }else{
+            $data =  array(
+                   'Status'     =>'FALSE',
+                   'Error'      =>$error
+            );
+            $this->response($data);
+        }
+    }
+    
+    /**
+     * 
+     * Update Collection Booking
+     * 
+     * Menthod: POST
+     * 
+     * Response: JSONObject
+     * 
+     */
+    public function update_booking_post() {
+        //  Get param from client
+        $action                     = $this->post('action');
+        $id                         = $this->post('id');
+        
+        //  param
+        
+        $created_date               = $this->post('created_date');
+        $array_value = array(
+                        //  TODO
+                );
+        $this->common_model->updateCollection(Booking_enum::COLLECTION_BOOKING_ENUM, $action, $id, $array_value);
+        $error = $this->common_model->getError();
+        if($error == null){
+            $data =  array(
+                   'Status'     =>'SUCCESSFUL',
+                   'Error'      =>$error
+            );
+            $this->response($data);
+        }
+        else{
+            $data =  array(
+                   'Status'     =>'FALSE',
+                   'Error'      =>$error
+            );
+            $this->response($data);
+        }
+    }
+    
+    //----------------------------------------------------//
+    //                                                    //
+    //  APIs Introduce                                    //
+    //                                                    //
+    //----------------------------------------------------//
+    
+    /**
+     * 
+     * Get Collection Introduce
+     * 
+     * Menthod: GET
+     * 
+     * Response: JSONObject
+     * 
+     */
+    public function get_introduce_get() {
+        
+        $collection = Introduce_enum::COLLECTION_INTRODUCE;
+        //  Get collection 
+        $get_collection = $this->common_model->getCollection($collection);
+        $error = $this->common_model->getError();
+        if($error == null){
+            //  Array object
+            $results = array();
+            //  Count object
+            $count = 0;
+            foreach ($get_collection as $value){
+                $count ++;
+                //  Create JSONObject
+                $jsonobject = array( 
+                    
+                    //  TODO
+                    
+                    );
+                    
+                $results[] = $jsonobject;
+            }
+            $data =  array(
+                   'Status'     =>'SUCCESSFUL',
+                   'Total'      =>$count,
+                   'Results'    =>$results
+            );
+            $this->response($data);
+            
+        }else{
+            $data =  array(
+                   'Status'     =>'FALSE',
+                   'Error'      =>$error
+            );
+            $this->response($data);
+        }
+    }
+    
+    /**
+     * 
+     * Update Collection Introduce
+     * 
+     * Menthod: POST
+     * 
+     * Response: JSONObject
+     * 
+     */
+    public function update_introduce_Quote_enumpost() {
+        //  Get param from client
+        $action                     = $this->post('action');
+        $id                         = $this->post('id');
+        
+        //  param
+        
+        $created_date               = $this->post('created_date');
+        $array_value = array(
+                        //  TODO
+                );
+        $this->common_model->updateCollection(Introduce_enum::COLLECTION_INTRODUCE, $action, $id, $array_value);
         $error = $this->common_model->getError();
         if($error == null){
             $data =  array(
