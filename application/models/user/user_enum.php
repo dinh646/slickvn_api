@@ -12,12 +12,12 @@ class User_enum {
     const AVATAR                    = 'avatar';
     const ROLE_LIST                 = 'role_list';
     const NUMBER_ASSESSMENT         = 'number_assessment';
-    
+    const IS_DELETE                  = 'is_delete';
     //  More
     const COLLECTION_USER           = 'user';
     const DEFAULT_ROLE_LIST         = '527b567a3fce119ed62d859a';
     const DEFAULT_POINT             = 50;
-    const IS_DELETE                  = 0;
+    const DEFAULT_IS_DELETE                  = 0;
     
 }
 

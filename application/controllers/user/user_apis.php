@@ -51,22 +51,25 @@ class user_apis extends REST_Controller{
             //  Count object
             $count = 0;
             foreach ($get_collection as $value){
-                $count ++;
-                //  Create JSONObject
-                $jsonobject = array( 
+                
+                if($value['is_delete'] == 0){
+                    $count ++;
+                    //  Create JSONObject
+                    $jsonobject = array( 
 
-                            User_enum::ID                => $value['_id']->{'$id'},
-                            User_enum::FULL_NAME         => $value['full_name'],
-                            User_enum::EMAIL             => $value['email'],        
-                            User_enum::PHONE_NUMBER      => $value['phone_number'],
-                            User_enum::ADDRESS           => $value['address'],
-                            User_enum::LOCATION          => $value['location'],
-                            User_enum::AVATAR            => Common_enum::DOMAIN_NAME.Common_enum::URL_USER_PROFILE.$value['avatar'],
-                            User_enum::ROLE_LIST         => $value['role_list'],
-                            Common_enum::CREATED_DATE    => $value['created_date']
+                                User_enum::ID                => $value['_id']->{'$id'},
+                                User_enum::FULL_NAME         => $value['full_name'],
+                                User_enum::EMAIL             => $value['email'],        
+                                User_enum::PHONE_NUMBER      => $value['phone_number'],
+                                User_enum::ADDRESS           => $value['address'],
+                                User_enum::LOCATION          => $value['location'],
+                                User_enum::AVATAR            => $value['avatar'],
+                                User_enum::ROLE_LIST         => $value['role_list'],
+                                Common_enum::CREATED_DATE    => $value['created_date']
 
-                           );
-                $results[] = $jsonobject;
+                               );
+                    $results[] = $jsonobject;
+                }
             }
             $data =  array(
                    'Status'     =>'SUCCESSFUL',
@@ -112,22 +115,25 @@ class user_apis extends REST_Controller{
             //  Count object
             $count = 0;
             foreach ($get_collection as $value){
-                $count ++;
-                //  Create JSONObject
-                $jsonobject = array( 
+                
+                if($value[is_delete] == 0){
+                    $count ++;
+                    //  Create JSONObject
+                    $jsonobject = array( 
 
-                            User_enum::ID                => $value['_id']->{'$id'},
-                            User_enum::FULL_NAME         => $value['full_name'],
-                            User_enum::EMAIL             => $value['email'],        
-                            User_enum::PHONE_NUMBER      => $value['phone_number'],
-                            User_enum::ADDRESS           => $value['address'],
-                            User_enum::LOCATION          => $value['location'],
-                            User_enum::AVATAR            => Common_enum::DOMAIN_NAME.Common_enum::URL_USER_PROFILE.$value['avatar'],
-                            User_enum::ROLE_LIST         => $value['role_list'],
-                            Common_enum::CREATED_DATE    => $value['created_date']
+                                User_enum::ID                => $value['_id']->{'$id'},
+                                User_enum::FULL_NAME         => $value['full_name'],
+                                User_enum::EMAIL             => $value['email'],        
+                                User_enum::PHONE_NUMBER      => $value['phone_number'],
+                                User_enum::ADDRESS           => $value['address'],
+                                User_enum::LOCATION          => $value['location'],
+                                User_enum::AVATAR            => $value['avatar'],
+                                User_enum::ROLE_LIST         => $value['role_list'],
+                                Common_enum::CREATED_DATE    => $value['created_date']
 
-                           );
-                $results[] = $jsonobject;
+                               );
+                    $results[] = $jsonobject;
+                }
             }
             $data =  array(
                    'Status'     =>'SUCCESSFUL',

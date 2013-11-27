@@ -234,7 +234,7 @@ class User_model extends CI_Model{
 
                     if($id == null){$this->setError('Id is null'); return;}
                     
-                    $this->common_model ->editSpecialField($collection, $id, array(User_enum::IS_DELETE =>1) );
+                    $this->common_model ->editSpecialField($collection, $id, array( '$set' => array(User_enum::IS_DELETE =>1)) );
                 }
                 else{
                     $this->setError('Action '.$action.' NOT support');
