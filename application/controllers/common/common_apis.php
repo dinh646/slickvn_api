@@ -18,6 +18,13 @@ class common_apis extends REST_Controller{
         $this->load->model('common/info_website_enum_enum');
         $this->load->model('common/communications_enum');
         
+        $this->load->model('common/card_enum');
+        $this->load->model('common/information_inquiry_enum');
+        $this->load->model('common/member_card_enum');
+        $this->load->model('common/my_favourites_enum');
+        $this->load->model('common/quote');
+        
+        
     }
     
     //----------------------------------------------------//

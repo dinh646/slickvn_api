@@ -2269,7 +2269,7 @@ class restaurant_apis extends REST_Controller{
         $str_image_post = $this->post('array_image');                   //  image.jpg,image2.png,...
         $array_image_post = explode(Common_enum::MARK, $str_image_post); //  ['image.jpg', 'image2.png' ,...]
         
-        $file_avatar;
+        $file_avatar='';
         
         $base_path_post = Common_enum::ROOT.Common_enum::DIR_POST.$id_user.'/';
         

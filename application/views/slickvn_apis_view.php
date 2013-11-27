@@ -127,7 +127,7 @@
             <code><a href="<?php echo $url?>index.php/user/user_apis/check_valid_email/format/json">Check email</a></code>
             <code><a href="<?php echo $url?>index.php/user/user_apis/login/format/json">Login</a></code>
             <code><a href="<?php echo $url?>index.php/user/user_apis/get_all_role/format/json">Get All Role</a></code>
-            <code><a href="<?php echo $url?>index.php/user/user_apis/get_role_by_id/format/json">Get All Role</a></code>
+            <code><a href="<?php echo $url?>index.php/user/user_apis/get_role_by_id/format/json">Get Role by Id</a></code>
             <code><a href="<?php echo $url?>index.php/user/user_apis/update_role/format/json">Update Role</a></code>
             <code><a href="<?php echo $url?>index.php/user/user_apis/get_all_function/format/json">Get All Function</a></code>
             <code><a href="<?php echo $url?>index.php/user/user_apis/get_function_by_id/format/json">Get Function by Id</a></code>
