@@ -383,11 +383,11 @@ class user_apis extends REST_Controller{
         
         $user = $this->user_model->login($email, $password);
         
-        $results = array();
+        $results;
         
         foreach ($user as $value) {
             
-            $results = array( 
+            $results[] = array( 
 
                         Common_enum::ID              => $value['_id']->{'$id'},
                         User_enum::FULL_NAME         => $value['full_name'],
@@ -400,6 +400,7 @@ class user_apis extends REST_Controller{
             );
                         
         }
+//        var_dump(is_array($results));
         if(sizeof($results) == 0){
             $data =  array(
                    'Status'     =>'FALSE',
