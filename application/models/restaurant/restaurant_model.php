@@ -157,29 +157,62 @@ class Restaurant_model extends CI_Model{
      */
     public function countAssessmentForRestaurant($id_restaurant) {
         $list_assessment = $this->getAssessmentByIdRestaurant($id_restaurant);
-        
         foreach ($list_assessment as $assessment ) {
-            
             $this->rate_service     = $this->rate_service   + $assessment['rate_service'];
             $this->rate_landscape   = $this->rate_landscape + $assessment['rate_landscape'];
             $this->rate_taste       = $this->rate_taste     + $assessment['rate_taste'];
             $this->rate_price       = $this->rate_price     + $assessment['rate_price'];
-            
         }
-        
         $count = sizeof($list_assessment);
-        
         if($count > 0){
-        
             $this->rate_service     = $this->rate_service   / $count;
             $this->rate_landscape   = $this->rate_landscape / $count;
             $this->rate_taste       = $this->rate_taste     / $count;
             $this->rate_price       = $this->rate_price     / $count;
-            
         }
-        
         return $count;
+    }
+    
+    /**
+     * 
+     * Get Collection Assessment by $id_post
+     * 
+     * @param String $id_post
+     * 
+     * @return array collection Assessment
+     * 
+     */
+    public function getAssessmentByIdPost($id_post) {
         
+        return $this->common_model->getCollectionByField(Assessment_enum::COLLECTION_ASSESSMENT, array(Assessment_enum::ID_POST => $id_post) );
+        
+    }
+    
+    /**
+     * 
+     * Count Assessment for Restaurant
+     * 
+     * @param String $id_restaurant
+     * 
+     * @return int
+     * 
+     */
+    public function countAssessmentForPost($id_post) {
+        $list_assessment = $this->getAssessmentByIdPost($id_post);
+        foreach ($list_assessment as $assessment ) {
+            $this->rate_service     = $this->rate_service   + $assessment['rate_service'];
+            $this->rate_landscape   = $this->rate_landscape + $assessment['rate_landscape'];
+            $this->rate_taste       = $this->rate_taste     + $assessment['rate_taste'];
+            $this->rate_price       = $this->rate_price     + $assessment['rate_price'];
+        }
+        $count = sizeof($list_assessment);
+        if($count > 0){
+            $this->rate_service     = $this->rate_service   / $count;
+            $this->rate_landscape   = $this->rate_landscape / $count;
+            $this->rate_taste       = $this->rate_taste     / $count;
+            $this->rate_price       = $this->rate_price     / $count;
+        }
+        return $count;
     }
     
     //----------------------------------------------------------------------//
