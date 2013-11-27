@@ -15,7 +15,7 @@ class common_apis extends REST_Controller{
         $this->load->model('common/common_model');
         $this->load->model('common/common_enum');
         
-        $this->load->model('common/info_website_enum_enum');
+        $this->load->model('common/info_website_enum');
         $this->load->model('common/communications_enum');
         
         $this->load->model('common/card_enum');
@@ -482,7 +482,7 @@ class common_apis extends REST_Controller{
     
     //----------------------------------------------------//
     //                                                    //
-    //  APIs Card                                        //
+    //  APIs Card Slickvn                                 //
     //                                                    //
     //----------------------------------------------------//
     
@@ -542,7 +542,7 @@ class common_apis extends REST_Controller{
      * Response: JSONObject
      * 
      */
-    public function update_card_post() {
+    public function update_card_post(){
         //  Get param from client
         $action                     = $this->post('action');
         $id                         = $this->post('id');
