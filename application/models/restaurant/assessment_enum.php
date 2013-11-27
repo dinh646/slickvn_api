@@ -16,6 +16,7 @@ class Assessment_enum {
    const ID                             = 'id';
    const ID_USER                        = 'id_user';
    const ID_RESTAURANT                  = 'id_restaurant';
+   const ID_POST                        = 'id_post';
    const CONTENT                        = 'content';
    const RATE_SERVICE                   = 'rate_service';
    const RATE_LANDSCAPE                 = 'rate_landscape';
