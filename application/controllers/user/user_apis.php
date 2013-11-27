@@ -383,7 +383,7 @@ class user_apis extends REST_Controller{
         
         $user = $this->user_model->login($email, $password);
         
-        $results;
+        $results='';
         
         foreach ($user as $value) {
             
@@ -401,11 +401,10 @@ class user_apis extends REST_Controller{
                         
         }
 //        var_dump(is_array($results));
-        if(sizeof($results) == 0){
+        if(!is_array($results) || sizeof($results) == 0){
             $data =  array(
                    'Status'     =>'FALSE',
-                   'Total'      =>  sizeof($results),
-                   'Results'    =>$results
+                   'Error'    =>'Login fail'
             );
             $this->response($data);
         }
