@@ -246,6 +246,8 @@ class user_apis extends REST_Controller{
         
         $role_list      = $this->post('role_list');// 527b512b3fce119ed62d8599, 527b512b3fce119ed62d8599
         
+        var_dump(( ($role_list == null) ) ? array(User_enum::DEFAULT_ROLE_LIST) : explode(Common_enum::MARK, $role_list));
+        
         $file_temp = Common_enum::ROOT.Common_enum::PATH_TEMP.$avatar;
         $path_avatar = Common_enum::ROOT.Common_enum::DIR_USER_PROFILE;
         
