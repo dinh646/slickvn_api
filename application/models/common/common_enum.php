@@ -82,6 +82,11 @@ class Common_enum {
     
     //  MESSAGE RESPONSE
     const MESSAGE_RESPONSE_SUCCESSFUL      = 'SUCCESSFUL';
+    const MESSAGE_RESPONSE_FALSE            = 'FALSE';
+    
+    //  OS
+    const WINDOWN = 1;
+    const LINUX = 2;
     
 }
 

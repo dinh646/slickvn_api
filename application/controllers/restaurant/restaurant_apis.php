@@ -126,7 +126,7 @@ class restaurant_apis extends REST_Controller{
         }
         //  Response
         $data =  array(
-               'Status'     =>'SUCCESSFUL',
+               'Status'     =>  Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                'Total'      =>  sizeof($results),
                'Results'    =>$results
         );
@@ -176,7 +176,7 @@ class restaurant_apis extends REST_Controller{
                         Menu_dish_enum::ID                => $menu_dish['_id']->{'$id'},
                         Menu_dish_enum::ID_RESTAURANT     => $menu_dish['id_restaurant'],
                         Menu_dish_enum::DISH_LIST         => $menu_dish['dish_list'],        
-                        Common_enum::CREATED_DATE        => $menu_dish['created_date']
+                        Common_enum::CREATED_DATE         => $menu_dish['created_date']
                     );
                 $results [] = $jsonobject;
                 
@@ -186,7 +186,7 @@ class restaurant_apis extends REST_Controller{
         
         //  Response
         $data =  array(
-               'Status'     =>'SUCCESSFUL',
+               'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                'Total'      =>  sizeof($results),
                'Results'    =>$results
         );
@@ -253,14 +253,14 @@ class restaurant_apis extends REST_Controller{
         
 //        if($error == null){
 //            $data =  array(
-//                   'Status'     =>'SUCCESSFUL',
+//                   'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
 //                   'Error'      =>$error
 //            );
 //            $this->response($data);
 //        }
 //        else{
 //            $data =  array(
-//                   'Status'     =>'FALSE',
+//                   'Status'     =>Common_enum::MESSAGE_RESPONSE_FALSE,
 //                   'Error'      =>$error
 //            );
 //            $this->response($data);
@@ -300,7 +300,7 @@ class restaurant_apis extends REST_Controller{
 //        $key = iconv('UTF-8', 'UTF-8//IGNORE', $key);
 //        $this->response(array(
 //            
-//                    'Status'     =>'SUCCESSFUL',
+//                    'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
 //                   'Total'      =>  1,
 //                   'Results'    =>$key
 //            
@@ -392,7 +392,7 @@ class restaurant_apis extends REST_Controller{
             }
             //  Response
             $data =  array(
-                   'Status'     =>'SUCCESSFUL',
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Total'      =>  sizeof($results),
                    'Results'    =>$results
             );
@@ -401,7 +401,7 @@ class restaurant_apis extends REST_Controller{
         else{
             //  Response
             $data =  array(
-                   'Status'     =>'SUCCESSFUL',
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Total'      =>  sizeof($results),
                    'Results'    =>$results
             );
@@ -517,7 +517,7 @@ class restaurant_apis extends REST_Controller{
             }
             //  Response
             $data =  array(
-                   'Status'     =>'SUCCESSFUL',
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Total'      =>  sizeof($results),
                    'Results'    =>$results
             );
@@ -526,7 +526,7 @@ class restaurant_apis extends REST_Controller{
         else{
             //  Response
             $data =  array(
-                   'Status'     =>'SUCCESSFUL',
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Total'      =>  sizeof($results),
                    'Results'    =>$results
             );
@@ -636,7 +636,7 @@ class restaurant_apis extends REST_Controller{
             }
             //  Response
             $data =  array(
-                   'Status'     =>'SUCCESSFUL',
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Total'      =>  sizeof($results),
                    'Results'    =>$results
             );
@@ -645,7 +645,7 @@ class restaurant_apis extends REST_Controller{
         else{
             //  Response
             $data =  array(
-                   'Status'     =>'SUCCESSFUL',
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Total'      =>  sizeof($results),
                    'Results'    =>$results
             );
@@ -672,9 +672,6 @@ class restaurant_apis extends REST_Controller{
         $limit = $this->get("limit");
         $page = $this->get("page");
 
-		//
-        //  Edit field number_view: +1
-        //
         //  Key search
         $key = $this->get('key');
         
@@ -788,7 +785,7 @@ class restaurant_apis extends REST_Controller{
             }
             //  Response
             $data =  array(
-                   'Status'     =>'SUCCESSFUL',
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Total'      =>  sizeof($results),
                    'Results'    =>$results
             );
@@ -797,7 +794,7 @@ class restaurant_apis extends REST_Controller{
         else{
             //  Response
             $data =  array(
-                   'Status'     =>'SUCCESSFUL',
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Total'      =>  sizeof($results),
                    'Results'    =>$results
             );
@@ -905,7 +902,7 @@ class restaurant_apis extends REST_Controller{
 //            }
             //  Response
             $data =  array(
-                   'Status'     =>'SUCCESSFUL',
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Total'      =>  sizeof($results),
                    'Results'    =>$results
             );
@@ -914,7 +911,7 @@ class restaurant_apis extends REST_Controller{
         else{
             //  Response
             $data =  array(
-                   'Status'     =>'SUCCESSFUL',
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Total'      =>  sizeof($results),
                    'Results'    =>$results
             );
@@ -1024,7 +1021,7 @@ class restaurant_apis extends REST_Controller{
             }
             //  Response
             $data =  array(
-                   'Status'     =>'SUCCESSFUL',
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Total'      =>  sizeof($results),
                    'Results'    =>$results
             );
@@ -1033,7 +1030,7 @@ class restaurant_apis extends REST_Controller{
         else{
             //  Response
             $data =  array(
-                   'Status'     =>'FALSE',
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>  $error
             );
             $this->response($data);
@@ -1119,7 +1116,7 @@ class restaurant_apis extends REST_Controller{
             }
             //  Response
             $data =  array(
-                   'Status'     =>'SUCCESSFUL',
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Total'      =>  sizeof($results),
                    'Results'    =>$results
             );
@@ -1130,7 +1127,7 @@ class restaurant_apis extends REST_Controller{
         else{
             //  Response
             $data =  array(
-                   'Status'     =>'FALSE',
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error,
             );
             $this->response($data);
@@ -1236,7 +1233,7 @@ class restaurant_apis extends REST_Controller{
             }
             //  Response
             $data =  array(
-                   'Status'     =>'SUCCESSFUL',
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Total'      =>  sizeof($results),
                    'Results'    =>$results
             );
@@ -1247,7 +1244,7 @@ class restaurant_apis extends REST_Controller{
         else{
             //  Response
             $data =  array(
-                   'Status'     =>'FALSE',
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error,
             );
             $this->response($data);
@@ -1354,7 +1351,7 @@ class restaurant_apis extends REST_Controller{
         }
         //  Response
         $data =  array(
-               'Status'     =>'SUCCESSFUL',
+               'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                'Total'      =>  sizeof($results),
                'Results'    =>$results
         );
@@ -1464,7 +1461,7 @@ class restaurant_apis extends REST_Controller{
         
         //  Response
         $data =  array(
-               'Status'     =>'SUCCESSFUL',
+               'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                'Total'      =>sizeof($results),
                'Results'    =>$results
         );
@@ -1672,14 +1669,14 @@ class restaurant_apis extends REST_Controller{
         
         if($error == null){
             $data =  array(
-                   'Status'     =>'SUCCESSFUL',
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Error'      =>$error
             );
             $this->response($data);
         }
         else{
             $data =  array(
-                   'Status'     =>'FALSE',
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
             $this->response($data);
@@ -1776,7 +1773,7 @@ class restaurant_apis extends REST_Controller{
         //  Response
 //        $data = array();
         $data =  array(
-               'Status'     =>'SUCCESSFUL',
+               'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                'Total'      =>$count_result,
                'Results'    =>$results
         );
@@ -1818,7 +1815,7 @@ class restaurant_apis extends REST_Controller{
            
             //  Response error
             $resulte =  array(
-                   'Status'     =>'FALSE',
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      => 'Param is NULL'
             );
 
@@ -1834,7 +1831,7 @@ class restaurant_apis extends REST_Controller{
                 
                 //  Response
                 $resulte =  array(
-                   'Status'     =>'SUCCESSFUL',
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Error'      =>$error
                 );
 
@@ -1844,7 +1841,7 @@ class restaurant_apis extends REST_Controller{
             else{
                 //  Response error
                 $resulte =  array(
-                       'Status'     =>'FALSE',
+                       'Status'     =>Common_enum::MESSAGE_RESPONSE_FALSE,
                        'Error'      =>$error
                 );
 
@@ -1891,7 +1888,7 @@ class restaurant_apis extends REST_Controller{
            
             //  Response error
             $resulte =  array(
-                   'Status'     =>'FALSE',
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      => 'Param is NULL'
             );
 
@@ -1907,7 +1904,7 @@ class restaurant_apis extends REST_Controller{
                 
                 //  Response
                 $resulte =  array(
-                   'Status'     =>'SUCCESSFUL',
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Error'      =>$error
                 );
 
@@ -1917,7 +1914,7 @@ class restaurant_apis extends REST_Controller{
             else{
                 //  Response error
                 $resulte =  array(
-                       'Status'     =>'FALSE',
+                       'Status'     =>Common_enum::MESSAGE_RESPONSE_FALSE,
                        'Error'      =>$error
                 );
 
@@ -1951,7 +1948,7 @@ class restaurant_apis extends REST_Controller{
             
             //  Response error
             $resulte =  array(
-                   'Status'     =>'FALSE',
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      => 'Param is NULL'
             );
 
@@ -1966,7 +1963,7 @@ class restaurant_apis extends REST_Controller{
                 
                 //  Response
                 $resulte =  array(
-                   'Status'     =>'SUCCESSFUL',
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Error'      =>$error
                 );
 
@@ -1976,7 +1973,7 @@ class restaurant_apis extends REST_Controller{
             else{
                 //  Response error
                 $resulte =  array(
-                       'Status'     =>'FALSE',
+                       'Status'     =>Common_enum::MESSAGE_RESPONSE_FALSE,
                        'Error'      =>$error
                 );
 
@@ -2077,7 +2074,7 @@ class restaurant_apis extends REST_Controller{
         
         //  Response
         $data =  array(
-               'Status'     =>'SUCCESSFUL',
+               'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                'Total'      =>$count_resulte,
                'Results'    =>$results
         );
@@ -2140,7 +2137,7 @@ class restaurant_apis extends REST_Controller{
         }
         //  Response
         $data =  array(
-               'Status'     =>'SUCCESSFUL',
+               'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                'Total'      =>$count_resulte,
                'Results'    =>$results
         );
@@ -2207,7 +2204,7 @@ class restaurant_apis extends REST_Controller{
         }
         //  Response
         $data =  array(
-               'Status'     =>'SUCCESSFUL',
+               'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                'Total'      =>$count_resulte,
                'Results'    =>$results
         );
@@ -2327,14 +2324,14 @@ class restaurant_apis extends REST_Controller{
         
         if($error == null){
             $data =  array(
-                   'Status'     =>'SUCCESSFUL',
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Error'      =>$error
             );
             $this->response($data);
         }
         else{
             $data =  array(
-                   'Status'     =>'FALSE',
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
             $this->response($data);
@@ -2411,7 +2408,7 @@ class restaurant_apis extends REST_Controller{
         //  Response
 //        $data = array();
         $data =  array(
-               'Status'     =>'SUCCESSFUL',
+               'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                'Total'      =>$count_resulte,
                'Results'    =>$results
         );
@@ -2442,7 +2439,7 @@ class restaurant_apis extends REST_Controller{
             
             //  Response error
             $resulte =  array(
-                   'Status'     =>'FALSE',
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      => Subscribed_email_enum::EMAIL.' is NULL'
             );
 
@@ -2457,7 +2454,7 @@ class restaurant_apis extends REST_Controller{
                 
                 //  Response
                 $resulte =  array(
-                   'Status'     =>'SUCCESSFUL',
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Error'      =>$error
                 );
 
@@ -2467,7 +2464,7 @@ class restaurant_apis extends REST_Controller{
             else{
                 //  Response error
                 $resulte =  array(
-                       'Status'     =>'FALSE',
+                       'Status'     =>Common_enum::MESSAGE_RESPONSE_FALSE,
                        'Error'      =>$error
                 );
 
@@ -2503,7 +2500,7 @@ class restaurant_apis extends REST_Controller{
             
             //  Response error
             $resulte =  array(
-                   'Status'     =>'FALSE',
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>'Param is NULL'
             );
 
@@ -2518,7 +2515,7 @@ class restaurant_apis extends REST_Controller{
                 
                 //  Response
                 $resulte =  array(
-                   'Status'     =>'SUCCESSFUL',
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Error'      =>$error
                 );
 
@@ -2528,7 +2525,7 @@ class restaurant_apis extends REST_Controller{
             else{
                 //  Response error
                 $resulte =  array(
-                       'Status'     =>'FALSE',
+                       'Status'     =>Common_enum::MESSAGE_RESPONSE_FALSE,
                        'Error'      =>$error
                 );
 
@@ -2562,7 +2559,7 @@ class restaurant_apis extends REST_Controller{
             
             //  Response error
             $resulte =  array(
-                   'Status'     =>'FALSE',
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>'Param is NULL'
             );
 
@@ -2577,7 +2574,7 @@ class restaurant_apis extends REST_Controller{
                 
                 //  Response
                 $resulte =  array(
-                   'Status'     =>'SUCCESSFUL',
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Error'      =>$error
                 );
 
@@ -2587,7 +2584,7 @@ class restaurant_apis extends REST_Controller{
             else{
                 //  Response error
                 $resulte =  array(
-                       'Status'     =>'FALSE',
+                       'Status'     =>Common_enum::MESSAGE_RESPONSE_FALSE,
                        'Error'      =>$error
                 );
 

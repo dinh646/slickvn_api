@@ -92,6 +92,37 @@ class Common_model extends CI_Model{
     
     /**
      * 
+     * Create Directory
+     * 
+     * @param String $path
+     * @param int $mode
+     * 
+     */
+    public function createDirectory($path, $mode){
+        
+        switch ($mode){
+            
+            case Common_enum::WINDOWN:{
+                
+                if(!file_exists($path)){
+                    mkdir($path, 0, true);
+                }
+                break;
+            }
+            case Common_enum::LINUX:{
+                
+                if(!file_exists($path)){
+                    mkdir($path, 0, true);
+                }
+                break;
+            }
+            
+        }
+        
+    }
+
+        /**
+     * 
      * Remove Element Array Null
      * 
      * @param array $array

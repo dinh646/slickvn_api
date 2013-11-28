@@ -250,9 +250,7 @@ class user_apis extends REST_Controller{
         $path_avatar = Common_enum::ROOT.Common_enum::DIR_USER_PROFILE;
         
         //  Create directory $path
-        if(!file_exists($path_avatar)){
-            mkdir($path_avatar, 0, true);
-        }
+        $this->common_model->createDirectory($path_avatar, Common_enum::WINDOWN);
         
         if(file_exists($file_temp)){
             $move_file_avatar = $this->common_model->moveFileToDirectory($file_temp, $path_avatar.$avatar);
@@ -276,10 +274,14 @@ class user_apis extends REST_Controller{
                         User_enum::AVATAR            => $avatar,
                         User_enum::DESC              => $desc,
                         User_enum::IS_DELETE         => ($delete == null) ? 0 : $delete,
-                        User_enum::ROLE_LIST         => ( ($is_insert == 0) ) ? array(User_enum::DEFAULT_ROLE_LIST) : explode(Common_enum::MARK, $role_list),
+                        User_enum::ROLE_LIST         => ( ($role_list == null) ) ? array(User_enum::DEFAULT_ROLE_LIST) : explode(Common_enum::MARK, $role_list),
                         Common_enum::CREATED_DATE    => ($created_date == null ) ? $this->common_model->getCurrentDate(): $created_date
                 
                 ) : array();
+        
+        if($array_value['password'] == null){
+            unset($array_value['password']);
+        }
         
         $this->user_model->updateUser($action, $id, $array_value);
         $error = $this->user_model->getError();

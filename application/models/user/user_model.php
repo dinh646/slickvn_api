@@ -194,13 +194,10 @@ class User_model extends CI_Model{
      * 
      **/
     public function updateUser($action, $id, array $array_value) {
-        
         try{
-            
             if($action == null){ 
                 $this->setError('Action is null'); return;
             }
-            
             else{
                 // Connect collection User
                 $collection = User_enum::COLLECTION_USER;
@@ -215,20 +212,16 @@ class User_model extends CI_Model{
                     if(sizeof($check_email) > 0){
                         $this->setError('Existing email'); return;
                     }
-
                     $this->collection ->insert( $array_value );
-                    
                 }
-
                 //  Action edit
                 else if( strcmp( strtolower($action), Common_enum::EDIT ) == 0 ){
 
                     if($id == null){$this->setError('Is is null'); return;}
                     $array_value[Common_enum::_ID] = new MongoId($id);
                     
-                    $this->collection ->save( $array_value );
+                    $this->collection ->update( array( '$set' => $array_value) );
                 }
-
                 //  Action delete
                 else if( strcmp( strtolower($action), Common_enum::DELETE ) == 0 ){
 
@@ -239,14 +232,12 @@ class User_model extends CI_Model{
                 else{
                     $this->setError('Action '.$action.' NOT support');
                 }
-                
             }
         }catch ( MongoConnectionException $e ){
                 $this->setError($e->getMessage());
         }catch ( MongoException $e ){
                 $this->setError($e->getMessage());
         }
-        
     }
     
     /**
