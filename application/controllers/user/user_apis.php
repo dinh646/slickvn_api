@@ -180,9 +180,7 @@ class user_apis extends REST_Controller{
         
         //  Get param from client
         $action         = $this->post('action');
-
         $id             = $this->post('id');
-        
         $full_name      = $this->post('full_name');
         $email          = $this->post('email');
         $password       = $this->post('password');

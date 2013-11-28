@@ -11,7 +11,7 @@
  *
  * @author Huynh
  */
-class User_profile {
+class User_profile_enum {
     
     const ID = 'id';
     const NUMBER_MEMBER_CARD = '';
