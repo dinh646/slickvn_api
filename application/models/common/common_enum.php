@@ -66,6 +66,7 @@ class Common_enum {
     const COMMENT                   = 'COMMENT';
     const LIKE                      = 'LIKE';
     const SHARE                     = 'SHARE';
+    const ASSESSMENT_RESTAURANT     = 'ASSESSMENT_RESTAURANT';
     const VISIT_RESTAURANT          = 'VISIT_RESTAURANT';
     const LIKE_RESTAURANT           = 'LIKE_RESTAURANT';
     const LIKE_ASSESSMENT           = 'LIKE_ASSESSMENT';
@@ -76,6 +77,11 @@ class Common_enum {
     
     const LOCALHOST                 = 'http://localhost/';
     const PATH_TEMP                 = 'include/modul_upload/upload_temp/';
+    
+    const LEVEL_ACTIVE_MEMBERS      = 1;
+    
+    //  MESSAGE RESPONSE
+    const MESSAGE_RESPONSE_SUCCESSFUL      = 'SUCCESSFUL';
     
 }
 

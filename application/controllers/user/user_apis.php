@@ -157,6 +157,58 @@ class user_apis extends REST_Controller{
     }
     
     /**
+     * Get Active members
+     * 
+     * Menthod: GET
+     * 
+     * @param int $limit
+     * @param int $page
+     * 
+     * Response: JSONObject
+     **/
+    public function get_active_members_get() {
+        //  Get limit from client
+        $limit = $this->get("limit");
+        //  Get page from client
+        $page = $this->get("page");
+        //  End
+        $position_end_get   = ($page == 1)? $limit : ($limit * $page);
+        //  Start
+        $position_start_get = ($page == 1)? $page : ( $position_end_get - ($limit - 1) );
+        //  Get collection 
+        $get_collection = $this->user_model->getAllUser();
+        $results = array();
+        $count = 0;
+        if(is_array($get_collection)){
+            foreach ($get_collection as $value) {
+                $number_assessment = $this->user_model->countUserLogByAction(array ( 
+                                                                                User_log_enum::ID_USER => $value['_id']->{'$id'}, 
+                                                                                User_log_enum::ACTION        => Common_enum::ASSESSMENT_RESTAURANT
+                                                                                ));
+                if($number_assessment>=Common_enum::LEVEL_ACTIVE_MEMBERS){
+                    $count ++;
+                    if(($count) >= $position_start_get && ($count) <= $position_end_get){
+                        //  Create JSONObject Restaurant
+                        $jsonobject = array( 
+                                            User_enum::FULL_NAME => $value['full_name'],
+                                            User_enum::AVATAR => $value['avatar'],
+                                            User_enum::NUMBER_ASSESSMENT => $number_assessment
+                                            );
+                        $results [] = $jsonobject;
+                    }
+                }
+            }
+            //  Response
+            $data =  array(
+                   'Status'     =>'SUCCESSFUL',
+                   'Total'      =>sizeof($results),
+                   'Results'    =>$results
+            );
+            $this->response($data);
+        }
+    }
+    
+    /**
      * API Update User
      * 
      * Menthod: POST
@@ -195,10 +247,15 @@ class user_apis extends REST_Controller{
         $role_list      = $this->post('role_list');// 527b512b3fce119ed62d8599, 527b512b3fce119ed62d8599
         
         $file_temp = Common_enum::ROOT.Common_enum::PATH_TEMP.$avatar;
-        $file_avatar = Common_enum::ROOT.Common_enum::DIR_USER_PROFILE.$avatar;
+        $path_avatar = Common_enum::ROOT.Common_enum::DIR_USER_PROFILE;
+        
+        //  Create directory $path
+        if(!file_exists($path_avatar)){
+            mkdir($path_avatar, 0, true);
+        }
         
         if(file_exists($file_temp)){
-            $move_file_avatar = $this->common_model->moveFileToDirectory($file_temp, $file_avatar);
+            $move_file_avatar = $this->common_model->moveFileToDirectory($file_temp, $path_avatar.$avatar);
             if(!$move_file_avatar){
                 $this->common_model->setError('Move file avatar '.$move_file_avatar);
             }

@@ -61,6 +61,45 @@ class common_apis extends REST_Controller{
     
     /**
      * 
+     * Check permisstion of user
+     * 
+     * @param arry $
+     * 
+     * @return boolean
+     * 
+     **/
+    public function check_permisstion_post() {
+        
+        //  Get param from client
+        $collection_name = $this->post('collection_name');
+        $field           = $this->post('field');
+        $value           = $this->post('value');
+        
+        
+        
+        if($collection_name != null && $field != null && $value != null){
+            
+            $result = $this->common_model->checkExistValue($collection_name, array($field => $value) );
+            
+            $data =  array(
+                   'Status'     =>'SUCCESSFUL',
+                   'Result'      =>$result
+            );
+            $this->response($data);
+            
+        }
+        else{
+            $data =  array(
+                   'Status'     =>'FALSE',
+                   'Error'      =>'Param is null'
+            );
+            $this->response($data);
+        }
+        
+    }
+    
+    /**
+     * 
      * Check Exist Value in a collecstion by $field => $value
      * 
      * @param String $collection_name
