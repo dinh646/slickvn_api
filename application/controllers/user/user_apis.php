@@ -246,9 +246,7 @@ class user_apis extends REST_Controller{
         
         $role_list      = $this->post('role_list');// 527b512b3fce119ed62d8599, 527b512b3fce119ed62d8599
         
-        var_dump(( ($role_list == null) ) ? array(User_enum::DEFAULT_ROLE_LIST) : explode(Common_enum::MARK, $role_list));
-        
-        $file_temp = Common_enum::ROOT.Common_enum::PATH_TEMP.$avatar;
+        $file_temp = Common_enum::ROOT.Common_enum::PATH_TEMP;
         $path_avatar = Common_enum::ROOT.Common_enum::DIR_USER_PROFILE;
         
         (int)$is_insert = strcmp( strtolower($action), Common_enum::INSERT );
@@ -260,7 +258,7 @@ class user_apis extends REST_Controller{
             $this->common_model->createDirectory($path_avatar, Common_enum::WINDOWN);
 
             if(file_exists($file_temp)){
-                $move_file_avatar = $this->common_model->moveFileToDirectory($file_temp, $path_avatar.$avatar);
+                $move_file_avatar = $this->common_model->moveFileToDirectory($file_temp.$avatar, $path_avatar.$avatar);
                 if(!$move_file_avatar){
                     $this->common_model->setError('Move file avatar '.$move_file_avatar);
                 }
@@ -278,7 +276,7 @@ class user_apis extends REST_Controller{
             
             if(!file_exists($file_new_avatar)){
                 unlink($file_old_avatar);
-                $move_file_avatar = $this->common_model->moveFileToDirectory($file_temp, $file_new_avatar);
+                $move_file_avatar = $this->common_model->moveFileToDirectory($file_temp.$new_avatar, $file_new_avatar);
                 if(!$move_file_avatar){
                     $this->common_model->setError('Move file avatar '.$move_file_avatar);
                 }
@@ -291,8 +289,6 @@ class user_apis extends REST_Controller{
             }
             
         }
-        
-        
         $array_value = ($is_delete != 0) ? 
                 array(
                         User_enum::FULL_NAME         => $full_name,
@@ -307,10 +303,10 @@ class user_apis extends REST_Controller{
                         User_enum::ROLE_LIST         => ( ($role_list == null) ) ? array(User_enum::DEFAULT_ROLE_LIST) : explode(Common_enum::MARK, $role_list),
                         Common_enum::CREATED_DATE    => ($created_date == null ) ? $this->common_model->getCurrentDate(): $created_date
                 ) : array();
-        if( $array_value['password'] == 'null' ){
+        if( $array_value['password'] == null ){
             unset($array_value['password']);
         }
-        
+        var_dump($array_value);
         $this->user_model->updateUser($action, $id, $array_value);
         $error = $this->user_model->getError();
         
