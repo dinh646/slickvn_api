@@ -12,6 +12,7 @@ class User_enum {
     const AVATAR                    = 'avatar';
     const ROLE_LIST                 = 'role_list';
     const NUMBER_ASSESSMENT         = 'number_assessment';
+    const DESC                      = 'desc';
     const IS_DELETE                  = 'is_delete';
     //  More
     const COLLECTION_USER           = 'user';

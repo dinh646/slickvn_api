@@ -65,6 +65,7 @@ class user_apis extends REST_Controller{
                                 User_enum::LOCATION          => $value['location'],
                                 User_enum::AVATAR            => $value['avatar'],
                                 User_enum::IS_DELETE         => $value['is_delete'],
+                                User_enum::DESC              => $value['desc'],
                                 User_enum::ROLE_LIST         => $value['role_list'],
                                 Common_enum::CREATED_DATE    => $value['created_date']
 
@@ -130,6 +131,7 @@ class user_apis extends REST_Controller{
                                 User_enum::LOCATION          => $value['location'],
                                 User_enum::AVATAR            => $value['avatar'],
                                 User_enum::ROLE_LIST         => $value['role_list'],
+                                User_enum::DESC              => $value['desc'],
                                 User_enum::IS_DELETE         => $value['is_delete'],
                                 Common_enum::CREATED_DATE    => $value['created_date']
 
@@ -188,10 +190,21 @@ class user_apis extends REST_Controller{
         $address        = $this->post('address');
         $location       = $this->post('location');
         $avatar         = $this->post('avatar');
+        $desc           = $this->post('desc');
         $delete         = $this->post('delete');
         $created_date   = $this->post('created_date');
         
         $role_list      = $this->post('role_list');// 527b512b3fce119ed62d8599, 527b512b3fce119ed62d8599
+        
+        $file_temp = Common_enum::ROOT.Common_enum::PATH_TEMP.$avatar;
+        $file_avatar = Common_enum::ROOT.Common_enum::DIR_USER_PROFILE.$avatar;
+        
+        if(file_exists($file_temp)){
+            $move_file_avatar = $this->common_model->moveFileToDirectory($file_temp, $file_avatar);
+            if(!$move_file_avatar){
+                $this->common_model->setError('Move file avatar '.$move_file_avatar);
+            }
+        }
         
         (int)$is_insert = strcmp( strtolower($action), Common_enum::INSERT );
         (int)$is_delete = strcmp( strtolower($action), Common_enum::DELETE );
@@ -206,6 +219,7 @@ class user_apis extends REST_Controller{
                         User_enum::ADDRESS           => $address,
                         User_enum::LOCATION          => $location,
                         User_enum::AVATAR            => $avatar,
+                        User_enum::DESC              => $desc,
                         User_enum::IS_DELETE         => ($delete == null) ? 0 : $delete,
                         User_enum::ROLE_LIST         => ( ($is_insert == 0) ) ? array(User_enum::DEFAULT_ROLE_LIST) : explode(Common_enum::MARK, $role_list),
                         Common_enum::CREATED_DATE    => ($created_date == null ) ? $this->common_model->getCurrentDate(): $created_date
