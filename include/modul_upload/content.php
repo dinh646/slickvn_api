@@ -5,7 +5,7 @@ session_start();
 $session_id='1'; //$session id
 $path = "upload_temp/";
 
-	$valid_formats = array("jpg", "png", "gif", "bmp","JPG");
+	$valid_formats = array("jpg", "png"/*, "gif", "bmp"*/);
 	if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST")
 		{
 			$name = $_FILES['photoimg_post']['name'];
@@ -14,7 +14,7 @@ $path = "upload_temp/";
 			if(strlen($name))
 				{
 					list($txt, $ext) = explode(".", $name);
-					if(in_array($ext,$valid_formats))
+					if(in_array(strtolower($ext), $valid_formats))
 					{
 					if($size<(2048*2048))
           
