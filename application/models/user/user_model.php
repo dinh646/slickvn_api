@@ -218,9 +218,9 @@ class User_model extends CI_Model{
                 else if( strcmp( strtolower($action), Common_enum::EDIT ) == 0 ){
 
                     if($id == null){$this->setError('Is is null'); return;}
-                    $array_value[Common_enum::_ID] = new MongoId($id);
+                    $where = array( Common_enum::_ID => new MongoId($id) );
                     
-                    $this->collection ->update( array( '$set' => $array_value) );
+                    $this->collection ->update($where, array( '$set' => $array_value) );
                 }
                 //  Action delete
                 else if( strcmp( strtolower($action), Common_enum::DELETE ) == 0 ){
