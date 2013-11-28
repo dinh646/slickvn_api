@@ -251,21 +251,43 @@ class user_apis extends REST_Controller{
         $file_temp = Common_enum::ROOT.Common_enum::PATH_TEMP.$avatar;
         $path_avatar = Common_enum::ROOT.Common_enum::DIR_USER_PROFILE;
         
-        //  Create directory $path
-        $this->common_model->createDirectory($path_avatar, Common_enum::WINDOWN);
-        
-        if(file_exists($file_temp)){
-            $move_file_avatar = $this->common_model->moveFileToDirectory($file_temp, $path_avatar.$avatar);
-            if(!$move_file_avatar){
-                $this->common_model->setError('Move file avatar '.$move_file_avatar);
-            }
-        }
-        
         (int)$is_insert = strcmp( strtolower($action), Common_enum::INSERT );
+        (int)$is_edit = strcmp( strtolower($action), Common_enum::EDIT );
         (int)$is_delete = strcmp( strtolower($action), Common_enum::DELETE );
         
+        if($is_insert == 0){
+            //  Create directory $path
+            $this->common_model->createDirectory($path_avatar, Common_enum::WINDOWN);
+
+            if(file_exists($file_temp)){
+                $move_file_avatar = $this->common_model->moveFileToDirectory($file_temp, $path_avatar.$avatar);
+                if(!$move_file_avatar){
+                    $this->common_model->setError('Move file avatar '.$move_file_avatar);
+                }
+            }
+        }
+        else if($is_edit == 0){
+            
+            $new_old_avatar = explode(Common_enum::MARK, $avatar);
+            
+            $new_avatar = $new_old_avatar[0];
+            $old_avatar = $new_old_avatar[1];
+            
+            $file_new_avatar = $path_avatar.$new_avatar;
+            $file_old_avatar = $path_avatar.$old_avatar;
+            
+            if(!file_exists($file_new_avatar)){
+                unlink($file_old_avatar);
+                $move_file_avatar = $this->common_model->moveFileToDirectory($file_temp, $file_new_avatar);
+                if(!$move_file_avatar){
+                    $this->common_model->setError('Move file avatar '.$move_file_avatar);
+                }
+            }
+            
+        }
+        
+        
         $array_value = ($is_delete != 0) ? 
-                
                 array(
                         User_enum::FULL_NAME         => $full_name,
                         User_enum::EMAIL             => $email,        
@@ -278,10 +300,8 @@ class user_apis extends REST_Controller{
                         User_enum::IS_DELETE         => ($delete == null) ? 0 : $delete,
                         User_enum::ROLE_LIST         => ( ($role_list == null) ) ? array(User_enum::DEFAULT_ROLE_LIST) : explode(Common_enum::MARK, $role_list),
                         Common_enum::CREATED_DATE    => ($created_date == null ) ? $this->common_model->getCurrentDate(): $created_date
-                
                 ) : array();
-        
-        if($array_value['password'] == null){
+        if( $array_value['password'] == 'null' ){
             unset($array_value['password']);
         }
         
