@@ -599,11 +599,11 @@ class Common_model extends CI_Model{
                 $this->collection = $this->slickvn_db->$collection;
                 
 
-                    if($id == null){$this->setError('Is is null'); return;}
+                    if($id == null){$this->setError('Id Is is null'); return;}
                     
                     $where = array( Common_enum::_ID => new MongoId($id) );
                     
-                    $this->collection ->update($where, $array_value );
+                    $this->collection ->update($where, array('$set' =>$array_value) );
                 
             }
         }catch ( MongoConnectionException $e ){

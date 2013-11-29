@@ -39,6 +39,14 @@ class user_apis extends REST_Controller{
      * 
      */
     public function get_all_user_get() {
+        //  Get limit from client
+        $limit = $this->get("limit");
+        //  Get page from client
+        $page = $this->get("page");
+        //  End
+        $position_end_get   = ($page == 1)? $limit : ($limit * $page);
+        //  Start
+        $position_start_get = ($page == 1)? $page : ( $position_end_get - ($limit - 1) );
         
         //  Get collection 
         $get_collection = $this->user_model->getAllUser();
@@ -55,28 +63,30 @@ class user_apis extends REST_Controller{
                 
                 if($value['is_delete'] == 0){
                     $count ++;
-                    //  Create JSONObject
-                    $jsonobject = array( 
+                    if(($count) >= $position_start_get && ($count) <= $position_end_get){
+                        //  Create JSONObject
+                        $jsonobject = array( 
 
-                                User_enum::ID                => $value['_id']->{'$id'},
-                                User_enum::FULL_NAME         => $value['full_name'],
-                                User_enum::EMAIL             => $value['email'],        
-                                User_enum::PHONE_NUMBER      => $value['phone_number'],
-                                User_enum::ADDRESS           => $value['address'],
-                                User_enum::LOCATION          => $value['location'],
-                                User_enum::AVATAR            => $value['avatar'],
-                                User_enum::IS_DELETE         => $value['is_delete'],
-                                User_enum::DESC              => $value['desc'],
-                                User_enum::ROLE_LIST         => $value['role_list'],
-                                Common_enum::CREATED_DATE    => $value['created_date']
+                                    User_enum::ID                => $value['_id']->{'$id'},
+                                    User_enum::FULL_NAME         => $value['full_name'],
+                                    User_enum::EMAIL             => $value['email'],        
+                                    User_enum::PHONE_NUMBER      => $value['phone_number'],
+                                    User_enum::ADDRESS           => $value['address'],
+                                    User_enum::LOCATION          => $value['location'],
+                                    User_enum::AVATAR            => $value['avatar'],
+                                    User_enum::IS_DELETE         => $value['is_delete'],
+                                    User_enum::DESC              => $value['desc'],
+                                    User_enum::ROLE_LIST         => $value['role_list'],
+                                    Common_enum::CREATED_DATE    => $value['created_date']
 
-                               );
-                    $results[] = $jsonobject;
+                                   );
+                        $results[] = $jsonobject;
+                    }
                 }
             }
             $data =  array(
                    'Status'     =>  Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
-                   'Total'      =>$count,
+                   'Total'      =>  sizeof($results),
                    'Results'    =>$results
             );
             $this->response($data);
@@ -158,7 +168,7 @@ class user_apis extends REST_Controller{
     }
     
     /**
-     * Get Active members
+     * Get Active Members
      * 
      * Menthod: GET
      * 
@@ -486,11 +496,8 @@ class user_apis extends REST_Controller{
         //  Get param from client
         $email      = $this->post('email');
         $password   = $this->post('password');
-        
         $user = $this->user_model->login($email, $password);
-        
         $results='';
-        
         foreach ($user as $value) {
             
             $results[] = array( 
@@ -504,7 +511,6 @@ class user_apis extends REST_Controller{
                         User_enum::AVATAR            => $value['avatar'],
                         User_enum::ROLE_LIST         => $value['role_list'],
             );
-                        
         }
 //        var_dump(is_array($results));
         if(!is_array($results) || sizeof($results) == 0){
@@ -515,7 +521,6 @@ class user_apis extends REST_Controller{
             $this->response($data);
         }
         else{
-            
             $this->user_model->updateUserLog(Common_enum::INSERT, null, 
                                                 array(
                                                     User_log_enum::ID_USER              => $value['_id']->{'$id'},
