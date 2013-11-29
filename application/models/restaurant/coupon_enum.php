@@ -13,17 +13,15 @@
 class Coupon_enum {
     
 
-   const ID = 'id';
-   const COUPON_VALUE       = 'coupon_value';
-   const DEAL_TO_DATE       = 'deal_to_date';
-   const RESTAURANT_NAME    = 'restaurant_name';
-   const CONTENT            = 'content';
-   const IMAGE_LINK         = 'image_link';
-   const LINK_TO            = 'link_to';
-   
-   const COLLECTION_NAME    = 'coupon';
-   const BASE_IMAGE_LINK    = 'http://localhost/slickvn_api/include/images/coupons/';
-   
+   const ID             = 'id';
+   const ID_RESTAURANT  = 'id_restaurant';
+   const VALUE_COUPON   = 'value_coupon';
+   const START_DATE     = 'start_date';
+   const DUE_DATE       = 'due_date';
+   const DESC           = 'desc';
+
+   //   More
+   const COLLECTION_COUPON    = 'coupon';
 }
 
 ?>

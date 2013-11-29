@@ -455,148 +455,30 @@ class Restaurant_model extends CI_Model{
     
     /**
      * 
-     * Insert Coupon
-     *
-     * @param int $coupon_value
-     * @param String $deal_to_date
-     * @param String $restaurant_name
-     * @param String $content
-     * @param String $image_link
-     * @param String $link_to
+     * Get Collection Coupon by Id
      * 
-     * @return error
+     * @param String $id
+     * 
+     * Return: Array Collection Coupon
      * 
      */
-    public function insertCoupon($coupon_value, $deal_to_date, $restaurant_name, 
-                                     $content, $image_link, $link_to) {
-        
-        $error = null;
-        
-        try{
-            
-            // Connect collection coupon
-            $collection_name = Coupon_enum::COLLECTION_NAME;
-            $this->collection_coupon = $this->slickvn_db->$collection_name;
-            
-            $new = array(
-                            
-                            Coupon_enum::COUPON_VALUE        => (int)$coupon_value,
-                            Coupon_enum::DEAL_TO_DATE        => $deal_to_date,
-                            Coupon_enum::RESTAURANT_NAME     => $restaurant_name,
-                            Coupon_enum::CONTENT             => $content,
-                            Coupon_enum::IMAGE_LINK          => $image_link,
-                            Coupon_enum::LINK_TO             => $link_to
-                           
-                        );
-            
-            $this->collection_coupon->insert( $new );
-            
-        }catch ( MongoConnectionException $e ){
-                
-                return $error = ''.$e->getMessage();
-                
-        }catch ( MongoException $e ){
-            
-                return $error = ''.$e->getMessage();
-                
-        }
-        
-        return $error;
-        
+    public function insertCouponByRestaurant($id) {
+        return $this->common_model->getCollectionById(Coupon_enum::COLLECTION_COUPON, $id);
     }
     
     /**
      * 
-     * Update Coupon
-     *
-     * @param String $id
-     * @param int $coupon_value
-     * @param String $deal_to_date
-     * @param String $restaurant_name
-     * @param String $content
-     * @param String $image_link
-     * @param String $link_to
-     * 
-     * @return error
-     * 
-     */
-    public function updateCoupon($id, $coupon_value, $deal_to_date, $restaurant_name, 
-                                     $content, $image_link, $link_to) {
-        
-        $error = null;
-        
-        try{
-            
-            // Connect collection coupon
-            $collection_name = Coupon_enum::COLLECTION_NAME;
-            $this->collection_coupon = $this->slickvn_db->$collection_name;
-            
-            $update = array(
-                
-                            Common_enum::_ID                 => new MongoId($id),
-                            Coupon_enum::COUPON_VALUE        => (int)$coupon_value,
-                            Coupon_enum::DEAL_TO_DATE        => $deal_to_date,
-                            Coupon_enum::RESTAURANT_NAME     => $restaurant_name,
-                            Coupon_enum::CONTENT             => $content,
-                            Coupon_enum::IMAGE_LINK          => $image_link,
-                            Coupon_enum::LINK_TO             => $link_to
-                           
-                        );
-            
-            $this->collection_coupon->save( $update );
-            
-        }catch ( MongoConnectionException $e ){
-                
-                return $error = ''.$e->getMessage();
-                
-        }catch ( MongoException $e ){
-            
-                return $error = ''.$e->getMessage();
-                
-        }
-        
-        return $error;
-        
-    }
-    
-        /**
-     * 
-     * Delete Coupon
+     * Update Collection Coupon
      * 
      * @param String $id
+     * @param Array $array_value
      * 
-     * @return error
+     * @param String $action:  insert | edit | delete
      * 
-     */
-    public function deleteCoupon($id){
+     **/
+    public function updateCoupon($action, $id, array $array_value) {
         
-        $error = null;
-        
-        try{
-            
-            // Connect collection restaurant
-            $collection_name = Coupon_enum::COLLECTION_NAME;
-            $this->collection_coupon = $this->slickvn_db->$collection_name;
-            
-            $delete = array(
-                
-                            Common_enum::_ID  => new MongoId($id),
-                           
-                        );
-            
-            $this->collection_coupon->remove( $delete );
-            
-        }catch ( MongoConnectionException $e ){
-                
-                return $error = ''.$e->getMessage();
-                
-        }catch ( MongoException $e ){
-            
-                return $error = ''.$e->getMessage();
-                
-        }
-        
-        return $error;
+        $this->common_model->updateCollection(Coupon_enum::COLLECTION_COUPON, $action, $id, $array_value);
         
     }
     
@@ -727,7 +609,7 @@ class Restaurant_model extends CI_Model{
     
     //----------------------------------------------------------------------//
     //                                                                      //
-    //                  FUNCTION FOR COLLECTION COMMENT                     //
+    //                  FUNCTION FOR COLLECTION ASSESSMENT                  //
     //                                                                      //
     //----------------------------------------------------------------------//
     
@@ -779,6 +661,22 @@ class Restaurant_model extends CI_Model{
         }
         
         return $list_comment_detail;
+        
+    }
+    
+    /**
+     * 
+     * Update Collection Assessemt
+     * 
+     * @param String $id
+     * @param Array $array_value
+     * 
+     * @param String $action:  insert | edit | delete
+     * 
+     **/
+    public function updateAssessment($action, $id, array $array_value) {
+        
+        $this->common_model->updateCollection(Assessment_enum::COLLECTION_ASSESSMENT, $action, $id, $array_value);
         
     }
     

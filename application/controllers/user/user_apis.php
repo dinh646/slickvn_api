@@ -21,6 +21,7 @@ class user_apis extends REST_Controller{
         
         $this->load->model('user/user_log_enum');
         
+        
     }
     
     //----------------------------------------------------//
@@ -74,7 +75,7 @@ class user_apis extends REST_Controller{
                 }
             }
             $data =  array(
-                   'Status'     =>'SUCCESSFUL',
+                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Total'      =>$count,
                    'Results'    =>$results
             );
@@ -140,7 +141,7 @@ class user_apis extends REST_Controller{
                 }
             }
             $data =  array(
-                   'Status'     =>'SUCCESSFUL',
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Total'      =>$count,
                    'Results'    =>$results
             );
@@ -200,7 +201,7 @@ class user_apis extends REST_Controller{
             }
             //  Response
             $data =  array(
-                   'Status'     =>'SUCCESSFUL',
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Total'      =>sizeof($results),
                    'Results'    =>$results
             );
@@ -312,7 +313,7 @@ class user_apis extends REST_Controller{
         
         if($error == null){
             $data =  array(
-                   'Status'     =>'SUCCESSFUL',
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Error'      =>$error
             );
             $this->response($data);
@@ -359,7 +360,7 @@ class user_apis extends REST_Controller{
         
         if($error == null){
             $data =  array(
-                   'Status'     =>'SUCCESSFUL',
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Error'      =>$error
             );
             $this->response($data);
@@ -408,7 +409,7 @@ class user_apis extends REST_Controller{
         $error = $this->user_model->getError();
         if($error == null){
             $data =  array(
-                   'Status'     =>'SUCCESSFUL',
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Error'      =>$error
             );
             $this->response($data);
@@ -456,7 +457,7 @@ class user_apis extends REST_Controller{
         $error = $this->user_model->getError();
         if($error == null){
             $data =  array(
-                   'Status'     =>'SUCCESSFUL',
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Error'      =>$error
             );
             $this->response($data);
@@ -514,8 +515,22 @@ class user_apis extends REST_Controller{
             $this->response($data);
         }
         else{
+            
+            $this->user_model->updateUserLog(Common_enum::INSERT, null, 
+                                                array(
+                                                    User_log_enum::ID_USER              => $value['_id']->{'$id'},
+                                                    User_log_enum::ID_RESTAURANT        => '',        
+                                                    User_log_enum::ID_ASSESSMENT        => '',
+                                                    User_log_enum::ID_COMMENT           => '',
+                                                    User_log_enum::ID_POST              => '',
+                                                    User_log_enum::ACTION               => Common_enum::LOGIN,
+                                                    User_log_enum::DESC                 => Common_enum::LOGIN,
+                                                    Common_enum::CREATED_DATE           => $this->common_model->getCurrentDate()
+                                                )
+                                            );
+            
             $data =  array(
-                   'Status'     =>'SUCCESSFUL',
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Total'      =>  sizeof($results),
                    'Results'    =>$results
             );
@@ -564,7 +579,7 @@ class user_apis extends REST_Controller{
                 $results[] = $jsonobject;
             }
             $data =  array(
-                   'Status'     =>'SUCCESSFUL',
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Total'      =>$count,
                    'Results'    =>$results
             );
@@ -619,7 +634,7 @@ class user_apis extends REST_Controller{
                 $results[] = $jsonobject;
             }
             $data =  array(
-                   'Status'     =>'SUCCESSFUL',
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Total'      =>$count,
                    'Results'    =>$results
             );
@@ -674,7 +689,7 @@ class user_apis extends REST_Controller{
         
         if($error == null){
             $data =  array(
-                   'Status'     =>'SUCCESSFUL',
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Error'      =>$error
             );
             $this->response($data);
@@ -728,7 +743,7 @@ class user_apis extends REST_Controller{
                 $results[] = $jsonobject;
             }
             $data =  array(
-                   'Status'     =>'SUCCESSFUL',
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Total'      =>$count,
                    'Results'    =>$results
             );
@@ -782,7 +797,7 @@ class user_apis extends REST_Controller{
                 $results[] = $jsonobject;
             }
             $data =  array(
-                   'Status'     =>'SUCCESSFUL',
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Total'      =>$count,
                    'Results'    =>$results
             );
@@ -823,6 +838,7 @@ class user_apis extends REST_Controller{
         $created_date       = $this->post('created_date');
         
         $array_value = array(
+            
                         Role_enum::NAME              => $name,
                         Role_enum::DESC              => $desc,        
                         Common_enum::CREATED_DATE    => ($created_date == null ) ? $this->common_model->getCurrentDate(): $created_date
@@ -834,7 +850,7 @@ class user_apis extends REST_Controller{
         
         if($error == null){
             $data =  array(
-                   'Status'     =>'SUCCESSFUL',
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Error'      =>$error
             );
             $this->response($data);
@@ -847,5 +863,7 @@ class user_apis extends REST_Controller{
             $this->response($data);
         }
     }
+    
+    
     
 }

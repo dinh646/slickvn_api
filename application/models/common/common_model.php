@@ -458,6 +458,59 @@ class Common_model extends CI_Model{
     
     /**
      * 
+     * Get Value Feild Id Base Collection
+     * 
+     * @param String $collection_name
+     * @param String $array_id
+     * 
+     * @return array document
+     * 
+     */
+    public function getValueFeildIdBaseCollectionById($collection_name, array $array_id){
+        
+        try{
+        
+            if($collection_name == null){ 
+                $this->setError('Collection name is null');
+            }
+            else if($array_id == null){
+                $this->setError('Id is null');
+            }
+            else{
+                //  Connect to $collection_name
+                $this->collection = $this->slickvn_db->$collection_name;
+                
+                $str_doc="";
+                
+                foreach ($array_id as $id) {
+                    
+                    //  Query select collection_name by id
+                    $select_collection = $this->collection->find(array(Common_enum::_ID => new MongoId($id)));
+					
+                    $array_ = iterator_to_array($select_collection);
+                    if(sizeof($array_) > 0){
+						$str_doc = $str_doc.', '.$array_[$id][Common_enum::NAME];
+					}
+                
+                }
+                
+                return $str_doc;
+                
+            }
+            
+        }catch ( MongoConnectionException $e ){
+                
+            $this->setError($e->getMessage());
+                
+        }catch ( MongoException $e ){
+            
+            $this->setError($e->getMessage());
+                
+        }
+    }
+    
+    /**
+     * 
      * Update Collection
      * 
      * @param String $collection_name
@@ -480,14 +533,12 @@ class Common_model extends CI_Model{
                 // Connect collection $collection_name
                 $collection = $collection_name;
                 $this->collection = $this->slickvn_db->$collection;
-                
                 //  Action insert
                 if( strcmp( strtolower($action), Common_enum::INSERT ) == 0 ) {
                     
                     $this->collection ->insert( $array_value );
                     
                 }
-
                 //  Action edit
                 else if( strcmp( strtolower($action), Common_enum::EDIT ) == 0 ){
 

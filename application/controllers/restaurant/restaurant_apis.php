@@ -134,6 +134,77 @@ class restaurant_apis extends REST_Controller{
         
     }
     
+    /**
+     * 
+     *  API update Assessment
+     * 
+     *  Menthod: POST
+     * 
+     *  Response: JSONObject
+     * 
+     */
+    public function update_assement_post(){
+        
+        //  Get param from client
+        $action = $this->post('action');
+        $id = $this->post('id');
+        
+        $id_user = $this->post('id_user');
+        $id_restaurant = $this->post('id_restaurant');
+        $content = $this->post('content');
+        $rate_service = $this->post('rate_service');
+        $rate_landscape = $this->post('rate_landscape');
+        $rate_taste = $this->post('rate_taste');
+        $rate_price = $this->post('rate_price');
+        $approval = $this->post('approval');
+        $created_date = $this->post('created_date');
+            
+        $array_value = array(
+            Assessment_enum::ID_USER => $id_user,
+            Assessment_enum::ID_RESTAURANT => $id_restaurant,
+            Assessment_enum::CONTENT => $content,
+            Assessment_enum::RATE_SERVICE => (int)$rate_service,
+            Assessment_enum::RATE_LANDSCAPE => (int)$rate_landscape,
+            Assessment_enum::RATE_TASTE => (int)$rate_taste,
+            Assessment_enum::RATE_PRICE => (int)$rate_price,
+            Assessment_enum::APPROVAL => $approval,
+            Common_enum::CREATED_DATE => ($created_date != null) ? $created_date : $this->common_model->getCurrentDate()
+        );
+        
+        $this->restaurant_model->updateAssessment($action, $id, $array_value);
+        $error = $this->restaurant_model->getError();
+        
+        if($error == null){
+            
+            $this->user_model->updateUserLog(Common_enum::INSERT, null, 
+                                                array(
+                                                    User_log_enum::ID_USER              => $id_user,
+                                                    User_log_enum::ID_RESTAURANT        => $id_restaurant,        
+                                                    User_log_enum::ID_ASSESSMENT        => '',
+                                                    User_log_enum::ID_COMMENT           => '',
+                                                    User_log_enum::ID_POST              => '',
+                                                    User_log_enum::ACTION               => Common_enum::ASSESSMENT_RESTAURANT,
+                                                    User_log_enum::DESC                 => Common_enum::ASSESSMENT_RESTAURANT,
+                                                    Common_enum::CREATED_DATE           => $this->common_model->getCurrentDate()
+                                                )
+                                            );
+            
+            $data =  array(
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
+                   'Error'      =>$error
+            );
+            $this->response($data);
+        }
+        else{
+            $data =  array(
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_FALSE,
+                   'Error'      =>$error
+            );
+            $this->response($data);
+        }
+        
+    }
+    
     //----------------------------------------------------//
     //                                                    //
     //  APIs Menu Dish                                    //
@@ -193,6 +264,7 @@ class restaurant_apis extends REST_Controller{
         $this->response($data);
         
     }
+    
     
     /**
      * 
@@ -287,7 +359,7 @@ class restaurant_apis extends REST_Controller{
      *  Response: JSONObject
      * 
      */
-    public function search_restaurant_by_name_get() {
+    public function search_restaurant_by_name_get(){
         
         //  Get param from client
         $limit = $this->get("limit");
@@ -1082,13 +1154,13 @@ class restaurant_apis extends REST_Controller{
                     Restaurant_enum::PHONE_NUMBER               => $restaurant['phone_number'],
                     Restaurant_enum::WORKING_TIME               => $restaurant['working_time'],
                     Restaurant_enum::STATUS_ACTIVE              => $restaurant['status_active'],
-                    Restaurant_enum::FAVOURITE_LIST             => substr ($this->common_model->getValueFeildNameBaseCollectionById(Common_enum::FAVOURITE_TYPE,   $restaurant['favourite_list']), 2),
-                    Restaurant_enum::PRICE_PERSON_LIST          => substr ($this->common_model->getValueFeildNameBaseCollectionById(Common_enum::PRICE_PERSON,     $restaurant['price_person_list']), 2),
-                    Restaurant_enum::CULINARY_STYLE_LIST        => substr ($this->common_model->getValueFeildNameBaseCollectionById(Common_enum::CULINARY_STYLE,   $restaurant['culinary_style_list']), 2),
-                    Restaurant_enum::MODE_USE_LIST              => substr ($this->common_model->getValueFeildNameBaseCollectionById(Common_enum::MODE_USE,         $restaurant['mode_use_list']), 2),
-                    Restaurant_enum::PAYMENT_TYPE_LIST          => substr ($this->common_model->getValueFeildNameBaseCollectionById(Common_enum::PAYMENT_TYPE,     $restaurant['payment_type_list']), 2),
-                    Restaurant_enum::LANDSCAPE_LIST             => substr ($this->common_model->getValueFeildNameBaseCollectionById(Common_enum::LANDSCAPE,        $restaurant['landscape_list']), 2),
-                    Restaurant_enum::OTHER_CRITERIA_LIST        => substr ($this->common_model->getValueFeildNameBaseCollectionById(Common_enum::OTHER_CRITERIA,   $restaurant['other_criteria_list']), 2),
+                    Restaurant_enum::FAVOURITE_LIST             => $restaurant['favourite_list'],
+                    Restaurant_enum::PRICE_PERSON_LIST          => $restaurant['price_person_list'],
+                    Restaurant_enum::CULINARY_STYLE_LIST        => $restaurant['culinary_style_list'],
+                    Restaurant_enum::MODE_USE_LIST              => $restaurant['mode_use_list'],
+                    Restaurant_enum::PAYMENT_TYPE_LIST          => $restaurant['payment_type_list'],
+                    Restaurant_enum::LANDSCAPE_LIST             => $restaurant['landscape_list'],
+                    Restaurant_enum::OTHER_CRITERIA_LIST        => $restaurant['other_criteria_list'],
                     Restaurant_enum::INTRODUCE                  => $restaurant['introduce'],
                     Restaurant_enum::START_DATE                 => $restaurant['start_date'],
                     Restaurant_enum::END_DATE                   => $restaurant['end_date'],
@@ -1621,6 +1693,7 @@ class restaurant_apis extends REST_Controller{
         $end_date                = $this->post('end_date');
         $created_date            = $this->post('created_date');
         $is_delete               = $this->post('is_delete');
+        
         //  Get image from client
         $str_image_post = $this->post('array_image');                   //  image.jpg,image2.png,...
         $array_image_post = explode(Common_enum::MARK, $str_image_post); //  ['image.jpg', 'image2.png' ,...]
@@ -1628,7 +1701,7 @@ class restaurant_apis extends REST_Controller{
         $file_carousel='';
         $file_introduce = array();
         $base_path_restaurant = Common_enum::ROOT.Common_enum::DIR_RESTAURANT.$folder_name.'/images/';
-        
+        $file_temp = Common_enum::ROOT.Common_enum::PATH_TEMP;
         $path_avatar    = $base_path_restaurant.'avatar/';
         $path_carousel  = $base_path_restaurant.'carousel/';
         $path_introduce = $base_path_restaurant.'introduce/';
@@ -1646,7 +1719,7 @@ class restaurant_apis extends REST_Controller{
         if($is_insert == 0){
             
             for($i=0; $i<sizeof($array_image_post); $i++) {
-                $file_temp = Common_enum::ROOT.Common_enum::PATH_TEMP.$array_image_post[$i];
+                $file_temp = $file_temp.$array_image_post[$i];
 //                var_dump('temp ['.$i.'] = '.$file_temp);
                 if (file_exists($file_temp)) {
                     //  Move file from directory post
@@ -1654,26 +1727,31 @@ class restaurant_apis extends REST_Controller{
                       $move_file_avatar = $this->common_model->moveFileToDirectory($file_temp, $path_avatar.$array_image_post[$i]);
                       if(!$move_file_avatar){
                           $this->common_model->setError('Move file avatar '.$move_file_avatar);
+                      }else{
+                          $file_avatar = $folder_name.'/images/avatar/'.$array_image_post[0];
                       }
-                      $file_avatar = $folder_name.'/images/avatar/'.$array_image_post[0];
+                      
                     }
                     else if($i==1){
                       $move_file_carousel = $this->common_model->moveFileToDirectory($file_temp, $path_carousel.$array_image_post[$i]);
                       if(!$move_file_carousel){
                           $this->common_model->setError('Move file carousel '.$move_file_carousel);
                       }
-                      $file_carousel = $folder_name.'/images/carousel/'.$array_image_post[1];
+                      else{
+                          $file_carousel = $folder_name.'/images/carousel/'.$array_image_post[1];
+                      }
+                      
                     }
                     else{
                       $move_file_introduce = $this->common_model->moveFileToDirectory($file_temp, $path_introduce.$array_image_post[$i]);
 
                       if(!$move_file_introduce){
                           $this->common_model->setError('Move file introduce '.$move_file_introduce);
+                      }else{
+                          $introduce = str_replace(str_replace(Common_enum::ROOT, Common_enum::DOMAIN_NAME ,$file_temp), 'folder_image_introduce_detail_page/'.$folder_name.'/images/introduce/'.$array_image_post[$i], $introduce);
+
+                          $file_introduce []= $folder_name.'/images/introduce/'.$array_image_post[$i];
                       }
-
-                      $introduce = str_replace(str_replace(Common_enum::ROOT, Common_enum::DOMAIN_NAME ,$file_temp), 'folder_image_introduce_detail_page/'.$folder_name.'/images/introduce/'.$array_image_post[$i], $introduce);
-
-                      $file_introduce []= $folder_name.'/images/introduce/'.$array_image_post[$i];
 
                     }
 
@@ -1683,10 +1761,13 @@ class restaurant_apis extends REST_Controller{
         }
         else if($is_edit == 0){
             
+            //
+            //  TODO
+            //
+            
         }
         //  Update menu_dish
         $id_menu_dish = $this->update_menu_dish($action, null/*id_menu_dish*/, $str_dish_list, $created_date);
-        
         $array_value = array( 
             Restaurant_enum::ID_MENU_DISH               => $id_menu_dish,
             Restaurant_enum::ID_COUPON                  => $id_coupon,
@@ -1739,11 +1820,8 @@ class restaurant_apis extends REST_Controller{
             );
             $this->response($data);
         }
-        
     }
-    
-    
-    
+
     //------------------------------------------------------
     //                                                     /
     //  APIs Coupon                                        /
@@ -1752,177 +1830,16 @@ class restaurant_apis extends REST_Controller{
     
     /**
      * 
-     *  API get Coupon
-     * 
-     *  Menthod: GET
-     * 
-     *  @param $limit
-     *  @param $page
-     * 
-     *  Response: JSONObject
-     * 
-     */
-    public function get_coupon_list_get() {
-        
-        //  Get limit from client
-        $limit = $this->get("limit");
-        
-        //  Get page from client
-        $page = $this->get("page");
-                
-        //  End
-        $position_end_get   = ($page == 1)? $limit : ($limit * $page);
-        
-        //  Start
-        $position_start_get = ($page == 1)? $page : ( $position_end_get - ($limit - 1) );
-        
-        // Get collection coupon
-        $collection_name = Coupon_enum::COLLECTION_NAME;
-        $list_coupon = $this->common_model->getCollection($collection_name);
-        
-        //  Array object coupon
-        $results = array();
-        
-        //  Count object coupon
-        $count = 0;
-        
-        //  Count result
-        $count_result = 0;
-        
-        foreach ($list_coupon as $coupon){
-            
-            //  Get deal to date
-            $deal_to_date = $coupon['deal_to_date'];
-
-            //  Get now date
-            $now_date = new DateTime();
-
-            //  Get interval
-            $interval = $this->common_model->getInterval($now_date->format('d-m-Y H:i:s'), $deal_to_date);
-            
-            if($interval >= 0){
-                
-                $count++;
-                
-                if(($count) >= $position_start_get && ($count) <= $position_end_get){
-                    
-                    $count_result ++ ;
-                
-                    //  Create JSONObject Coupon
-                    $jsonobject = array( 
-
-                               Coupon_enum::ID               => $coupon['_id']->{'$id'},
-                               Coupon_enum::COUPON_VALUE     => $coupon['coupon_value'],
-                               Coupon_enum::DEAL_TO_DATE     => $coupon['deal_to_date'],
-                               Coupon_enum::RESTAURANT_NAME  => $coupon['restaurant_name'],
-                               Coupon_enum::CONTENT          => $coupon['content'],
-                               Coupon_enum::IMAGE_LINK       => Coupon_enum::BASE_IMAGE_LINK.$coupon['image_link'],
-                               Coupon_enum::LINK_TO          => $coupon['link_to']
-                                       
-                               );
-
-                    $results[] = $jsonobject;
-                    
-                }
-            }
-            
-        }
-        
-        //  Response
-//        $data = array();
-        $data =  array(
-               'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
-               'Total'      =>$count_result,
-               'Results'    =>$results
-        );
-
-        $this->response($data);
-    }
-    
-    /**
-     * 
-     * API insert Coupon
-     * 
-     * Menthod: POST
-     * 
-     * @param int $coupon_value
-     * @param String $deal_to_date
-     * @param String $restaurant_name
-     * @param String $content
-     * @param String $image_link
-     * @param String $link_to
-     * 
-     *  Response: JSONObject
-     * 
-     */
-    public function insert_coupon_post(){
-        
-        //  Get param from client;
-         $coupon_value          = $this->post('coupon_value');
-         $deal_to_date          = $this->post('deal_to_date');
-         $restaurant_name       = $this->post('restaurant_name');
-         $content               = $this->post('content');
-         $image_link            = $this->post('image_link');
-         $link_to               = $this->post('link_to');
-         
-        //  Resulte
-        $resulte = array();
-        
-        if($coupon_value == null || $deal_to_date == null || $restaurant_name == null || 
-           $content == null || $image_link == null || $link_to == null){
-           
-            //  Response error
-            $resulte =  array(
-                   'Status'     =>Common_enum::MESSAGE_RESPONSE_FALSE,
-                   'Error'      => 'Param is NULL'
-            );
-
-            $this->response($resulte);
-            
-        }else{
-            
-            $error = $this->restaurant_model->insertCoupon($coupon_value, $deal_to_date, $restaurant_name, 
-                                                           $content, $image_link, $link_to);
-            
-            //  If insert successful
-            if( is_null($error) ){
-                
-                //  Response
-                $resulte =  array(
-                   'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
-                   'Error'      =>$error
-                );
-
-                $this->response($resulte);
-
-            }
-            else{
-                //  Response error
-                $resulte =  array(
-                       'Status'     =>Common_enum::MESSAGE_RESPONSE_FALSE,
-                       'Error'      =>$error
-                );
-
-                $this->response($resulte);
-
-            }
-        }
-        
-    }
-    
-    /**
-     * 
      * API upadate Coupon
      * 
      * Menthod: POST
      * 
      * @param String $id
+     * @param String $id_restaurant
      * @param int $coupon_value
-     * @param String $deal_to_date
-     * @param String $restaurant_name
-     * @param String $content
-     * @param String $image_link
-     * @param String $link_to
+     * @param String $start_date
+     * @param String $due_date
+     * @param String $desc
      * 
      *  Response: JSONObject
      * 
@@ -1930,114 +1847,46 @@ class restaurant_apis extends REST_Controller{
     public function update_coupon_post(){
         
         //  Get param from client
-         $id                    = $this->post('id');
-         $coupon_value          = $this->post('coupon_value');
-         $deal_to_date          = $this->post('deal_to_date');
-         $restaurant_name       = $this->post('restaurant_name');
-         $content               = $this->post('content');
-         $image_link            = $this->post('image_link');
-         $link_to               = $this->post('link_to');
+        $action         = $this->post('action');
+        $id             = $this->post('id');
+        $id_restaurant  = $this->post('id_restaurant');
+        $value_coupon   = $this->post('value_coupon');
+        $start_date     = $this->post('start_date');
+        $due_date       = $this->post('due_date');
+        $desc           = $this->post('desc');
         
-        //  Resulte
-        $resulte = array();
+        $created_date   = $this->post('created_date');
+            
+        $array_value = array(
+            Coupon_enum::ID_RESTAURANT => $id_restaurant,
+            Coupon_enum::VALUE_COUPON => (int)$value_coupon,
+            Coupon_enum::START_DATE => $start_date,
+            Coupon_enum::DUE_DATE => $due_date,
+            Coupon_enum::DESC => $desc,
+            Common_enum::CREATED_DATE => ($created_date != null) ? $created_date : $this->common_model->getCurrentDate()
+        );
         
-        if($id == null || $coupon_value == null || $deal_to_date == null || $restaurant_name == null || 
-           $content == null || $image_link == null || $link_to == null){
-           
-            //  Response error
-            $resulte =  array(
-                   'Status'     =>Common_enum::MESSAGE_RESPONSE_FALSE,
-                   'Error'      => 'Param is NULL'
-            );
-
-            $this->response($resulte);
+        $this->restaurant_model->updateCoupon($action, $id, $array_value);
+        $error = $this->restaurant_model->getError();
+        
+        if($error == null){
             
-        }else{
+            $this->common_model->editSpecialField(Restaurant_enum::COLLECTION_RESTAURANT, 
+                                                  $id_restaurant, 
+                                                  array(Restaurant_enum::ID_COUPON=>$array_value['_id']->{'id'} ));
             
-            $error = $this->restaurant_model->updateCoupon($id, $coupon_value, $deal_to_date, $restaurant_name, 
-                                                           $content, $image_link, $link_to);
-            
-            //  If insert successful
-            if( is_null($error) ){
-                
-                //  Response
-                $resulte =  array(
+            $data =  array(
                    'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Error'      =>$error
-                );
-
-                $this->response($resulte);
-
-            }
-            else{
-                //  Response error
-                $resulte =  array(
-                       'Status'     =>Common_enum::MESSAGE_RESPONSE_FALSE,
-                       'Error'      =>$error
-                );
-
-                $this->response($resulte);
-
-            }
+            );
+            $this->response($data);
         }
-        
-    }
-    
-    /**
-     * 
-     * API delete Coupon
-     * 
-     * Menthod: POST
-     * 
-     * @param $id
-     * 
-     *  Response: JSONObject
-     * 
-     */
-    public function delete_coupon_post(){
-        
-        //  Get param from client
-        $id  = $this->post('id');
-        
-        //  Resulte
-        $resulte = array();
-        
-        if($id == null){
-            
-            //  Response error
-            $resulte =  array(
+        else{
+            $data =  array(
                    'Status'     =>Common_enum::MESSAGE_RESPONSE_FALSE,
-                   'Error'      => 'Param is NULL'
-            );
-
-            $this->response($resulte);
-            
-        }else{
-            
-            $error = $this->restaurant_model->deleteCoupon($id);
-            
-            //  If insert successful
-            if( is_null($error) ){
-                
-                //  Response
-                $resulte =  array(
-                   'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Error'      =>$error
-                );
-
-                $this->response($resulte);
-
-            }
-            else{
-                //  Response error
-                $resulte =  array(
-                       'Status'     =>Common_enum::MESSAGE_RESPONSE_FALSE,
-                       'Error'      =>$error
-                );
-
-                $this->response($resulte);
-
-            }
+            );
+            $this->response($data);
         }
         
     }
