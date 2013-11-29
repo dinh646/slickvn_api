@@ -1142,7 +1142,7 @@ class restaurant_apis extends REST_Controller{
                     Restaurant_enum::ID_MENU_DISH               => $menu_dish_object,
                     Restaurant_enum::ID_COUPON                  => $restaurant['id_coupon'],
                     Restaurant_enum::NAME                       => $restaurant['name'],
-                    Restaurant_enum::AVATAR                       => $restaurant['avatar'],
+                    Restaurant_enum::AVATAR                     => $restaurant['avatar'],
                     Restaurant_enum::ADDRESS                    => $restaurant['address'],
                     Restaurant_enum::CITY                       => $restaurant['city'],
                     Restaurant_enum::DISTRICT                   => $restaurant['district'],
@@ -1463,7 +1463,6 @@ class restaurant_apis extends REST_Controller{
                 $count ++ ;
                 
                 if(($count) >= $position_start_get && ($count) <= $position_end_get){
-                    
                     //  Create JSONObject Restaurant
                     $jsonobject = array( 
 
@@ -1485,7 +1484,6 @@ class restaurant_apis extends REST_Controller{
                                                                                                                         User_log_enum::ID_RESTAURANT => $restaurant['_id']->{'$id'}, 
                                                                                                                         User_log_enum::ACTION        => Common_enum::SHARE_RESTAURANT
                                                                                                                         )),
-
 
                     );
                 
@@ -1866,14 +1864,13 @@ class restaurant_apis extends REST_Controller{
             Common_enum::CREATED_DATE => ($created_date != null) ? $created_date : $this->common_model->getCurrentDate()
         );
         
+        
         $this->restaurant_model->updateCoupon($action, $id, $array_value);
         $error = $this->restaurant_model->getError();
-        
         if($error == null){
             
             $this->common_model->editSpecialField(Restaurant_enum::COLLECTION_RESTAURANT, 
-                                                  $id_restaurant, 
-                                                  array(Restaurant_enum::ID_COUPON=>$array_value['_id']->{'id'} ));
+                                                  $id_restaurant, array(Restaurant_enum::ID_COUPON=>$array_value['_id']->{'$id'} ));
             
             $data =  array(
                    'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
