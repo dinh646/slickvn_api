@@ -1070,6 +1070,7 @@ class restaurant_apis extends REST_Controller{
                     Restaurant_enum::ID_MENU_DISH               => $menu_dish_object,
                     Restaurant_enum::ID_COUPON                  => $restaurant['id_coupon'],
                     Restaurant_enum::NAME                       => $restaurant['name'],
+                    Restaurant_enum::AVATAR                       => $restaurant['avatar'],
                     Restaurant_enum::ADDRESS                    => $restaurant['address'],
                     Restaurant_enum::CITY                       => $restaurant['city'],
                     Restaurant_enum::DISTRICT                   => $restaurant['district'],
