@@ -1075,6 +1075,7 @@ class restaurant_apis extends REST_Controller{
                     Restaurant_enum::CITY                       => $restaurant['city'],
                     Restaurant_enum::DISTRICT                   => $restaurant['district'],
                     Restaurant_enum::EMAIL                      => $restaurant['email'],
+                    Restaurant_enum::APPROVAL_SHOW_CAROSUEL     => $restaurant['approval_show_carousel'],
                     Restaurant_enum::IMAGE_INTRODUCE_LINK       => $restaurant['image_introduce_link'],
                     Restaurant_enum::IMAGE_CAROUSEL_LINK        => $restaurant['image_carousel_link'],
                     Restaurant_enum::LINK_TO                    => $restaurant['link_to'],
@@ -1092,6 +1093,7 @@ class restaurant_apis extends REST_Controller{
                     Restaurant_enum::START_DATE                 => $restaurant['start_date'],
                     Restaurant_enum::END_DATE                   => $restaurant['end_date'],
                     Restaurant_enum::DESC                       => $restaurant['desc'],        
+                    Restaurant_enum::NUMBER_VIEW                => $restaurant['number_view'],        
                     Common_enum::CREATED_DATE                   => $restaurant['created_date'] 
                 );
                 $results[] = $jsonobject;
@@ -1591,7 +1593,6 @@ class restaurant_apis extends REST_Controller{
         
         //  Get param from client
         $action                  = $this->post('action'); 
-        
         $id                      = $this->post('id'); 
         $id_coupon               = $this->post('id_coupon');
         $name                    = $this->post('name');
@@ -1606,9 +1607,7 @@ class restaurant_apis extends REST_Controller{
         $phone_number            = $this->post('phone_number');
         $working_time            = $this->post('working_time');
         $status_active           = $this->post('status_active');
-        
         $str_dish_list           = $this->post('dish_list');
-        
         $favourite_list          = $this->post('favourite_list');
         $price_person_list       = $this->post('price_person_list');
         $culinary_style_list     = $this->post('culinary_style_list');
@@ -1616,89 +1615,81 @@ class restaurant_apis extends REST_Controller{
         $payment_type_list       = $this->post('payment_type_list');
         $landscape_list          = $this->post('landscape_list');
         $other_criteria_list     = $this->post('other_criteria_list');
-        
         $introduce               = $this->post('introduce');
         $number_view             = $this->post('number_view');
         $start_date              = $this->post('start_date');
         $end_date                = $this->post('end_date');
         $created_date            = $this->post('created_date');
         $is_delete               = $this->post('is_delete');
-        
         //  Get image from client
         $str_image_post = $this->post('array_image');                   //  image.jpg,image2.png,...
         $array_image_post = explode(Common_enum::MARK, $str_image_post); //  ['image.jpg', 'image2.png' ,...]
-        
         $file_avatar='';
         $file_carousel='';
         $file_introduce = array();
-        
         $base_path_restaurant = Common_enum::ROOT.Common_enum::DIR_RESTAURANT.$folder_name.'/images/';
         
         $path_avatar    = $base_path_restaurant.'avatar/';
         $path_carousel  = $base_path_restaurant.'carousel/';
         $path_introduce = $base_path_restaurant.'introduce/';
         
-        //  Create directory $path
-        if(!file_exists($path_avatar)){
-            mkdir($path_avatar, 0, true);
-        }
-        if(!file_exists($path_carousel)){
-            mkdir($path_carousel, 0, true);
-        }
-        if(!file_exists($path_introduce)){
-            mkdir($path_introduce, 0, true);
-        }
+        (int)$is_insert = strcmp( strtolower($action), Common_enum::INSERT );
+        (int)$is_edit = strcmp( strtolower($action), Common_enum::EDIT );
+        (int)$delete = strcmp( strtolower($action), Common_enum::DELETE );
         
-        for($i=0; $i<sizeof($array_image_post); $i++) {
+        //  Create directory $path
+        $this->common_model->createDirectory($path_avatar, Common_enum::WINDOWN);
+        $this->common_model->createDirectory($path_carousel, Common_enum::WINDOWN);
+        $this->common_model->createDirectory($path_introduce, Common_enum::WINDOWN);
+        
+        
+        if($is_insert == 0){
             
-            $file_temp = Common_enum::ROOT.Common_enum::PATH_TEMP.$array_image_post[$i];
-            var_dump('temp ['.$i.'] = '.$file_temp);
-   
-            if (file_exists($file_temp)) {
-                
-                //  Move file from directory post
-                if($i == 0){
-                  $move_file_avatar = $this->common_model->moveFileToDirectory($file_temp, $path_avatar.$array_image_post[$i]);
-                  if(!$move_file_avatar){
-                      $this->common_model->setError('Move file avatar '.$move_file_avatar);
-                  }
-                      
-                  $file_avatar = $folder_name.'/images/avatar/'.$array_image_post[0];
+            for($i=0; $i<sizeof($array_image_post); $i++) {
+                $file_temp = Common_enum::ROOT.Common_enum::PATH_TEMP.$array_image_post[$i];
+//                var_dump('temp ['.$i.'] = '.$file_temp);
+                if (file_exists($file_temp)) {
+                    //  Move file from directory post
+                    if($i == 0){
+                      $move_file_avatar = $this->common_model->moveFileToDirectory($file_temp, $path_avatar.$array_image_post[$i]);
+                      if(!$move_file_avatar){
+                          $this->common_model->setError('Move file avatar '.$move_file_avatar);
+                      }
+                      $file_avatar = $folder_name.'/images/avatar/'.$array_image_post[0];
+                    }
+                    else if($i==1){
+                      $move_file_carousel = $this->common_model->moveFileToDirectory($file_temp, $path_carousel.$array_image_post[$i]);
+                      if(!$move_file_carousel){
+                          $this->common_model->setError('Move file carousel '.$move_file_carousel);
+                      }
+                      $file_carousel = $folder_name.'/images/carousel/'.$array_image_post[1];
+                    }
+                    else{
+                      $move_file_introduce = $this->common_model->moveFileToDirectory($file_temp, $path_introduce.$array_image_post[$i]);
+
+                      if(!$move_file_introduce){
+                          $this->common_model->setError('Move file introduce '.$move_file_introduce);
+                      }
+
+                      $introduce = str_replace(str_replace(Common_enum::ROOT, Common_enum::DOMAIN_NAME ,$file_temp), 'folder_image_introduce_detail_page/'.$folder_name.'/images/introduce/'.$array_image_post[$i], $introduce);
+
+                      $file_introduce []= $folder_name.'/images/introduce/'.$array_image_post[$i];
+
+                    }
+
                 }
-                else if($i==1){
-                  $move_file_carousel = $this->common_model->moveFileToDirectory($file_temp, $path_carousel.$array_image_post[$i]);
-                  if(!$move_file_carousel){
-                      $this->common_model->setError('Move file carousel '.$move_file_carousel);
-                  }
-                  $file_carousel = $folder_name.'/images/carousel/'.$array_image_post[1];
-                  
-                }
-                else{
-                  $move_file_introduce = $this->common_model->moveFileToDirectory($file_temp, $path_introduce.$array_image_post[$i]);
-          
-                  if(!$move_file_introduce){
-                      $this->common_model->setError('Move file introduce '.$move_file_introduce);
-                  }
-                  
-                  $introduce = str_replace(str_replace(Common_enum::ROOT, Common_enum::DOMAIN_NAME ,$file_temp), 'folder_image_introduce_detail_page/'.$folder_name.'/images/introduce/'.$array_image_post[$i], $introduce);
-                  
-                  $file_introduce []= $folder_name.'/images/introduce/'.$array_image_post[$i];
-                  
-                }
-                
             }
             
         }
-        
-        (int)$is_insert = strcmp( strtolower($action), Common_enum::INSERT );
-        
+        else if($is_edit == 0){
+            
+        }
         //  Update menu_dish
         $id_menu_dish = $this->update_menu_dish($action, null/*id_menu_dish*/, $str_dish_list, $created_date);
         
         $array_value = array( 
             Restaurant_enum::ID_MENU_DISH               => $id_menu_dish,
             Restaurant_enum::ID_COUPON                  => $id_coupon,
-
             Restaurant_enum::NAME                       => $name,
             Restaurant_enum::FOLDER_NAME                => $folder_name,
             Restaurant_enum::EMAIL                      => $email,
@@ -1714,25 +1705,19 @@ class restaurant_apis extends REST_Controller{
             Restaurant_enum::PHONE_NUMBER               => $phone_number,
             Restaurant_enum::WORKING_TIME               => $working_time,
             Restaurant_enum::STATUS_ACTIVE              => $status_active,
-            
             Restaurant_enum::FAVOURITE_LIST             => ($favourite_list != null ) ? explode(Common_enum::MARK, $favourite_list): array(),
             Restaurant_enum::PRICE_PERSON_LIST          => ($price_person_list != null ) ? explode(Common_enum::MARK, $price_person_list): array(),
             Restaurant_enum::CULINARY_STYLE_LIST        => ($culinary_style_list != null ) ? explode(Common_enum::MARK, $culinary_style_list): array(),
-            
             Restaurant_enum::MODE_USE_LIST              => ($mode_use_list != null ) ? explode(Common_enum::MARK, $mode_use_list): array(),
             Restaurant_enum::PAYMENT_TYPE_LIST          => ($payment_type_list != null ) ? explode(Common_enum::MARK, $payment_type_list): array(),
             Restaurant_enum::LANDSCAPE_LIST             => ($landscape_list != null ) ? explode(Common_enum::MARK, $landscape_list): array(),
             Restaurant_enum::OTHER_CRITERIA_LIST        => ($other_criteria_list != null ) ? explode(Common_enum::MARK, $other_criteria_list): array(),
-            
             Restaurant_enum::INTRODUCE                  => $introduce,
             Restaurant_enum::NUMBER_VIEW                => (int)$number_view,
-
             Restaurant_enum::START_DATE                 => $start_date,
             Restaurant_enum::END_DATE                   => $end_date,
-
             Common_enum::CREATED_DATE                   => ($created_date == null) ? $this->common_model->getCurrentDate(): $created_date,
             Restaurant_enum::IS_DELETE                  => ($is_delete == null ) ? Restaurant_enum::DEFAULT_IS_DELETE : (int)$is_delete
-                
         );
         
         $this->restaurant_model->updateRestaurant($action, $id, $array_value);
@@ -1740,7 +1725,6 @@ class restaurant_apis extends REST_Controller{
         $this->restaurant_model->updateMenuDish(Common_enum::EDIT, $id_menu_dish, array(Menu_dish_enum::ID_RESTAURANT => $array_value['_id']->{'$id'}) );
         
         $error = $this->restaurant_model->getError();
-        
         if($error == null){
             $data =  array(
                    'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
