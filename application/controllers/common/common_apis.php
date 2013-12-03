@@ -33,31 +33,31 @@ class common_apis extends REST_Controller{
     //                                                    //
     //----------------------------------------------------//
     
-    public function upload_image_post() {
-        
-        //  Get param from client
-        $type           = $this->post('type');
-        $name_retaurant = $this->post('name_retaurant');
-        
-        $this->common_model->uploadImage($type, $name_retaurant);
-        $error = $this->common_model->getError();
-        
-        if($error == null){
-            $data =  array(
-                   'Status'     =>'SUCCESSFUL',
-                   'Error'      =>$error
-            );
-            $this->response($data);
-        }
-        else{
-            $data =  array(
-                   'Status'     =>'FALSE',
-                   'Error'      =>$error
-            );
-            $this->response($data);
-        }
-        
-    }
+//    public function upload_image_post() {
+//        
+//        //  Get param from client
+//        $type           = $this->post('type');
+//        $name_retaurant = $this->post('name_retaurant');
+//        
+//        $this->common_model->uploadImage($type, $name_retaurant);
+//        $error = $this->common_model->getError();
+//        
+//        if($error == null){
+//            $data =  array(
+//                   'Status'     =>'SUCCESSFUL',
+//                   'Error'      =>$error
+//            );
+//            $this->response($data);
+//        }
+//        else{
+//            $data =  array(
+//                   'Status'     =>'FALSE',
+//                   'Error'      =>$error
+//            );
+//            $this->response($data);
+//        }
+//        
+//    }
     
     /**
      * 
@@ -82,7 +82,7 @@ class common_apis extends REST_Controller{
             $result = $this->common_model->checkExistValue($collection_name, array($field => $value) );
             
             $data =  array(
-                   'Status'     =>'SUCCESSFUL',
+                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Result'      =>$result
             );
             $this->response($data);
@@ -90,7 +90,7 @@ class common_apis extends REST_Controller{
         }
         else{
             $data =  array(
-                   'Status'     =>'FALSE',
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>'Param is null'
             );
             $this->response($data);
@@ -123,7 +123,7 @@ class common_apis extends REST_Controller{
             $result = $this->common_model->checkExistValue($collection_name, array($field => $value) );
             
             $data =  array(
-                   'Status'     =>'SUCCESSFUL',
+                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Result'      =>$result
             );
             $this->response($data);
@@ -131,7 +131,7 @@ class common_apis extends REST_Controller{
         }
         else{
             $data =  array(
-                   'Status'     =>'FALSE',
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>'Param is null'
             );
             $this->response($data);
@@ -164,18 +164,23 @@ class common_apis extends REST_Controller{
             $results = array();
             //  Count object
             $count = 0;
-            foreach ($get_collection as $value){
-                $count ++;
-                //  Create JSONObject
-                $jsonobject = array( 
-                            Info_website_enum::ID                   => $value['_id']->{'$id'},
-                            Info_website_enum::SECURITY_POLICIES    => $value['security_policies'],
-                            Info_website_enum::TERMS_OF_USE         => $value['terms_of_use'],
-                            Info_website_enum::CAREER_OPPORTUNITIES => $value['career_opportunities'],
-                            Common_enum::CREATED_DATE               => $value['created_date']
-                           );
-                $results[] = $jsonobject;
+            
+            if(is_array($get_collection)){
+                foreach ($get_collection as $value){
+                    $count ++;
+                    //  Create JSONObject
+                    $jsonobject = array( 
+                                Info_website_enum::ID                   => $value['_id']->{'$id'},
+                                Info_website_enum::SECURITY_POLICIES    => $value['security_policies'],
+                                Info_website_enum::TERMS_OF_USE         => $value['terms_of_use'],
+                                Info_website_enum::CAREER_OPPORTUNITIES => $value['career_opportunities'],
+                                Common_enum::UPDATED_DATE               => $value['updated_date'],
+                                Common_enum::CREATED_DATE               => $value['created_date']
+                               );
+                    $results[] = $jsonobject;
+                }
             }
+            
             $data =  array(
                    'Status'     =>'SUCCESSFUL',
                    'Total'      =>$count,
@@ -208,25 +213,28 @@ class common_apis extends REST_Controller{
         $security_policies          = $this->post('security_policies');
         $terms_of_use               = $this->post('terms_of_use');
         $career_opportunities       = $this->post('career_opportunities');
+        $updated_date               = $this->post('updated_date');
         $created_date               = $this->post('created_date');
+        
         $array_value = array(
                         Info_website_enum::SECURITY_POLICIES    => $security_policies,
                         Info_website_enum::TERMS_OF_USE         => $terms_of_use,
                         Info_website_enum::CAREER_OPPORTUNITIES => $career_opportunities,
+                        Common_enum::UPDATED_DATE               => ($updated_date == null ) ? $this->common_model->getCurrentDate(): $updated_date,
                         Common_enum::CREATED_DATE               => ($created_date == null ) ? $this->common_model->getCurrentDate(): $created_date
                 );
         $this->common_model->updateCollection(Info_website_enum::COLLECTION_INFO_WEBSITE, $action, $id, $array_value);
         $error = $this->common_model->getError();
         if($error == null){
             $data =  array(
-                   'Status'     =>'SUCCESSFUL',
+                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Error'      =>$error
             );
             $this->response($data);
         }
         else{
             $data =  array(
-                   'Status'     =>'FALSE',
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
             $this->response($data);
@@ -258,30 +266,33 @@ class common_apis extends REST_Controller{
             $results = array();
             //  Count object
             $count = 0;
-            foreach ($get_collection as $value){
-                $count ++;
-                //  Create JSONObject
-                $jsonobject = array( 
-                            Communications_enum::ID             => $value['_id']->{'$id'},
-                            Communications_enum::TITLE          => $value['title'],
-                            Communications_enum::CONTENT        => $value['content'],
-                            Communications_enum::FULL_NAME      => $value['full_name'],
-                            Communications_enum::EMAIL          => $value['email'],
-                            Communications_enum::PHONE          => $value['phone'],
-                            Common_enum::CREATED_DATE           => $value['created_date']
-                           );
-                $results[] = $jsonobject;
+            if(is_array($get_collection)){
+                foreach ($get_collection as $value){
+                    $count ++;
+                    //  Create JSONObject
+                    $jsonobject = array( 
+                                Communications_enum::ID             => $value['_id']->{'$id'},
+                                Communications_enum::TITLE          => $value['title'],
+                                Communications_enum::CONTENT        => $value['content'],
+                                Communications_enum::FULL_NAME      => $value['full_name'],
+                                Communications_enum::EMAIL          => $value['email'],
+                                Communications_enum::PHONE          => $value['phone'],
+                                Common_enum::UPDATED_DATE           => $value['updated_date'],
+                                Common_enum::CREATED_DATE           => $value['created_date']
+                               );
+                    $results[] = $jsonobject;
+                }
             }
             $data =  array(
-                   'Status'     =>'SUCCESSFUL',
-                   'Total'      =>$count,
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
+                   'Total'      =>  sizeof($results),
                    'Results'    =>$results
             );
             $this->response($data);
             
         }else{
             $data =  array(
-                   'Status'     =>'FALSE',
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
             $this->response($data);
@@ -306,6 +317,7 @@ class common_apis extends REST_Controller{
         $full_name                  = $this->post('full_name');
         $email                      = $this->post('email');
         $phone                      = $this->post('phone');
+        $updated_date               = $this->post('updated_date');
         $created_date               = $this->post('created_date');
         $array_value = array(
                         Communications_enum::TITLE          => $title,
@@ -313,20 +325,21 @@ class common_apis extends REST_Controller{
                         Communications_enum::FULL_NAME      => $full_name,
                         Communications_enum::EMAIL          => $email,
                         Communications_enum::PHONE          => $phone,
+                        Common_enum::UPDATED_DATE           => ($updated_date == null ) ? $this->common_model->getCurrentDate(): $updated_date,
                         Common_enum::CREATED_DATE           => ($created_date == null ) ? $this->common_model->getCurrentDate(): $created_date
                 );
         $this->common_model->updateCollection(Info_website_enum::COLLECTION_INFO_WEBSITE, $action, $id, $array_value);
         $error = $this->common_model->getError();
         if($error == null){
             $data =  array(
-                   'Status'     =>'SUCCESSFUL',
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Error'      =>$error
             );
             $this->response($data);
         }
         else{
             $data =  array(
-                   'Status'     =>'FALSE',
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
             $this->response($data);
@@ -359,27 +372,29 @@ class common_apis extends REST_Controller{
             $results = array();
             //  Count object
             $count = 0;
-            foreach ($get_collection as $value){
-                $count ++;
-                //  Create JSONObject
-                $jsonobject = array( 
-                    
-                    //  TODO
-                    
-                    );
-                    
-                $results[] = $jsonobject;
+            if(is_array($get_collection)){
+                foreach ($get_collection as $value){
+                    $count ++;
+                    //  Create JSONObject
+                    $jsonobject = array( 
+
+                        //  TODO
+
+                        );
+
+                    $results[] = $jsonobject;
+                }
             }
             $data =  array(
-                   'Status'     =>'SUCCESSFUL',
-                   'Total'      =>$count,
+                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
+                   'Total'      =>  sizeof($results),
                    'Results'    =>$results
             );
             $this->response($data);
             
         }else{
             $data =  array(
-                   'Status'     =>'FALSE',
+                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
             $this->response($data);
@@ -401,7 +416,7 @@ class common_apis extends REST_Controller{
         $id                         = $this->post('id');
         
         //  param
-        
+        $updated_date               = $this->post('updated_date');
         $created_date               = $this->post('created_date');
         $array_value = array(
                         //  TODO
@@ -410,14 +425,14 @@ class common_apis extends REST_Controller{
         $error = $this->common_model->getError();
         if($error == null){
             $data =  array(
-                   'Status'     =>'SUCCESSFUL',
+                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Error'      =>$error
             );
             $this->response($data);
         }
         else{
             $data =  array(
-                   'Status'     =>'FALSE',
+                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
             $this->response($data);
@@ -450,30 +465,33 @@ class common_apis extends REST_Controller{
             $results = array();
             //  Count object
             $count = 0;
-            foreach ($get_collection as $value){
-                $count ++;
-                //  Create JSONObject
-                $jsonobject = array( 
-                    
-                    Information_inquiry_enum::ID => $value['_id']->{'$id'},
-                    Information_inquiry_enum::QUESTION => $value['question'],
-                    Information_inquiry_enum::ANSWER => $value['answer'],
-                    Common_enum::CREATED_DATE => $value['created_date']
-                    
-                    );
-                    
-                $results[] = $jsonobject;
+            if(is_array($get_collection)){
+                foreach ($get_collection as $value){
+                    $count ++;
+                    //  Create JSONObject
+                    $jsonobject = array( 
+
+                        Information_inquiry_enum::ID => $value['_id']->{'$id'},
+                        Information_inquiry_enum::QUESTION => $value['question'],
+                        Information_inquiry_enum::ANSWER => $value['answer'],
+                        Common_enum::UPDATED_DATE => $value['updated_date'],
+                        Common_enum::CREATED_DATE => $value['created_date']
+
+                        );
+
+                    $results[] = $jsonobject;
+                }
             }
             $data =  array(
-                   'Status'     =>'SUCCESSFUL',
-                   'Total'      =>$count,
+                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
+                   'Total'      =>  sizeof($results),
                    'Results'    =>$results
             );
             $this->response($data);
             
         }else{
             $data =  array(
-                   'Status'     =>'FALSE',
+                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
             $this->response($data);
@@ -495,24 +513,26 @@ class common_apis extends REST_Controller{
         $id                         = $this->post('id');
         $question                   = $this->post('question');
         $answer                     = $this->post('answer');
+        $updated_date               = $this->post('updated_date');
         $created_date               = $this->post('created_date');
         $array_value = array(
-                        Information_inquiry_enum::QUESTION => $question,
-                        Information_inquiry_enum::ANSWER => $answer,
-                        Common_enum::CREATED_DATE => ($created_date == null ) ? $this->common_model->getCurrentDate(): $created_date
+                        Information_inquiry_enum::QUESTION  => $question,
+                        Information_inquiry_enum::ANSWER    => $answer,
+                        Common_enum::UPDATED_DATE           => ($updated_date == null ) ? $this->common_model->getCurrentDate(): $updated_date,
+                        Common_enum::CREATED_DATE           => ($created_date == null ) ? $this->common_model->getCurrentDate(): $created_date
                 );
         $this->common_model->updateCollection(Information_inquiry_enum::COLLECTION_INFORMATION_INQUIRY, $action, $id, $array_value);
         $error = $this->common_model->getError();
         if($error == null){
             $data =  array(
-                   'Status'     =>'SUCCESSFUL',
+                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Error'      =>$error
             );
             $this->response($data);
         }
         else{
             $data =  array(
-                   'Status'     =>'FALSE',
+                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
             $this->response($data);
@@ -545,27 +565,29 @@ class common_apis extends REST_Controller{
             $results = array();
             //  Count object
             $count = 0;
-            foreach ($get_collection as $value){
-                $count ++;
-                //  Create JSONObject
-                $jsonobject = array( 
-                    
-                    //  TODO
-                    
-                    );
-                    
-                $results[] = $jsonobject;
+            if(is_array($get_collection)){
+                foreach ($get_collection as $value){
+                    $count ++;
+                    //  Create JSONObject
+                    $jsonobject = array( 
+
+                        //  TODO
+
+                        );
+
+                    $results[] = $jsonobject;
+                }
             }
             $data =  array(
-                   'Status'     =>'SUCCESSFUL',
-                   'Total'      =>$count,
+                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
+                   'Total'      =>  sizeof($results),
                    'Results'    =>$results
             );
             $this->response($data);
             
         }else{
             $data =  array(
-                   'Status'     =>'FALSE',
+                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
             $this->response($data);
@@ -587,7 +609,7 @@ class common_apis extends REST_Controller{
         $id                         = $this->post('id');
         
         //  param
-        
+        $updated_date               = $this->post('updated_date');
         $created_date               = $this->post('created_date');
         $array_value = array(
                         //  TODO
@@ -596,14 +618,14 @@ class common_apis extends REST_Controller{
         $error = $this->common_model->getError();
         if($error == null){
             $data =  array(
-                   'Status'     =>'SUCCESSFUL',
+                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Error'      =>$error
             );
             $this->response($data);
         }
         else{
             $data =  array(
-                   'Status'     =>'FALSE',
+                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
             $this->response($data);
@@ -636,19 +658,21 @@ class common_apis extends REST_Controller{
             $results = array();
             //  Count object
             $count = 0;
-            foreach ($get_collection as $value){
-                $count ++;
-                //  Create JSONObject
-                $jsonobject = array( 
-                    
-                    //  TODO
-                    
-                    );
-                    
-                $results[] = $jsonobject;
+            if(is_array($get_collection)){
+                foreach ($get_collection as $value){
+                    $count ++;
+                    //  Create JSONObject
+                    $jsonobject = array( 
+
+                        //  TODO
+
+                        );
+
+                    $results[] = $jsonobject;
+                }
             }
             $data =  array(
-                   'Status'     =>'SUCCESSFUL',
+                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Total'      =>$count,
                    'Results'    =>$results
             );
@@ -656,7 +680,7 @@ class common_apis extends REST_Controller{
             
         }else{
             $data =  array(
-                   'Status'     =>'FALSE',
+                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
             $this->response($data);
@@ -679,6 +703,7 @@ class common_apis extends REST_Controller{
         
         //  param
         
+        $updated_date               = $this->post('updated_date');
         $created_date               = $this->post('created_date');
         $array_value = array(
                         //  TODO
@@ -687,14 +712,14 @@ class common_apis extends REST_Controller{
         $error = $this->common_model->getError();
         if($error == null){
             $data =  array(
-                   'Status'     =>'SUCCESSFUL',
+                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Error'      =>$error
             );
             $this->response($data);
         }
         else{
             $data =  array(
-                   'Status'     =>'FALSE',
+                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
             $this->response($data);
@@ -727,27 +752,29 @@ class common_apis extends REST_Controller{
             $results = array();
             //  Count object
             $count = 0;
-            foreach ($get_collection as $value){
-                $count ++;
-                //  Create JSONObject
-                $jsonobject = array( 
-                    
-                    //  TODO
-                    
-                    );
-                    
-                $results[] = $jsonobject;
+            if(is_array($get_collection)){
+                foreach ($get_collection as $value){
+                    $count ++;
+                    //  Create JSONObject
+                    $jsonobject = array( 
+
+                        //  TODO
+
+                        );
+
+                    $results[] = $jsonobject;
+                }
             }
             $data =  array(
-                   'Status'     =>'SUCCESSFUL',
-                   'Total'      =>$count,
+                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
+                   'Total'      =>  sizeof($results),
                    'Results'    =>$results
             );
             $this->response($data);
             
         }else{
             $data =  array(
-                   'Status'     =>'FALSE',
+                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
             $this->response($data);
@@ -770,6 +797,7 @@ class common_apis extends REST_Controller{
         
         //  param
         
+        $updated_date                = $this->post('updated_date');
         $created_date               = $this->post('created_date');
         $array_value = array(
                         //  TODO
@@ -778,14 +806,14 @@ class common_apis extends REST_Controller{
         $error = $this->common_model->getError();
         if($error == null){
             $data =  array(
-                   'Status'     =>'SUCCESSFUL',
+                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Error'      =>$error
             );
             $this->response($data);
         }
         else{
             $data =  array(
-                   'Status'     =>'FALSE',
+                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
             $this->response($data);
@@ -818,27 +846,29 @@ class common_apis extends REST_Controller{
             $results = array();
             //  Count object
             $count = 0;
-            foreach ($get_collection as $value){
-                $count ++;
-                //  Create JSONObject
-                $jsonobject = array( 
-                    
-                    //  TODO
-                    
-                    );
-                    
-                $results[] = $jsonobject;
+            if(is_array($get_collection)){
+                foreach ($get_collection as $value){
+                    $count ++;
+                    //  Create JSONObject
+                    $jsonobject = array( 
+
+                        //  TODO
+
+                        );
+
+                    $results[] = $jsonobject;
+                }
             }
             $data =  array(
-                   'Status'     =>'SUCCESSFUL',
-                   'Total'      =>$count,
+                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
+                   'Total'      =>  sizeof($results),
                    'Results'    =>$results
             );
             $this->response($data);
             
         }else{
             $data =  array(
-                   'Status'     =>'FALSE',
+                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
             $this->response($data);
@@ -861,6 +891,7 @@ class common_apis extends REST_Controller{
         
         //  param
         
+        $updated_date               = $this->post('updated_date');
         $created_date               = $this->post('created_date');
         $array_value = array(
                         //  TODO
@@ -869,14 +900,14 @@ class common_apis extends REST_Controller{
         $error = $this->common_model->getError();
         if($error == null){
             $data =  array(
-                   'Status'     =>'SUCCESSFUL',
+                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Error'      =>$error
             );
             $this->response($data);
         }
         else{
             $data =  array(
-                   'Status'     =>'FALSE',
+                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
             $this->response($data);
@@ -909,27 +940,29 @@ class common_apis extends REST_Controller{
             $results = array();
             //  Count object
             $count = 0;
-            foreach ($get_collection as $value){
-                $count ++;
-                //  Create JSONObject
-                $jsonobject = array( 
-                    
-                    //  TODO
-                    
-                    );
-                    
-                $results[] = $jsonobject;
+            if(is_array($get_collection)){
+                foreach ($get_collection as $value){
+                    $count ++;
+                    //  Create JSONObject
+                    $jsonobject = array( 
+
+                        //  TODO
+
+                        );
+
+                    $results[] = $jsonobject;
+                }
             }
             $data =  array(
-                   'Status'     =>'SUCCESSFUL',
-                   'Total'      =>$count,
+                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
+                   'Total'      =>  sizeof($results),
                    'Results'    =>$results
             );
             $this->response($data);
             
         }else{
             $data =  array(
-                   'Status'     =>'FALSE',
+                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
             $this->response($data);
@@ -952,6 +985,7 @@ class common_apis extends REST_Controller{
         
         //  param
         
+        $updated_date               = $this->post('updated_date');
         $created_date               = $this->post('created_date');
         $array_value = array(
                         //  TODO
@@ -960,14 +994,14 @@ class common_apis extends REST_Controller{
         $error = $this->common_model->getError();
         if($error == null){
             $data =  array(
-                   'Status'     =>'SUCCESSFUL',
+                   'Status'     => Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Error'      =>$error
             );
             $this->response($data);
         }
         else{
             $data =  array(
-                   'Status'     =>'FALSE',
+                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
             $this->response($data);
@@ -1005,28 +1039,31 @@ class common_apis extends REST_Controller{
             $results = array();
             //  Count object
             $count = 0;
-            foreach ($get_collection as $value){
-                $count ++;
-                //  Create JSONObject
-                $jsonobject = array( 
+            if(is_array($get_collection)){
+                foreach ($get_collection as $value){
+                    $count ++;
+                    //  Create JSONObject
+                    $jsonobject = array( 
 
-                            Common_enum::ID              => $value['_id']->{'$id'},
-                            Common_enum::NAME            => $value['name'],
-                            Common_enum::CREATED_DATE    => $value['created_date']
+                                Common_enum::ID              => $value['_id']->{'$id'},
+                                Common_enum::NAME            => $value['name'],
+                                Common_enum::UPDATED_DATE    => $value['updated_date'],
+                                Common_enum::CREATED_DATE    => $value['created_date']
 
-                           );
-                $results[] = $jsonobject;
+                               );
+                    $results[] = $jsonobject;
+                }
             }
             $data =  array(
-                   'Status'     =>'SUCCESSFUL',
-                   'Total'      =>$count,
+                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
+                   'Total'      =>  sizeof($results),
                    'Results'    =>$results
             );
             $this->response($data);
             
         }else{
             $data =  array(
-                   'Status'     =>'FALSE',
+                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
             $this->response($data);
@@ -1061,28 +1098,31 @@ class common_apis extends REST_Controller{
             $results = array();
             //  Count object
             $count = 0;
-            foreach ($get_collection as $value){
-                $count ++;
-                //  Create JSONObject
-                $jsonobject = array( 
+            if(is_array($get_collection)){
+                foreach ($get_collection as $value){
+                    $count ++;
+                    //  Create JSONObject
+                    $jsonobject = array( 
 
-                            Common_enum::ID              => $value['_id']->{'$id'},
-                            Common_enum::NAME            => $value['name'],
-                            Common_enum::CREATED_DATE    => $value['created_date']
+                                Common_enum::ID              => $value['_id']->{'$id'},
+                                Common_enum::NAME            => $value['name'],
+                                Common_enum::UPDATED_DATE    => $value['updated_date'],
+                                Common_enum::CREATED_DATE    => $value['created_date']
 
-                           );
-                $results[] = $jsonobject;
+                               );
+                    $results[] = $jsonobject;
+                }
             }
             $data =  array(
-                   'Status'     =>'SUCCESSFUL',
-                   'Total'      =>$count,
+                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
+                   'Total'      =>  sizeof($results),
                    'Results'    =>$results
             );
             $this->response($data);
             
         }else{
             $data =  array(
-                   'Status'     =>'FALSE',
+                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
             $this->response($data);
@@ -1110,28 +1150,29 @@ class common_apis extends REST_Controller{
         $collection     = $this->post('collection_name');
         $id             = $this->post('id');
         $name           = $this->post('name');
+        $updated_date   = $this->post('updated_date');
         $created_date   = $this->post('created_date');
+        
+        if($name == null){
+            //  Response
+            $resulte =  array(
+               'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
+               'Error'      =>'Name is null'
+            );
+
+            $this->response($resulte);
+            return;
+        }
         
         (int)$is_insert = strcmp( strtolower($action), Common_enum::INSERT );
         (int)$is_edit = strcmp( strtolower($action), Common_enum::EDIT );
         (int)$is_delete = strcmp( strtolower($action), Common_enum::DELETE );
         
-        if($is_insert == 0){
-            if($name == null){
-                $this->common_model->setError("Name is null");
-            }
-        }
-        if($is_edit == 0){
-            $get_name_by_id = $this->common_model->getValueFeildNameBaseCollectionById($collection, array($id));
-            
-            $get_name_by_id = substr($get_name_by_id, 2);
-            
-            $name = ($name == null) ? $get_name_by_id : $name;
-        }
         //  Array value
         $array_value = ($is_delete != 0) ? array(
             
             Common_enum::NAME            => $name,
+            Common_enum::UPDATED_DATE    => ($updated_date==null) ? $this->common_model->getCurrentDate() : $updated_date,
             Common_enum::CREATED_DATE    => ($created_date==null) ? $this->common_model->getCurrentDate() : $created_date
             
         ) : array();
@@ -1142,12 +1183,11 @@ class common_apis extends REST_Controller{
         $this->common_model->updateBaseCollection($action, $collection, $id, $array_value);
         
         $error = $this->common_model->getError();
-        $nam = '';
         if( $error == null ){
 
             //  Response
             $resulte =  array(
-               'Status'     =>'SUCCESSFUL',
+               'Status'     =>  Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                'Error'      =>$error
             );
 
@@ -1156,7 +1196,7 @@ class common_apis extends REST_Controller{
         }else{
             //  Response
             $resulte =  array(
-               'Status'     =>'FALSE',
+               'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                'Error'      =>$error
             );
 
