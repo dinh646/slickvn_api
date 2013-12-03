@@ -371,20 +371,8 @@ class restaurant_apis extends REST_Controller{
         $page = $this->get("page");
 
         //  Key search
-//        $key = str_replace("aaaa"," ",$this->get('key'));
         $key = Encode_utf8::toUTF8($this->get('key'));
         
-//        $key = iconv('UTF-8', 'UTF-8//IGNORE', $key);
-//        $this->response(array(
-//            
-//                    'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
-//                   'Total'      =>  1,
-//                   'Results'    =>$key
-//            
-//                
-//                )
-//                
-//                );return;
         //  Query
         $where = array(Restaurant_enum::NAME => new MongoRegex('/'.$key.'/i'));
         $list_restaurant = $this->restaurant_model->searchRestaurant($where);
@@ -1063,12 +1051,10 @@ class restaurant_apis extends REST_Controller{
                                                                                                                             User_log_enum::ID_RESTAURANT => $restaurant['_id']->{'$id'}, 
                                                                                                                             User_log_enum::ACTION        => Common_enum::SHARE_RESTAURANT
                                                                                                                             )),
-
                             Restaurant_enum::RATE_SERVICE               => $this->restaurant_model->getRateService(),
                             Restaurant_enum::RATE_LANDSCAPE             => $this->restaurant_model->getRateLandscape(),
                             Restaurant_enum::RATE_TASTE                 => $this->restaurant_model->getRateTaste(),
                             Restaurant_enum::RATE_PRICE                 => $this->restaurant_model->getRatePrice(),
-
                             Restaurant_enum::ADDRESS                    => $restaurant['address'],
                             Restaurant_enum::CITY                       => $restaurant['city'],
                             Restaurant_enum::DISTRICT                   => $restaurant['district'],
@@ -1090,14 +1076,29 @@ class restaurant_apis extends REST_Controller{
                             Restaurant_enum::START_DATE                 => $restaurant['start_date'],
                             Restaurant_enum::END_DATE                   => $restaurant['end_date'],
                             Restaurant_enum::DESC                       => $restaurant['desc'],        
-                            Common_enum::UPDATED_DATE         => $restaurant['updated_date'],
-                            Common_enum::CREATED_DATE         => $restaurant['created_date']
+                            Common_enum::UPDATED_DATE                   => $restaurant['updated_date'],
+                            Common_enum::CREATED_DATE                   => $restaurant['created_date']
                         );
 
                         $results[] = $jsonobject;
                     }
                 }
             }
+            
+//            $array_value = array(
+//                        User_log_enum::ID_USER              => $id_user,
+//                        User_log_enum::ID_RESTAURANT        => $id_restaurant,        
+//                        User_log_enum::ID_ASSESSMENT        => null,
+//                        User_log_enum::ID_COMMENT           => null,
+//                        User_log_enum::ID_POST              => null,
+//                        User_log_enum::ACTION               => Common_enum::LIKE_RESTAURANT,
+//                        User_log_enum::DESC                 => 'Like for a restaurant',
+//                        Common_enum::UPDATED_DATE    => ($updated_date==null) ? $this->common_model->getCurrentDate() : $updated_date,
+//                        Common_enum::CREATED_DATE    => ($created_date == null ) ? $this->common_model->getCurrentDate(): $created_date
+//                );
+//        
+//            $this->user_model->updateUserLog(Common_enum::INSERT, Common_enum::LIKE, $array_value);
+            
             //  Response
             $data =  array(
                    'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
@@ -1932,6 +1933,7 @@ class restaurant_apis extends REST_Controller{
         
         //  Key search
         $key = $this->get('key');
+        $key = Encode_utf8::toUTF8($this->get('key'));
         
         //  End
         $position_end_get   = ($page == 1)? $limit : ($limit * $page);
@@ -2372,6 +2374,78 @@ class restaurant_apis extends REST_Controller{
         }
         
     }
+    
+    /**
+     * 
+     *  API get list Restaurant liked by user
+     * 
+     *  Menthod: GET
+     *  @param limit
+     *  @param page
+     * 
+     *  Response: JSONObject
+     * 
+     */
+    public function get_list_restaurant_liked_by_user_get() {
+        
+        //  Get limit from client
+        $limit = $this->get("limit");
+        //  Get page from client
+        $page = $this->get("page");
+        
+        $id_user = $this->get('id_user');
+        
+        //  End
+        $position_end_get   = ($page == 1)? $limit : ($limit * $page);
+        
+        //  Start
+        $position_start_get = ($page == 1)? $page : ( $position_end_get - ($limit - 1) );
+        
+        // Get list id_restaurant liked by user
+        $array_id_restaurant = $this->user_model->getRestaurantsLikedByUser($id_user);
+        
+        //  Array object subscribed_email
+        $results = array();
+        
+        //  Count object subscribed_email
+        $count = 0;
+        
+        
+        
+//        foreach ($list_subscribed_email as $subscribed_email){
+//            
+//            $count++;
+//
+//            if(($count) >= $position_start_get && ($count) <= $position_end_get){
+//
+//
+//                //  Create JSONObject Post
+//                $jsonobject = array( 
+//                    
+//                           Subscribed_email_enum::ID        => $subscribed_email['_id']->{'$id'},
+//                           Subscribed_email_enum::EMAIL     => $subscribed_email['email'],
+//                           Common_enum::UPDATED_DATE        => $subscribed_email['updated_date'],
+//                           Common_enum::CREATED_DATE        => $subscribed_email['created_date']
+//                           
+//                           );
+//
+//                $results[] = $jsonobject;
+//
+//            }
+//            
+//        }
+        
+        //  Response
+//        $data = array();
+        $data =  array(
+               'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
+               'Total'      =>sizeof($results),
+               'Results'    =>$results
+        );
+
+        $this->response($data);
+    }
+    
 }
 
 ?>
