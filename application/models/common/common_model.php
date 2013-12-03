@@ -542,7 +542,7 @@ class Common_model extends CI_Model{
                 //  Action edit
                 else if( strcmp( strtolower($action), Common_enum::EDIT ) == 0 ){
 
-                    if($id == null){$this->setError('Is is null'); return;}
+                    if($id == null){$this->setError('Id is null'); return;}
                     
                     $where = array(
                                     Common_enum::_ID => new MongoId($id)
@@ -775,7 +775,7 @@ class Common_model extends CI_Model{
                 //  Action insert
                 if( strcmp( strtolower($action), Common_enum::INSERT  ) == 0 ) {
 
-//                    if($name == null){ $this->setError('Name is null');}
+                    if($array_value['name'] == null){ $this->setError('Name is null');return;}
 
 //                    $new = array(
 //                                    Common_enum::NAME => $name
