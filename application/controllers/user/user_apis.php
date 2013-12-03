@@ -59,28 +59,31 @@ class user_apis extends REST_Controller{
             $results = array();
             //  Count object
             $count = 0;
-            foreach ($get_collection as $value){
-                
-                if($value['is_delete'] == 0){
-                    $count ++;
-                    if(($count) >= $position_start_get && ($count) <= $position_end_get){
-                        //  Create JSONObject
-                        $jsonobject = array( 
+            if(is_array($get_collection)){
+                foreach ($get_collection as $value){
 
-                                    User_enum::ID                => $value['_id']->{'$id'},
-                                    User_enum::FULL_NAME         => $value['full_name'],
-                                    User_enum::EMAIL             => $value['email'],        
-                                    User_enum::PHONE_NUMBER      => $value['phone_number'],
-                                    User_enum::ADDRESS           => $value['address'],
-                                    User_enum::LOCATION          => $value['location'],
-                                    User_enum::AVATAR            => $value['avatar'],
-                                    User_enum::IS_DELETE         => $value['is_delete'],
-                                    User_enum::DESC              => $value['desc'],
-                                    User_enum::ROLE_LIST         => $value['role_list'],
-                                    Common_enum::CREATED_DATE    => $value['created_date']
+                    if($value['is_delete'] == 0){
+                        $count ++;
+                        if(($count) >= $position_start_get && ($count) <= $position_end_get){
+                            //  Create JSONObject
+                            $jsonobject = array( 
 
-                                   );
-                        $results[] = $jsonobject;
+                                        User_enum::ID                => $value['_id']->{'$id'},
+                                        User_enum::FULL_NAME         => $value['full_name'],
+                                        User_enum::EMAIL             => $value['email'],        
+                                        User_enum::PHONE_NUMBER      => $value['phone_number'],
+                                        User_enum::ADDRESS           => $value['address'],
+                                        User_enum::LOCATION          => $value['location'],
+                                        User_enum::AVATAR            => $value['avatar'],
+                                        User_enum::IS_DELETE         => $value['is_delete'],
+                                        User_enum::DESC              => $value['desc'],
+                                        User_enum::ROLE_LIST         => $value['role_list'],
+                                        Common_enum::UPDATED_DATE    => $value['updated_date'],
+                                        Common_enum::CREATED_DATE    => $value['created_date']
+
+                                       );
+                            $results[] = $jsonobject;
+                        }
                     }
                 }
             }
@@ -93,7 +96,7 @@ class user_apis extends REST_Controller{
             
         }else{
             $data =  array(
-                   'Status'     =>'FALSE',
+                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
             $this->response($data);
@@ -127,39 +130,42 @@ class user_apis extends REST_Controller{
             $results = array();
             //  Count object
             $count = 0;
-            foreach ($get_collection as $value){
-                
-                if($value['is_delete'] == 0){
-                    $count ++;
-                    //  Create JSONObject
-                    $jsonobject = array( 
+            if(is_array($get_collection)){
+                foreach ($get_collection as $value){
 
-                                User_enum::ID                => $value['_id']->{'$id'},
-                                User_enum::FULL_NAME         => $value['full_name'],
-                                User_enum::EMAIL             => $value['email'],        
-                                User_enum::PHONE_NUMBER      => $value['phone_number'],
-                                User_enum::ADDRESS           => $value['address'],
-                                User_enum::LOCATION          => $value['location'],
-                                User_enum::AVATAR            => $value['avatar'],
-                                User_enum::ROLE_LIST         => $value['role_list'],
-                                User_enum::DESC              => $value['desc'],
-                                User_enum::IS_DELETE         => $value['is_delete'],
-                                Common_enum::CREATED_DATE    => $value['created_date']
+                    if($value['is_delete'] == 0){
+                        $count ++;
+                        //  Create JSONObject
+                        $jsonobject = array( 
 
-                               );
-                    $results[] = $jsonobject;
+                                    User_enum::ID                => $value['_id']->{'$id'},
+                                    User_enum::FULL_NAME         => $value['full_name'],
+                                    User_enum::EMAIL             => $value['email'],        
+                                    User_enum::PHONE_NUMBER      => $value['phone_number'],
+                                    User_enum::ADDRESS           => $value['address'],
+                                    User_enum::LOCATION          => $value['location'],
+                                    User_enum::AVATAR            => $value['avatar'],
+                                    User_enum::ROLE_LIST         => $value['role_list'],
+                                    User_enum::DESC              => $value['desc'],
+                                    User_enum::IS_DELETE         => $value['is_delete'],
+                                    Common_enum::UPDATED_DATE    => $value['updated_date'],
+                                    Common_enum::CREATED_DATE    => $value['created_date']
+
+                                   );
+                        $results[] = $jsonobject;
+                    }
                 }
             }
             $data =  array(
                    'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
-                   'Total'      =>$count,
+                   'Total'      =>  sizeof($results),
                    'Results'    =>$results
             );
             $this->response($data);
             
         }else{
             $data =  array(
-                   'Status'     =>'FALSE',
+                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
             $this->response($data);
@@ -209,14 +215,14 @@ class user_apis extends REST_Controller{
                     }
                 }
             }
-            //  Response
-            $data =  array(
-                   'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
-                   'Total'      =>sizeof($results),
-                   'Results'    =>$results
-            );
-            $this->response($data);
         }
+        //  Response
+        $data =  array(
+               'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
+               'Total'      =>sizeof($results),
+               'Results'    =>$results
+        );
+        $this->response($data);
     }
     
     /**
@@ -254,6 +260,7 @@ class user_apis extends REST_Controller{
         $desc           = $this->post('desc');
         $delete         = $this->post('delete');
         $created_date   = $this->post('created_date');
+        $updated_date   = $this->post('updated_date');
         
         $role_list      = $this->post('role_list');// 527b512b3fce119ed62d8599, 527b512b3fce119ed62d8599
         
@@ -312,6 +319,7 @@ class user_apis extends REST_Controller{
                         User_enum::DESC              => $desc,
                         User_enum::IS_DELETE         => ($delete == null) ? 0 : $delete,
                         User_enum::ROLE_LIST         => ( ($role_list == null) ) ? array(User_enum::DEFAULT_ROLE_LIST) : explode(Common_enum::MARK, $role_list),
+                        Common_enum::UPDATED_DATE    => ($updated_date==null) ? $this->common_model->getCurrentDate() : $updated_date,
                         Common_enum::CREATED_DATE    => ($created_date == null ) ? $this->common_model->getCurrentDate(): $created_date
                 ) : array();
         if( $array_value['password'] == null ){
@@ -330,7 +338,7 @@ class user_apis extends REST_Controller{
         }
         else{
             $data =  array(
-                   'Status'     =>'FALSE',
+                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
             $this->response($data);
@@ -351,6 +359,8 @@ class user_apis extends REST_Controller{
         $id_post        = $this->post('id_post');
         $action         = $this->post('action');
         $desc           = $this->post('desc');
+        $created_date   = $this->post('created_date');
+        $updated_date   = $this->post('updated_date');
         
         $array_value = array(
             
@@ -361,7 +371,8 @@ class user_apis extends REST_Controller{
                         User_log_enum::ID_POST              => $id_post,
                         User_log_enum::ACTION               => $action,
                         User_log_enum::DESC                 => $desc,
-                        Common_enum::CREATED_DATE           => $this->common_model->getCurrentDate()
+                        Common_enum::UPDATED_DATE    => ($updated_date==null) ? $this->common_model->getCurrentDate() : $updated_date,
+                        Common_enum::CREATED_DATE    => ($created_date == null ) ? $this->common_model->getCurrentDate(): $created_date
                 
                 );
         
@@ -377,7 +388,7 @@ class user_apis extends REST_Controller{
         }
         else{
             $data =  array(
-                   'Status'     =>'FALSE',
+                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
             $this->response($data);
@@ -401,6 +412,8 @@ class user_apis extends REST_Controller{
         //  Get param from client
         $id_user        = $this->post('id_user');
         $id_restaurant  = $this->post('id_restaurant');
+        $created_date   = $this->post('created_date');
+        $updated_date   = $this->post('updated_date');
         
         if($id_user == null || $id_restaurant == null){return;}
         
@@ -412,7 +425,8 @@ class user_apis extends REST_Controller{
                         User_log_enum::ID_POST              => null,
                         User_log_enum::ACTION               => Common_enum::LIKE_RESTAURANT,
                         User_log_enum::DESC                 => 'Like for a restaurant',
-                        Common_enum::CREATED_DATE           => $this->common_model->getCurrentDate()
+                        Common_enum::UPDATED_DATE    => ($updated_date==null) ? $this->common_model->getCurrentDate() : $updated_date,
+                        Common_enum::CREATED_DATE    => ($created_date == null ) ? $this->common_model->getCurrentDate(): $created_date
                 );
         
         $this->user_model->updateUserLog(Common_enum::INSERT, Common_enum::LIKE, $array_value);
@@ -426,7 +440,7 @@ class user_apis extends REST_Controller{
         }
         else{
             $data =  array(
-                   'Status'     =>'FALSE',
+                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
             $this->response($data);
@@ -449,6 +463,8 @@ class user_apis extends REST_Controller{
         //  Get param from client
         $id_user        = $this->post('id_user');
         $id_restaurant  = $this->post('id_restaurant');
+        $created_date   = $this->post('created_date');
+        $updated_date   = $this->post('updated_date');
         
         if($id_user == null || $id_restaurant == null){return;}
         
@@ -459,8 +475,9 @@ class user_apis extends REST_Controller{
                         User_log_enum::ID_COMMENT           => null,
                         User_log_enum::ID_POST              => null,
                         User_log_enum::ACTION               => Common_enum::SHARE_RESTAURANT,
-                        User_log_enum::DESC                 => 'Like for a restaurant',
-                        Common_enum::CREATED_DATE           => $this->common_model->getCurrentDate()
+                        User_log_enum::DESC                 => 'Share for a restaurant',
+                        Common_enum::UPDATED_DATE           => ($updated_date==null) ? $this->common_model->getCurrentDate() : $updated_date,
+                        Common_enum::CREATED_DATE           => ($created_date==null) ? $this->common_model->getCurrentDate() : $created_date
                 );
         
         $this->user_model->updateUserLog(Common_enum::INSERT, Common_enum::SHARE, $array_value);
@@ -474,7 +491,7 @@ class user_apis extends REST_Controller{
         }
         else{
             $data =  array(
-                   'Status'     =>'FALSE',
+                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
             $this->response($data);
@@ -497,25 +514,30 @@ class user_apis extends REST_Controller{
         $email      = $this->post('email');
         $password   = $this->post('password');
         $user = $this->user_model->login($email, $password);
-        $results='';
-        foreach ($user as $value) {
-            
-            $results[] = array( 
+        $results= array();
+        
+        if(is_array($user)){
+            foreach ($user as $value) {
 
-                        Common_enum::ID              => $value['_id']->{'$id'},
-                        User_enum::FULL_NAME         => $value['full_name'],
-                        User_enum::EMAIL             => $value['email'],        
-                        User_enum::PHONE_NUMBER      => $value['phone_number'],
-                        User_enum::ADDRESS           => $value['address'],
-                        User_enum::LOCATION          => $value['location'],
-                        User_enum::AVATAR            => $value['avatar'],
-                        User_enum::ROLE_LIST         => $value['role_list'],
-            );
+                $results[] = array( 
+
+                            Common_enum::ID              => $value['_id']->{'$id'},
+                            User_enum::FULL_NAME         => $value['full_name'],
+                            User_enum::EMAIL             => $value['email'],        
+                            User_enum::PHONE_NUMBER      => $value['phone_number'],
+                            User_enum::ADDRESS           => $value['address'],
+                            User_enum::LOCATION          => $value['location'],
+                            User_enum::AVATAR            => $value['avatar'],
+                            User_enum::ROLE_LIST         => $value['role_list'],
+                            Common_enum::UPDATED_DATE    => $value['updated_date'],
+                            Common_enum::CREATED_DATE    => $value['created_date']
+                );
+            }
         }
 //        var_dump(is_array($results));
         if(!is_array($results) || sizeof($results) == 0){
             $data =  array(
-                   'Status'     =>'FALSE',
+                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'    =>'Login fail'
             );
             $this->response($data);
@@ -569,19 +591,22 @@ class user_apis extends REST_Controller{
             $results = array();
             //  Count object
             $count = 0;
-            foreach ($get_collection as $value){
-                $count ++;
-                //  Create JSONObject
-                $jsonobject = array( 
+            if(is_array($get_collection)){
+                foreach ($get_collection as $value){
+                    $count ++;
+                    //  Create JSONObject
+                    $jsonobject = array( 
 
-                            Role_enum::ID                    => $value['_id']->{'$id'},
-                            Role_enum::NAME                  => $value['name'],
-                            Role_enum::DESC                  => $value['desc'],        
-                            Role_enum::FUNCTION_LIST         => $value['function_list'],
-                            Common_enum::CREATED_DATE        => $value['created_date']
+                                Role_enum::ID                    => $value['_id']->{'$id'},
+                                Role_enum::NAME                  => $value['name'],
+                                Role_enum::DESC                  => $value['desc'],        
+                                Role_enum::FUNCTION_LIST         => $value['function_list'],
+                                Common_enum::UPDATED_DATE    => $value['updated_date'],
+                                Common_enum::CREATED_DATE    => $value['created_date']
 
-                           );
-                $results[] = $jsonobject;
+                               );
+                    $results[] = $jsonobject;
+                }
             }
             $data =  array(
                    'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
@@ -592,7 +617,7 @@ class user_apis extends REST_Controller{
             
         }else{
             $data =  array(
-                   'Status'     =>'FALSE',
+                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
             $this->response($data);
@@ -624,19 +649,22 @@ class user_apis extends REST_Controller{
             $results = array();
             //  Count object
             $count = 0;
-            foreach ($get_collection as $value){
-                $count ++;
-                //  Create JSONObject
-                $jsonobject = array( 
+            if(is_array($get_collection)){
+                foreach ($get_collection as $value){
+                    $count ++;
+                    //  Create JSONObject
+                    $jsonobject = array( 
 
-                            Role_enum::ID                    => $value['_id']->{'$id'},
-                            Role_enum::NAME                  => $value['name'],
-                            Role_enum::DESC                  => $value['desc'],        
-                            Role_enum::FUNCTION_LIST         => $value['function_list'],
-                            Common_enum::CREATED_DATE        => $value['created_date']
+                                Role_enum::ID                    => $value['_id']->{'$id'},
+                                Role_enum::NAME                  => $value['name'],
+                                Role_enum::DESC                  => $value['desc'],        
+                                Role_enum::FUNCTION_LIST         => $value['function_list'],
+                                Common_enum::UPDATED_DATE        => $value['updated_date'],
+                                Common_enum::CREATED_DATE        => $value['created_date']
 
-                           );
-                $results[] = $jsonobject;
+                               );
+                    $results[] = $jsonobject;
+                }
             }
             $data =  array(
                    'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
@@ -647,7 +675,7 @@ class user_apis extends REST_Controller{
             
         }else{
             $data =  array(
-                   'Status'     =>'FALSE',
+                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
             $this->response($data);
@@ -680,11 +708,13 @@ class user_apis extends REST_Controller{
         $desc               = $this->post('desc');
         $function_list      = $this->post('function_list');
         $created_date       = $this->post('created_date');
+        $updated_date       = $this->post('updated_date');
         
         $array_value = array(
                         Role_enum::NAME              => $name,
                         Role_enum::DESC              => $desc,        
                         Role_enum::FUNCTION_LIST     => explode(Common_enum::MARK, $function_list),
+                        Common_enum::UPDATED_DATE    => ($updated_date==null) ? $this->common_model->getCurrentDate() : $updated_date,
                         Common_enum::CREATED_DATE    => ($created_date == null ) ? $this->common_model->getCurrentDate(): $created_date
                 
                 );
@@ -734,18 +764,21 @@ class user_apis extends REST_Controller{
             $results = array();
             //  Count object
             $count = 0;
-            foreach ($get_collection as $value){
-                $count ++;
-                //  Create JSONObject
-                $jsonobject = array( 
+            if(is_array($get_collection)){
+                foreach ($get_collection as $value){
+                    $count ++;
+                    //  Create JSONObject
+                    $jsonobject = array( 
 
-                            function_enum::ID                    => $value['_id']->{'$id'},
-                            function_enum::NAME                  => $value['name'],
-                            function_enum::DESC                  => $value['desc'],        
-                            Common_enum::CREATED_DATE            => $value['created_date']
+                                function_enum::ID                    => $value['_id']->{'$id'},
+                                function_enum::NAME                  => $value['name'],
+                                function_enum::DESC                  => $value['desc'],        
+                                Common_enum::UPDATED_DATE    => $value['updated_date'],
+                                Common_enum::CREATED_DATE    => $value['created_date']
 
-                           );
-                $results[] = $jsonobject;
+                               );
+                    $results[] = $jsonobject;
+                }
             }
             $data =  array(
                    'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
@@ -756,7 +789,7 @@ class user_apis extends REST_Controller{
             
         }else{
             $data =  array(
-                   'Status'     =>'FALSE',
+                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
             $this->response($data);
@@ -788,18 +821,21 @@ class user_apis extends REST_Controller{
             $results = array();
             //  Count object
             $count = 0;
-            foreach ($get_collection as $value){
-                $count ++;
-                //  Create JSONObject
-                $jsonobject = array( 
+            if(is_array($get_collection)){
+                foreach ($get_collection as $value){
+                    $count ++;
+                    //  Create JSONObject
+                    $jsonobject = array( 
 
-                            Role_enum::ID                    => $value['_id']->{'$id'},
-                            Role_enum::NAME                  => $value['name'],
-                            Role_enum::DESC                  => $value['desc'],        
-                            Common_enum::CREATED_DATE        => $value['created_date']
+                                Role_enum::ID                    => $value['_id']->{'$id'},
+                                Role_enum::NAME                  => $value['name'],
+                                Role_enum::DESC                  => $value['desc'],        
+                                Common_enum::UPDATED_DATE    => $value['updated_date'],
+                                Common_enum::CREATED_DATE    => $value['created_date']
 
-                           );
-                $results[] = $jsonobject;
+                               );
+                    $results[] = $jsonobject;
+                }
             }
             $data =  array(
                    'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
@@ -810,7 +846,7 @@ class user_apis extends REST_Controller{
             
         }else{
             $data =  array(
-                   'Status'     =>'FALSE',
+                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
             $this->response($data);
@@ -841,11 +877,13 @@ class user_apis extends REST_Controller{
         $name               = $this->post('name');
         $desc               = $this->post('desc');
         $created_date       = $this->post('created_date');
+        $updated_date       = $this->post('updated_date');
         
         $array_value = array(
             
                         Role_enum::NAME              => $name,
                         Role_enum::DESC              => $desc,        
+                        Common_enum::UPDATED_DATE    => ($updated_date==null) ? $this->common_model->getCurrentDate() : $updated_date,
                         Common_enum::CREATED_DATE    => ($created_date == null ) ? $this->common_model->getCurrentDate(): $created_date
                 
                 );
@@ -862,7 +900,7 @@ class user_apis extends REST_Controller{
         }
         else{
             $data =  array(
-                   'Status'     =>'FALSE',
+                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
             $this->response($data);
