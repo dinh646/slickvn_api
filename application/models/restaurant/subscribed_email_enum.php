@@ -15,7 +15,7 @@ class Subscribed_email_enum {
    const ID                 = 'id'; 
    const EMAIL              = 'email';
    
-   const COLLECTION_NAME    = 'subscribed_email';
+   const COLLECTION_SUBSCRIBED    = 'subscribed_email';
   
 }
 

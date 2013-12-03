@@ -277,7 +277,7 @@ class restaurant_apis extends REST_Controller{
      *  Response: JSONObject
      * 
      */
-    public function update_menu_dish/*_post*/($action, $id, $str_dish_list, $created_date) {
+    public function update_menu_dish/*_post*/($action, $id, $str_dish_list, $created_date, $updated_date) {
         
         //  Get param from client
 //        $action = $this->post('action');
@@ -318,7 +318,8 @@ class restaurant_apis extends REST_Controller{
         $array_value = array(
             Menu_dish_enum::ID_RESTAURANT => '',
             Menu_dish_enum::DISH_LIST => $dish_list,
-            Common_enum::CREATED_DATE => ($created_date != null) ? $created_date : $this->common_model->getCurrentDate()
+            Common_enum::CREATED_DATE => ($created_date==null) ? $this->common_model->getCurrentDate() : $created_date ,
+            Common_enum::UPDATED_DATE => ($updated_date==null) ? $this->common_model->getCurrentDate() : $updated_date ,
         );
         
         $this->restaurant_model->updateMenuDish($action, $id, $array_value);
@@ -1704,6 +1705,7 @@ class restaurant_apis extends REST_Controller{
         $start_date              = $this->post('start_date');
         $end_date                = $this->post('end_date');
         $created_date            = $this->post('created_date');
+        $updated_date            = $this->post('updated_date');
         $is_delete               = $this->post('is_delete');
         
         //  Get image from client
@@ -1779,7 +1781,7 @@ class restaurant_apis extends REST_Controller{
             
         }
         //  Update menu_dish
-        $id_menu_dish = $this->update_menu_dish($action, null/*id_menu_dish*/, $str_dish_list, $created_date);
+        $id_menu_dish = $this->update_menu_dish($action, null/*id_menu_dish*/, $str_dish_list, $created_date, $updated_date);
         $array_value = array( 
             Restaurant_enum::ID_MENU_DISH               => $id_menu_dish,
             Restaurant_enum::ID_COUPON                  => $id_coupon,
