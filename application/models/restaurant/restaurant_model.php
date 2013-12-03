@@ -488,48 +488,22 @@ class Restaurant_model extends CI_Model{
     //                                                     /
     //------------------------------------------------------
     
-     /**
+    /**
      * 
-     * Insert Subscribed Email
+     * Get all Subcribed Email
      * 
-     * @param String $email
-     * 
-     * @return error
+     * Return: Array Collection Post
      * 
      */
-    public function insertEmail($email) {
-        
-        $error = null;
-        
-        try{
-            
-            // Connect collection subcribed_email
-            $collection_name = Subscribed_email_enum::COLLECTION_NAME;
-            $this->collection_subcribed_email = $this->slickvn_db->$collection_name;
-            
-            $new = array(
-                            Subscribed_email_enum::EMAIL => $email
-                        );
-            
-            $this->collection_subcribed_email ->insert( $new );
-            
-        }catch ( MongoConnectionException $e ){
-                
-                return $error = ''.$e->getMessage();
-                
-        }catch ( MongoException $e ){
-            
-                return $error = ''.$e->getMessage();
-                
-        }
-        
-        return $error;
+    public function getAllSubcribedEmail() {
+
+        return $this->common_model->getCollection(Subscribed_email_enum::COLLECTION_SUBSCRIBED);
         
     }
     
     /**
      * 
-     * Update Email
+     * Update Subcribed Email
      * 
      * @param String $id
      * @param String $email
@@ -537,73 +511,9 @@ class Restaurant_model extends CI_Model{
      * @return error
      * 
      */
-    public function updateEmail($id, $email) {
+    public function updateSubcribedEmail($action, $id, array $array_value) {
         
-        $error = null;
-        
-        try{
-            
-            // Connect collection subcribed_email
-            $collection_name = Subscribed_email_enum::COLLECTION_NAME;
-            $this->collection_subcribed_email = $this->slickvn_db->$collection_name;
-            
-            $update = array(
-                               Common_enum::_ID     => new MongoId($id),
-                               Subscribed_email_enum::EMAIL     => $email
-                            );
-            
-            $this->collection_subcribed_email ->save( $update );
-            
-        }catch ( MongoConnectionException $e ){
-                
-                return $error = ''.$e->getMessage();
-                
-        }catch ( MongoException $e ){
-            
-                return $error = ''.$e->getMessage();
-                
-        }
-        
-        return $error;
-        
-    }
-    
-    /**
-     * 
-     * Delete Email
-     * 
-     * @param String $id
-     * 
-     * @return error
-     * 
-     */
-    public function deleteEmail($id) {
-        
-        $error = null;
-        
-        try{
-            
-            // Connect collection subcribed_email
-            $collection_name = Subscribed_email_enum::COLLECTION_NAME;
-            $this->collection_subcribed_email = $this->slickvn_db->$collection_name;
-            
-            $delete = array(
-                                Common_enum::_ID => new MongoId($id)
-                           );
-            
-            $this->collection_subcribed_email ->remove( $delete );
-            
-        }catch ( MongoConnectionException $e ){
-                
-                return $error = ''.$e->getMessage();
-                
-        }catch ( MongoException $e ){
-            
-                return $error = ''.$e->getMessage();
-                
-        }
-        
-        return $error;
+        $this->common_model->updateCollection(Subscribed_email_enum::COLLECTION_SUBSCRIBED, $action, $id, $array_value);
         
     }
     
