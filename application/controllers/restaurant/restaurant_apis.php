@@ -2033,7 +2033,7 @@ class restaurant_apis extends REST_Controller{
                                Post_enum::PRICE_PERSON_LIST      => $this->common_model->getValueFeildNameBaseCollectionById(Common_enum::PRICE_PERSON,   $post['price_person_list']),
                                Post_enum::CULINARY_STYLE_LIST    => $this->common_model->getValueFeildNameBaseCollectionById(Common_enum::CULINARY_STYLE,   $post['culinary_style_list']),
                                Post_enum::CONTENT                => $post['content'],
-                               Post_enum::NUMBER_ASSESSMENT     => $this->restaurant_model->countAssessmentForPost($post_['_id']->{'$id'}),
+                               Post_enum::NUMBER_ASSESSMENT     => $this->restaurant_model->countAssessmentForPost($post['_id']->{'$id'}),
                                Post_enum::RATE_POINT            => $this->restaurant_model->getRatePoint(),
                                Post_enum::NUMBER_VIEW            => $post['number_view'],
                                Common_enum::UPDATED_DATE         => $post['updated_date'],
@@ -2073,6 +2073,11 @@ class restaurant_apis extends REST_Controller{
         $list_post = $this->restaurant_model->getPostById($id);
         //  Array object post
         $results = array();
+        
+        //
+        //  Edit field number_view: +1
+        //
+        $this->common_model->editSpecialField(Post_enum::COLLECTION_POST, $id, array('$inc' => array('number_view' => 1) ) );
         
         if(is_array($list_post)){
             foreach ($list_post as $post){
