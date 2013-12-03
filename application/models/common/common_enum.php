@@ -12,6 +12,7 @@ class Common_enum {
     const _ID                       = '_id';
     const ID                        = 'id';
     const NAME                      = 'name';
+    const UPDATED_DATE              = 'updated_date';
     const CREATED_DATE              = 'created_date';
     
     //  NAME BASE COLLECTION
