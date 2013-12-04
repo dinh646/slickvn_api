@@ -1188,9 +1188,10 @@ class restaurant_apis extends REST_Controller{
                         Restaurant_enum::START_DATE                 => $restaurant['start_date'],
                         Restaurant_enum::END_DATE                   => $restaurant['end_date'],
                         Restaurant_enum::DESC                       => $restaurant['desc'],        
-                        Restaurant_enum::NUMBER_VIEW                => $restaurant['number_view'],        
-                        Common_enum::UPDATED_DATE         => $restaurant['updated_date'],
-                        Common_enum::CREATED_DATE         => $restaurant['created_date']
+                        Restaurant_enum::NUMBER_VIEW                => $restaurant['number_view'],   
+                        Restaurant_enum::FOLDER_NAME                => $restaurant['folder_name'],
+                        Common_enum::UPDATED_DATE                   => $restaurant['updated_date'],
+                        Common_enum::CREATED_DATE                   => $restaurant['created_date']
                     );
                     $results[] = $jsonobject;
                 }
@@ -1711,15 +1712,14 @@ class restaurant_apis extends REST_Controller{
         $created_date            = $this->post('created_date');
         $updated_date            = $this->post('updated_date');
         $is_delete               = $this->post('is_delete');
+        $str_image_post          = $this->post('array_image');                   //  image.jpg,image2.png,...
         
-        //  Get image from client
-        $str_image_post = $this->post('array_image');                   //  image.jpg,image2.png,...
-        $array_image_post = explode(Common_enum::MARK, $str_image_post); //  ['image.jpg', 'image2.png' ,...]
         $file_avatar='';
         $file_carousel='';
         $file_introduce = array();
         $base_path_restaurant = Common_enum::ROOT.Common_enum::DIR_RESTAURANT.$folder_name.'/images/';
         $file_temp = Common_enum::ROOT.Common_enum::PATH_TEMP;
+        
         $path_avatar    = $base_path_restaurant.'avatar/';
         $path_carousel  = $base_path_restaurant.'carousel/';
         $path_introduce = $base_path_restaurant.'introduce/';
@@ -1735,6 +1735,8 @@ class restaurant_apis extends REST_Controller{
         
         
         if($is_insert == 0){
+            
+            $array_image_post = explode(Common_enum::MARK, $str_image_post); //  ['image.jpg', 'image2.png' ,...]
             
             for($i=0; $i<sizeof($array_image_post); $i++) {
                 $file_temp = $file_temp.$array_image_post[$i];
@@ -1779,9 +1781,63 @@ class restaurant_apis extends REST_Controller{
         }
         else if($is_edit == 0){
             
-            //
-            //  TODO
-            //
+            $array_image_post = explode(Common_enum::MARK_, $str_image_post); //  [ {'new_avatar.jpg,old_avatar.jpg'}, {'new_carousel.jpg,old_carousel.jpg'}, {'deleted_introduce_1.jpg,deleted_introduce_2.jpg,...'}, {'introduce_1.jpg,introduce_2.jpg,...'}]
+            
+            //  string image
+            $str_image_avatar = $array_image_post[0];   //{'new_avatar.jpg,old_avatar.jpg'}
+            $str_image_carousel = $array_image_post[1]; //{'new_carousel.jpg,old_carousel.jpg'}
+            $str_image_deleted = $array_image_post[2];  //{'deleted_introduce_1.jpg,deleted_introduce_2.jpg,...'}
+            $str_image_introduce = $array_image_post[3]; //{'introduce_1.jpg,introduce_2.jpg,...'}
+            
+            //  array imaga avatar
+            $array_image_avatar = explode(Common_enum::MARK, $str_image_avatar);//  [new_avatar.jpg, old_avatar.jpg]
+            if(file_exists($file_temp.$array_image_avatar[0])){                 //  check new avatar
+                $move_file_avatar = $this->common_model->moveFileToDirectory($file_temp.$array_image_avatar[0], $path_avatar.$array_image_avatar[0]);
+                if(!$move_file_avatar){
+                    $this->common_model->setError('Move file avatar '.$move_file_avatar);
+                }
+                else{
+                    $file_avatar = $folder_name.'/images/avatar/'.$array_image_avatar[0];
+                    if(file_exists($path_avatar.$array_image_avatar[1])){       //  check old avatar
+                        unlink($path_avatar.$array_image_avatar[1]);
+                    }
+                }
+            }
+            
+            //  array image carousel
+            $array_image_carousel = explode(Common_enum::MARK, $str_image_carousel);//  [new_carousel.jpg, old_carousel.jpg]
+            if(file_exists($file_temp.$array_image_carousel[0])){                 //  check new carousel
+                $move_file_carousel = $this->common_model->moveFileToDirectory($file_temp.$array_image_carousel[0], $path_carousel.$array_image_carousel[0]);
+                if(!$move_file_carousel){
+                    $this->common_model->setError('Move file carousel '.$move_file_carousel);
+                }
+                else{
+                    $file_carousel = $folder_name.'/images/carousel/'.$array_image_carousel[0];
+                    
+                    if(file_exists($path_carousel.$array_image_carousel[1])){       //  check old carousel
+                        unlink($path_carousel.$array_image_carousel[1]);
+                    }
+                }
+            }
+            
+            //  array image deleted
+            $array_image_delete = explode(Common_enum::MARK, $str_image_deleted);//  [deleted_introduce_1.jpg,deleted_introduce_2.jpg,...]
+            foreach ($array_image_delete as $value) {
+                if(file_exists($path_introduce.$value)){       //  check old introduce image
+                        unlink($path_introduce.$value);
+                    }
+            }
+            
+            //  array image introlduce
+            $array_image_introduce = explode(Common_enum::MARK, $str_image_introduce);//  [introduce_1.jpg,introduce_2.jpg,...]
+            foreach ($array_image_introduce as $value) {
+                if(file_exists($file_temp.$value)){       //  check new introduce image
+                        $move_file_carousel = $this->common_model->moveFileToDirectory($file_temp.$value, $path_introduce.$value);
+    //                if(!$move_file_carousel){
+    //                    $this->common_model->setError('Move file carousel '.$move_file_carousel);
+    //                }
+                    }
+            }
             
         }
         //  Update menu_dish

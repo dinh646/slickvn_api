@@ -54,6 +54,7 @@ class Common_enum {
     const ROOT                      = './';
     
     const MARK                      = ',';
+    const MARK_                      = '#';
     
     const MARK_DETAIL_DISH          = '*100#';
     const MARK_DISH                 = ' *101# ';

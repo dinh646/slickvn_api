@@ -375,14 +375,11 @@ class user_apis extends REST_Controller{
                 if(!$move_file_avatar){
                     $this->common_model->setError('Move file avatar '.$move_file_avatar);
                 }
-                
                 $avatar = $new_avatar;
-                
             }
             else{
                 $avatar = $old_avatar;
             }
-            
         }
         $array_value = ($is_delete != 0) ? 
                 array(
