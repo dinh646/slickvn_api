@@ -431,6 +431,7 @@ class user_apis extends REST_Controller{
         
         $this->user_model->updateUserLog(Common_enum::INSERT, Common_enum::LIKE, $array_value);
         $error = $this->user_model->getError();
+        
         if($error == null){
             $data =  array(
                    'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,

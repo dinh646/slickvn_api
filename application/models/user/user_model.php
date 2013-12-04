@@ -95,26 +95,25 @@ class User_model extends CI_Model{
             else{
                 // Connect collection User
                 $collection = User_log_enum::COLLECTION_USER_LOG;
-                $this->collection = $this->common_model->getConnectDataBase()->$collection;
-                
                 //  Action insert
                 if( strcmp( strtolower($action), Common_enum::INSERT ) == 0 ) {
-                    
                     if(strcmp(strtoupper($user_action), Common_enum::LIKE ) || strcmp(strtoupper($user_action), Common_enum::SHARE )){
-                    
                         //  Remove created_date
                         unset($array_value['desc']);
                         //  Remve desc
                         unset($array_value['created_date']);
-                        $check = $this->common_model->checkExistValue($collection, $this->common_model->removeElementArrayNull($array_value) );
-                        if(sizeof($check) > 0){
-                            $this->setError('Was liked or share'); return;
+                        unset($array_value['updated_date']);
+                        $id_user = $array_value['id_user'];
+                        $check_id_user = $this->common_model->checkExistValue(User_enum::COLLECTION_USER, array(Common_enum::_ID => new MongoId($id_user)));
+                        if(sizeof($check_id_user) == 0){
+                            $this->setError('Id user invaild'); return;
                         }
-                        
+                        $check_liked_or_shared = $this->common_model->checkExistValue($collection, $this->common_model->removeElementArrayNull($array_value) );
+                        if(sizeof($check_liked_or_shared) > 0){
+                            $this->setError('Was liked or shared'); return;
+                        }
                     }
-                    
-                    $this->collection ->insert( $array_value );
-                    
+                    $this->common_model->updateCollection($collection, Common_enum::INSERT, null, $array_value );
                 }
 
                 //  Action edit
@@ -148,6 +147,64 @@ class User_model extends CI_Model{
         }
         
     }
+    
+    /**
+     * 
+     * Get list id_restaurant by id_user
+     * 
+     * @param String $id_user
+     * @param Array $id_restaurant
+     * 
+     **/
+   public function getRestaurantsLikedByUser($id_user) {
+      
+       $array_id_restaurant = array();
+       
+       $value = array(
+                   User_log_enum::ID_USER => $id_user,
+                   User_log_enum::ACTION =>  Common_enum::LIKE_RESTAURANT
+               );
+               
+       $user_logs = $this->common_model->getCollectionByField(
+               User_log_enum::COLLECTION_USER_LOG,
+               $value
+       );
+       if(is_array($user_logs)){
+           foreach ($user_logs as $value) {
+               $array_id_restaurant [] = $value['id_restaurant'];
+           }
+       }
+       return $array_id_restaurant;
+   }
+   
+   /**
+     * 
+     * Get list User like Restaurant
+     * 
+     * @param String $id_restaurant
+     * @param Array $id_user
+     * 
+     **/
+   public function getUsersLikedRestaurant($id_restaurant) {
+      
+       $array_id_restaurant = array();
+       
+       $value = array(
+                   User_log_enum::ID_RESTAURANT => $id_restaurant,
+                   User_log_enum::ACTION =>  Common_enum::LIKE_RESTAURANT
+               );
+               
+       $user_logs = $this->common_model->getCollectionByField(
+               User_log_enum::COLLECTION_USER_LOG,
+               $value
+       );
+       if(is_array($user_logs)){
+           foreach ($user_logs as $value) {
+               $array_id_restaurant [] = $value['id_user'];
+           }
+       }
+       return $array_id_restaurant;
+   }
     
     //----------------------------------------------------------------------//
     //                                                                      //

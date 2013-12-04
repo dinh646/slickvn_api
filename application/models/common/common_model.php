@@ -603,7 +603,7 @@ class Common_model extends CI_Model{
                     
                     $where = array( Common_enum::_ID => new MongoId($id) );
                     
-                    $this->collection ->update($where, array('$set' =>$array_value) );
+                    $this->collection ->update($where, $array_value );
                 
             }
         }catch ( MongoConnectionException $e ){

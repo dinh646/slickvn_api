@@ -1886,7 +1886,7 @@ class restaurant_apis extends REST_Controller{
         if($error == null){
             
             $this->common_model->editSpecialField(Restaurant_enum::COLLECTION_RESTAURANT, 
-                                                  $id_restaurant, array(Restaurant_enum::ID_COUPON=>$array_value['_id']->{'$id'} ));
+                                                  $id_restaurant, array('$set' => array(Restaurant_enum::ID_COUPON=>$array_value['_id']->{'$id'} )));
             
             $data =  array(
                    'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
@@ -2402,21 +2402,17 @@ class restaurant_apis extends REST_Controller{
         // Get list id_restaurant liked by user
         $array_id_restaurant = $this->user_model->getRestaurantsLikedByUser($id_user);
         
-        //  Array results
         $results = array();
-        //  Count object subscribed_email
         $count = 0;
         if(is_array($array_id_restaurant)){
             foreach ($array_id_restaurant as $value){
-                var_dump($array_id_restaurant);
                 $count++;
-                $restaurant = $this->restaurant_model->getRestaurantById($value);
+                $array_restaurant = $this->restaurant_model->getRestaurantById($value);
+                $restaurant = $array_restaurant[$value];
                 
                 if(($count) >= $position_start_get && ($count) <= $position_end_get){
-                    
                         //  Create JSONObject Restaurant
                         $jsonobject = array( 
-
                             Restaurant_enum::ID                         => $restaurant['_id']->{'$id'},
                             //Restaurant_enum::ID_USER                    => $restaurant['id_user'],
                             Restaurant_enum::ID_MENU_DISH               => $restaurant['id_menu_dish'],
@@ -2442,7 +2438,6 @@ class restaurant_apis extends REST_Controller{
                                                                                                                         User_log_enum::ID_RESTAURANT => $restaurant['_id']->{'$id'}, 
                                                                                                                         User_log_enum::ACTION        => Common_enum::SHARE_RESTAURANT
                                                                                                                         )),
-
                             Restaurant_enum::RATE_SERVICE               => $this->restaurant_model->getRateService(),
                             Restaurant_enum::RATE_LANDSCAPE             => $this->restaurant_model->getRateLandscape(),
                             Restaurant_enum::RATE_TASTE                 => $this->restaurant_model->getRateTaste(),
@@ -2462,6 +2457,88 @@ class restaurant_apis extends REST_Controller{
                         $results[] = $jsonobject;
                 }
             }
+            //  Response
+            $data =  array(
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
+                   'Total'      =>sizeof($results),
+                   'Results'    =>$results
+            );
+
+            $this->response($data);
+        }
+        //  Response
+        $data =  array(
+               'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
+               'Total'      =>sizeof($results),
+               'Results'    =>$results
+        );
+
+        $this->response($data);
+    }
+    
+    /**
+     * 
+     *  API get list User like Restaurant
+     * 
+     *  Menthod: GET
+     *  @param limit
+     *  @param page
+     * 
+     *  Response: JSONObject
+     * 
+     */
+    public function get_list_user_liked_restaurant_get() {
+        
+        //  Get limit from client
+        $limit = $this->get("limit");
+        //  Get page from client
+        $page = $this->get("page");
+        
+        $id_restaurant = $this->get('id_restaurant');
+        //  End
+        $position_end_get   = ($page == 1)? $limit : ($limit * $page);
+        
+        //  Start
+        $position_start_get = ($page == 1)? $page : ( $position_end_get - ($limit - 1) );
+        
+        // Get list id_restaurant liked by user
+        $array_id_user = $this->user_model->getUsersLikedRestaurant($id_restaurant);
+        
+        $results = array();
+        $count = 0;
+        if(is_array($array_id_user)){
+            foreach ($array_id_user as $value){
+                $count++;
+                $array_user = $this->user_model->getUserById($value);
+                $user = $array_user[$value];
+                
+                if(($count) >= $position_start_get && ($count) <= $position_end_get){
+                        //  Create JSONObject
+                        $jsonobject = array( 
+                                    User_enum::ID                => $user['_id']->{'$id'},
+                                    User_enum::FULL_NAME         => $user['full_name'],
+                                    User_enum::EMAIL             => $user['email'],        
+                                    User_enum::PHONE_NUMBER      => $user['phone_number'],
+                                    User_enum::ADDRESS           => $user['address'],
+                                    User_enum::LOCATION          => $user['location'],
+                                    User_enum::AVATAR            => $user['avatar'],
+                                    User_enum::ROLE_LIST         => $user['role_list'],
+                                    User_enum::DESC              => $user['desc'],
+                                    User_enum::IS_DELETE         => $user['is_delete'],
+                                    Common_enum::UPDATED_DATE    => $user['updated_date'],
+                                    Common_enum::CREATED_DATE    => $user['created_date']
+                                   );
+                        $results[] = $jsonobject;
+                }
+            }
+            //  Response
+            $data =  array(
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
+                   'Total'      =>sizeof($results),
+                   'Results'    =>$results
+            );
+
+            $this->response($data);
         }
         //  Response
         $data =  array(
