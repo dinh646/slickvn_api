@@ -373,9 +373,16 @@ class restaurant_apis extends REST_Controller{
         //  Key search
         $key = Encode_utf8::toUTF8($this->get('key'));
         
+        $array_key_word = explode(' ', $key);
+//        var_dump($array_key_word);
+        
         //  Query
-        $where = array(Restaurant_enum::NAME => new MongoRegex('/'.$key.'/i'));
-        $list_restaurant = $this->restaurant_model->searchRestaurant($where);
+        $where = array();
+        foreach ($array_key_word as $value) {
+            $where[] = array(Restaurant_enum::NAME => new MongoRegex('/'.$value.'/i'));
+        }
+        
+        $list_restaurant = $this->restaurant_model->searchRestaurant(array( '$or'=>$where));
         
         //  End
         $position_end_get   = ($page == 1)? $limit : ($limit * $page);
