@@ -279,7 +279,7 @@ class restaurant_apis extends REST_Controller{
      *  Response: JSONObject
      * 
      */
-    public function update_menu_dish/*_post*/($action, $id, $str_dish_list, $created_date, $updated_date) {
+    public function update_menu_dish/*_post*/($action, $id, $id_restaurant, $str_dish_list, $created_date, $updated_date) {
         
         //  Get param from client
 //        $action = $this->post('action');
@@ -318,7 +318,7 @@ class restaurant_apis extends REST_Controller{
         }
         
         $array_value = array(
-            Menu_dish_enum::ID_RESTAURANT => '',
+            Menu_dish_enum::ID_RESTAURANT => ($id_restaurant == null) ? '' : $id_restaurant,
             Menu_dish_enum::DISH_LIST => $dish_list,
             Common_enum::CREATED_DATE => ($created_date==null) ? $this->common_model->getCurrentDate() : $created_date ,
             Common_enum::UPDATED_DATE => ($updated_date==null) ? $this->common_model->getCurrentDate() : $updated_date ,
@@ -1684,6 +1684,7 @@ class restaurant_apis extends REST_Controller{
         //  Get param from client
         $action                  = $this->post('action'); 
         $id                      = $this->post('id'); 
+        $id_menu_dish            = $this->post('id_menu_dish');
         $id_coupon               = $this->post('id_coupon');
         $name                    = $this->post('name');
         $folder_name             = $this->post('folder_name');
@@ -1760,7 +1761,6 @@ class restaurant_apis extends REST_Controller{
                       else{
                           $file_carousel = $folder_name.'/images/carousel/'.$array_image_post[1];
                       }
-                      
                     }
                     else{
                       $move_file_introduce = $this->common_model->moveFileToDirectory($file_temp, $path_introduce.$array_image_post[$i]);
@@ -1836,14 +1836,14 @@ class restaurant_apis extends REST_Controller{
     //                if(!$move_file_carousel){
     //                    $this->common_model->setError('Move file carousel '.$move_file_carousel);
     //                }
+                        $file_introduce []= $folder_name.'/images/introduce/'.$value;
                     }
             }
-            
         }
         //  Update menu_dish
-        $id_menu_dish = $this->update_menu_dish($action, null/*id_menu_dish*/, $str_dish_list, $created_date, $updated_date);
+        $id_menu_dish_new = $this->update_menu_dish($action, $id_menu_dish, $id, $str_dish_list, $created_date, $updated_date);
         $array_value = array( 
-            Restaurant_enum::ID_MENU_DISH               => $id_menu_dish,
+            Restaurant_enum::ID_MENU_DISH               => $id_menu_dish_new,
             Restaurant_enum::ID_COUPON                  => $id_coupon,
             Restaurant_enum::NAME                       => $name,
             Restaurant_enum::FOLDER_NAME                => $folder_name,
@@ -2254,14 +2254,9 @@ class restaurant_apis extends REST_Controller{
                             $content=str_replace(str_replace(Common_enum::ROOT, Common_enum::DOMAIN_NAME ,$file_temp), 
                                                  'folder_image_post_replace/'.$id_user."/".$array_image_post[$i],
                                                  $content);
-
-
                     }
-                    
                 }
-                
             }
-            
         }
         
        (int)$is_insert = strcmp( strtolower($action), Common_enum::INSERT );
@@ -2301,8 +2296,6 @@ class restaurant_apis extends REST_Controller{
             );
             $this->response($data);
         }
-        
-        
     }
     //------------------------------------------------------
     //                                                     /
