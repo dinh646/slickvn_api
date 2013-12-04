@@ -20,6 +20,7 @@ class user_apis extends REST_Controller{
         $this->load->model('user/user_enum');
         
         $this->load->model('user/user_log_enum');
+        $this->load->model('common/encode_utf8');
         
         
     }
@@ -31,7 +32,199 @@ class user_apis extends REST_Controller{
     //----------------------------------------------------//
     
     /**
-     * API All Get User
+     * API search User by name
+     * 
+     * Menthod: GET
+     * 
+     * Response: JSONObject
+     * 
+     */
+    public function search_user_by_name_get() {
+        //  Get limit from client
+        $limit = $this->get("limit");
+        //  Get page from client
+        $page = $this->get("page");
+        
+        $key = Encode_utf8::toUTF8($this->get('name'));
+        
+        //  Query
+        $where = array(User_enum::FULL_NAME => new MongoRegex('/'.$key.'/i'));
+        $list_user = $this->user_model->searchUser($where);
+        
+        //  End
+        $position_end_get   = ($page == 1)? $limit : ($limit * $page);
+        //  Start
+        $position_start_get = ($page == 1)? $page : ( $position_end_get - ($limit - 1) );
+        
+        //  Array object
+        $results = array();
+        //  Count object
+        $count = 0;
+        if(is_array($list_user)){
+            foreach ($list_user as $value){
+                if($value['is_delete'] == 0){
+                    $count ++;
+                    if(($count) >= $position_start_get && ($count) <= $position_end_get){
+                        //  Create JSONObject
+                        $jsonobject = array( 
+
+                                    User_enum::ID                => $value['_id']->{'$id'},
+                                    User_enum::FULL_NAME         => $value['full_name'],
+                                    User_enum::EMAIL             => $value['email'],        
+                                    User_enum::PHONE_NUMBER      => $value['phone_number'],
+                                    User_enum::ADDRESS           => $value['address'],
+                                    User_enum::LOCATION          => $value['location'],
+                                    User_enum::AVATAR            => $value['avatar'],
+                                    User_enum::IS_DELETE         => $value['is_delete'],
+                                    User_enum::DESC              => $value['desc'],
+                                    User_enum::ROLE_LIST         => $value['role_list'],
+                                    Common_enum::UPDATED_DATE    => $value['updated_date'],
+                                    Common_enum::CREATED_DATE    => $value['created_date']
+
+                                   );
+                        $results[] = $jsonobject;
+                    }
+                }
+            }
+        }
+        $data =  array(
+               'Status'     =>  Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
+               'Total'      =>  sizeof($results),
+               'Results'    =>$results
+        );
+        $this->response($data);
+    }
+    
+    /**
+     * API search User by email
+     * 
+     * Menthod: GET
+     * 
+     * Response: JSONObject
+     * 
+     */
+    public function search_user_by_email_get() {
+        //  Get limit from client
+        $limit = $this->get("limit");
+        //  Get page from client
+        $page = $this->get("page");
+        
+        $key = Encode_utf8::toUTF8($this->get('email'));
+        
+        //  Query
+        $where = array(User_enum::EMAIL => new MongoRegex('/'.$key.'/i'));
+        $list_user = $this->user_model->searchUser($where);
+        
+        //  End
+        $position_end_get   = ($page == 1)? $limit : ($limit * $page);
+        //  Start
+        $position_start_get = ($page == 1)? $page : ( $position_end_get - ($limit - 1) );
+        
+        //  Array object
+        $results = array();
+        //  Count object
+        $count = 0;
+        if(is_array($list_user)){
+            foreach ($list_user as $value){
+                if($value['is_delete'] == 0){
+                    $count ++;
+                    if(($count) >= $position_start_get && ($count) <= $position_end_get){
+                        //  Create JSONObject
+                        $jsonobject = array( 
+
+                                    User_enum::ID                => $value['_id']->{'$id'},
+                                    User_enum::FULL_NAME         => $value['full_name'],
+                                    User_enum::EMAIL             => $value['email'],        
+                                    User_enum::PHONE_NUMBER      => $value['phone_number'],
+                                    User_enum::ADDRESS           => $value['address'],
+                                    User_enum::LOCATION          => $value['location'],
+                                    User_enum::AVATAR            => $value['avatar'],
+                                    User_enum::IS_DELETE         => $value['is_delete'],
+                                    User_enum::DESC              => $value['desc'],
+                                    User_enum::ROLE_LIST         => $value['role_list'],
+                                    Common_enum::UPDATED_DATE    => $value['updated_date'],
+                                    Common_enum::CREATED_DATE    => $value['created_date']
+
+                                   );
+                        $results[] = $jsonobject;
+                    }
+                }
+            }
+        }
+        $data =  array(
+               'Status'     =>  Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
+               'Total'      =>  sizeof($results),
+               'Results'    =>$results
+        );
+        $this->response($data);
+    }
+    
+    /**
+     * API search User by phone number
+     * 
+     * Menthod: GET
+     * 
+     * Response: JSONObject
+     * 
+     */
+    public function search_user_by_phone_get() {
+        //  Get limit from client
+        $limit = $this->get("limit");
+        //  Get page from client
+        $page = $this->get("page");
+        
+        $key = Encode_utf8::toUTF8($this->get('phone'));
+        
+        //  Query
+        $where = array(User_enum::PHONE_NUMBER => new MongoRegex('/'.$key.'/i'));
+        $list_user = $this->user_model->searchUser($where);
+        
+        //  End
+        $position_end_get   = ($page == 1)? $limit : ($limit * $page);
+        //  Start
+        $position_start_get = ($page == 1)? $page : ( $position_end_get - ($limit - 1) );
+        
+        //  Array object
+        $results = array();
+        //  Count object
+        $count = 0;
+        if(is_array($list_user)){
+            foreach ($list_user as $value){
+                if($value['is_delete'] == 0){
+                    $count ++;
+                    if(($count) >= $position_start_get && ($count) <= $position_end_get){
+                        //  Create JSONObject
+                        $jsonobject = array( 
+
+                                    User_enum::ID                => $value['_id']->{'$id'},
+                                    User_enum::FULL_NAME         => $value['full_name'],
+                                    User_enum::EMAIL             => $value['email'],        
+                                    User_enum::PHONE_NUMBER      => $value['phone_number'],
+                                    User_enum::ADDRESS           => $value['address'],
+                                    User_enum::LOCATION          => $value['location'],
+                                    User_enum::AVATAR            => $value['avatar'],
+                                    User_enum::IS_DELETE         => $value['is_delete'],
+                                    User_enum::DESC              => $value['desc'],
+                                    User_enum::ROLE_LIST         => $value['role_list'],
+                                    Common_enum::UPDATED_DATE    => $value['updated_date'],
+                                    Common_enum::CREATED_DATE    => $value['created_date']
+
+                                   );
+                        $results[] = $jsonobject;
+                    }
+                }
+            }
+        }
+        $data =  array(
+               'Status'     =>  Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
+               'Total'      =>  sizeof($results),
+               'Results'    =>$results
+        );
+        $this->response($data);
+    }
+    
+    /**
+     * API Get all User
      * 
      * Menthod: GET
      * 

@@ -211,7 +211,26 @@ class User_model extends CI_Model{
     //                  FUNCTION FOR COLLECTION USER                        //
     //                                                                      //
     //----------------------------------------------------------------------//
-    
+   
+   /**
+     * 
+     * Search Collection User
+     * 
+     * @param String $where
+     * 
+     * @return Array collection User
+     * 
+     */
+    public function searchUser($where) {
+        
+        //  Collection Restaurant
+        $collection = User_enum::COLLECTION_USER;
+        $list_user = $this->common_model->searchCollection($collection, $where );
+        
+        return $list_user;
+        
+    }
+   
     /**
      * 
      * Get Collectin User
