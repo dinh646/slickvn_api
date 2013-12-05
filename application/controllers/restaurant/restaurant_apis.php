@@ -1744,39 +1744,47 @@ class restaurant_apis extends REST_Controller{
             
             $array_image_post = explode(Common_enum::MARK, $str_image_post); //  ['image.jpg', 'image2.png' ,...]
             
-            for($i=0; $i<sizeof($array_image_post)-1; $i++) {
-                $file_temp = $file_temp.$array_image_post[$i];
-//                var_dump('temp ['.$i.'] = '.$file_temp);
-                if (file_exists($file_temp)) {
+            foreach ($array_image_post as $i => $value) {
+                $temp = $file_temp.$value;
+                
+                if (file_exists($temp)) {
+                  
                     //  Move file from directory post
                     if($i == 0){
-                      $move_file_avatar = $this->common_model->moveFileToDirectory($file_temp, $path_avatar.$array_image_post[$i]);
+                      $move_file_avatar = $this->common_model->moveFileToDirectory($temp, $path_avatar.$value);
                       if(!$move_file_avatar){
                           $this->common_model->setError('Move file avatar '.$move_file_avatar);
                       }else{
-                          $file_avatar = $folder_name.'/images/avatar/'.$array_image_post[0];
+                          $file_avatar = $folder_name.'/images/avatar/'.$value;
                       }
+//                      var_dump($i.' = '.$value);
                     }
-                    else if($i==1){
-                      $move_file_carousel = $this->common_model->moveFileToDirectory($file_temp, $path_carousel.$array_image_post[$i]);
+                    else if($i == 1){
+                      
+                      $move_file_carousel = $this->common_model->moveFileToDirectory($temp, $path_carousel.$value);
                       if(!$move_file_carousel){
                           $this->common_model->setError('Move file carousel '.$move_file_carousel);
                       }
                       else{
-                          $file_carousel = $folder_name.'/images/carousel/'.$array_image_post[1];
+                          $file_carousel = $folder_name.'/images/carousel/'.$value;
                       }
+//                      var_dump($i.' = '.$value);
                     }
                     else{
-                      $move_file_introduce = $this->common_model->moveFileToDirectory($file_temp, $path_introduce.$array_image_post[$i]);
+                      
+                      $move_file_introduce = $this->common_model->moveFileToDirectory($temp, $path_introduce.$value);
 
                       if(!$move_file_introduce){
                           $this->common_model->setError('Move file introduce '.$move_file_introduce);
                       }else{
-                          $introduce = str_replace(str_replace(Common_enum::ROOT, Common_enum::DOMAIN_NAME ,$file_temp), 'folder_image_introduce_detail_page/'.$folder_name.'/images/introduce/'.$array_image_post[$i], $introduce);
-
-                          $file_introduce []= $folder_name.'/images/introduce/'.$array_image_post[$i];
+                          $introduce = str_replace(str_replace(Common_enum::ROOT, Common_enum::DOMAIN_NAME ,$temp), 'folder_image_introduce_detail_page/'.$folder_name.'/images/introduce/'.$array_image_post[$i], $introduce);
+//
+                          $file_introduce []= $folder_name.'/images/introduce/'.$value;
+//                          var_dump($i.' = '.$value);
                       }
                     }
+                    
+                    
                 }
             }
         }
@@ -1866,7 +1874,6 @@ class restaurant_apis extends REST_Controller{
               }
             }
         }
-        
         //  Update menu_dish
         $id_menu_dish_new = $this->update_menu_dish(Common_enum::INSERT, /*$id_menu_dish, $id,*/ $str_dish_list, $created_date, $updated_date);
         $array_value = array( 
