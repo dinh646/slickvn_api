@@ -1869,7 +1869,7 @@ class restaurant_apis extends REST_Controller{
             Restaurant_enum::LANDSCAPE_LIST             => ($landscape_list != null ) ? explode(Common_enum::MARK, $landscape_list): array(),
             Restaurant_enum::OTHER_CRITERIA_LIST        => ($other_criteria_list != null ) ? explode(Common_enum::MARK, $other_criteria_list): array(),
             Restaurant_enum::INTRODUCE                  => $introduce,
-            Restaurant_enum::NUMBER_VIEW                => (int)$number_view,
+            Restaurant_enum::NUMBER_VIEW                => 0,
             Restaurant_enum::START_DATE                 => $start_date,
             Restaurant_enum::END_DATE                   => $end_date,
             Common_enum::UPDATED_DATE       => ($updated_date == null ) ? $this->common_model->getCurrentDate(): $updated_date,
