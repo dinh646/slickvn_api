@@ -1842,7 +1842,7 @@ class restaurant_apis extends REST_Controller{
         //  Update menu_dish
         $id_menu_dish_new = $this->update_menu_dish(Common_enum::INSERT, /*$id_menu_dish, $id,*/ $str_dish_list, $created_date, $updated_date);
         $array_value = array( 
-            Restaurant_enum::ID_MENU_DISH               => id_menu_dish_new,
+            Restaurant_enum::ID_MENU_DISH               => $id_menu_dish_new,
             Restaurant_enum::ID_COUPON                  => $id_coupon,
             Restaurant_enum::NAME                       => $name,
             Restaurant_enum::FOLDER_NAME                => $folder_name,
