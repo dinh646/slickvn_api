@@ -1772,16 +1772,13 @@ class restaurant_apis extends REST_Controller{
 
                           $file_introduce []= $folder_name.'/images/introduce/'.$array_image_post[$i];
                       }
-
                     }
-
                 }
             }
-            
         }
         else if($is_edit == 0){
             
-            $this->common_model->removeDoc(Menu_dish_enum::COLLECTION_MENU_DISH, $id_menu_dish);
+//            $this->common_model->removeDoc(Menu_dish_enum::COLLECTION_MENU_DISH, $id_menu_dish);
             
             $array_image_post = explode(Common_enum::MARK_, $str_image_post); //  [ {'new_avatar.jpg,old_avatar.jpg'}, {'new_carousel.jpg,old_carousel.jpg'}, {'deleted_introduce_1.jpg,deleted_introduce_2.jpg,...'}, {'introduce_1.jpg,introduce_2.jpg,...'}]
             
