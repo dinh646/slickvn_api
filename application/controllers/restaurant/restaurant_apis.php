@@ -634,8 +634,8 @@ class restaurant_apis extends REST_Controller{
         $key = $this->get('key');
         
         //  Query
-        $where = array(Restaurant_enum::NAME => new MongoRegex('/'.$key.'/i'));
-        $list_restaurant = $this->restaurant_model->searchRestaurant($where);
+        $where = array(Coupon_enum::DESC => new MongoRegex('/'.$key.'/i'));
+        $list_coupon = $this->restaurant_model->searchCoupon($where);
         
         //  End
         $position_end_get   = ($page == 1) ? $limit : ($limit * $page);
@@ -648,9 +648,15 @@ class restaurant_apis extends REST_Controller{
         
         //  Count object restaurant
         $count = 0;
-        if (is_array($list_restaurant)){
+        if (is_array($list_coupon)){
             
-            foreach ($list_restaurant as $restaurant){
+            foreach ($list_coupon as $coupon){
+                
+                $id_restaurant = $coupon['id_restaurant'];
+//                $id_restaurant = '52938d7b6b2bf5200f000006';
+                var_dump($id_restaurant);
+                $restaurant = $this->restaurant_model->getRestaurantById($id_restaurant);
+                
                 //  Current date
                 $current_date = $this->common_model->getCurrentDate();
 
@@ -663,7 +669,7 @@ class restaurant_apis extends REST_Controller{
                 $is_delete = $restaurant['is_delete'];
 
                 //  Is coupon
-                $is_coupon = ($restaurant['id_coupon'] == null) ? 0 : 1;
+//                $is_coupon = ($restaurant['id_coupon'] == null) ? 0 : 1;
                 
                 if($interval_expired >=0 && $is_delete == 0 && $is_coupon == 1){
 
@@ -1734,7 +1740,6 @@ class restaurant_apis extends REST_Controller{
         $this->common_model->createDirectory($path_carousel, Common_enum::WINDOWN);
         $this->common_model->createDirectory($path_introduce, Common_enum::WINDOWN);
         
-        
         if($is_insert == 0){
             
             $array_image_post = explode(Common_enum::MARK, $str_image_post); //  ['image.jpg', 'image2.png' ,...]
@@ -1777,7 +1782,7 @@ class restaurant_apis extends REST_Controller{
         }
         else if($is_edit == 0){
             
-//            $this->common_model->removeDoc(Menu_dish_enum::COLLECTION_MENU_DISH, $id_menu_dish);
+            $this->common_model->removeDoc(Menu_dish_enum::COLLECTION_MENU_DISH, $id_menu_dish);
             
             $array_image_post = explode(Common_enum::MARK_, $str_image_post); //  [ {'new_avatar.jpg,old_avatar.jpg'}, {'new_carousel.jpg,old_carousel.jpg'}, {'deleted_introduce_1.jpg,deleted_introduce_2.jpg,...'}, {'introduce_1.jpg,introduce_2.jpg,...'}]
             
@@ -2595,7 +2600,6 @@ class restaurant_apis extends REST_Controller{
                    'Total'      =>sizeof($results),
                    'Results'    =>$results
             );
-
             $this->response($data);
         }
         //  Response
@@ -2604,7 +2608,6 @@ class restaurant_apis extends REST_Controller{
                'Total'      =>sizeof($results),
                'Results'    =>$results
         );
-
         $this->response($data);
     }
     

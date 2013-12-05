@@ -455,6 +455,25 @@ class Restaurant_model extends CI_Model{
     
     /**
      * 
+     * Search Collection Coupon
+     * 
+     * @param String $where
+     * 
+     * @return Array collection Restaurant
+     * 
+     */
+    public function searchCoupon($where) {
+        
+        //  Collection Restaurant
+        $collection = Coupon_enum::COLLECTION_COUPON;
+        $list_coupon = $this->common_model->searchCollection($collection, $where );
+        
+        return $list_coupon;
+        
+    }
+    
+    /**
+     * 
      * Get Collection Coupon by Id
      * 
      * @param String $id
