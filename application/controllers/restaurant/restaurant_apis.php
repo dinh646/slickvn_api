@@ -1781,11 +1781,8 @@ class restaurant_apis extends REST_Controller{
             }
         }
         else if($is_edit == 0){
-            
             $this->common_model->removeDoc(Menu_dish_enum::COLLECTION_MENU_DISH, $id_menu_dish);
-            
             $array_image_post = explode(Common_enum::MARK_, $str_image_post); //  [ {'new_avatar.jpg,old_avatar.jpg'}, {'new_carousel.jpg,old_carousel.jpg'}, {'deleted_introduce_1.jpg,deleted_introduce_2.jpg,...'}, {'introduce_1.jpg,introduce_2.jpg,...'}]
-            
             //  string image
             $str_image_avatar = $array_image_post[0];   //{'new_avatar.jpg,old_avatar.jpg'}
             $str_image_carousel = $array_image_post[1]; //{'new_carousel.jpg,old_carousel.jpg'}
@@ -1794,57 +1791,82 @@ class restaurant_apis extends REST_Controller{
             
             //  array imaga avatar
             $array_image_avatar = explode(Common_enum::MARK, $str_image_avatar);//  [new_avatar.jpg, old_avatar.jpg]
-            if(file_exists($file_temp.$array_image_avatar[0])){                 //  check new avatar
-                $move_file_avatar = $this->common_model->moveFileToDirectory($file_temp.$array_image_avatar[0], $path_avatar.$array_image_avatar[0]);
-                if(!$move_file_avatar){
-                    $this->common_model->setError('Move file avatar '.$move_file_avatar);
-                }
-                else{
-                    $file_avatar = $folder_name.'/images/avatar/'.$array_image_avatar[0];
-                    if(file_exists($path_avatar.$array_image_avatar[1])){       //  check old avatar
-                        unlink($path_avatar.$array_image_avatar[1]);
-                    }
-                }
+            if(strcmp($array_image_avatar[0], $array_image_avatar[1]) != 0 ){
+              if(file_exists($file_temp.$array_image_avatar[0])){                 //  check new avatar
+
+//                var_dump('Not match Avatar');
+
+                  $move_file_avatar = $this->common_model->moveFileToDirectory($file_temp.$array_image_avatar[0], $path_avatar.$array_image_avatar[0]);
+                  if(!$move_file_avatar){
+                      $this->common_model->setError('Move file avatar '.$move_file_avatar);
+                  }
+                  else{
+//                      $file_avatar = $folder_name.'/images/avatar/'.$array_image_avatar[0];
+                      if(file_exists($path_avatar.$array_image_avatar[1])){       //  check old avatar
+                          unlink($path_avatar.$array_image_avatar[1]);
+                      }
+                  }
+              }
             }
+            else{
+              var_dump('match Avatar');
+            }
+            $file_avatar = $folder_name.'/images/avatar/'.$array_image_avatar[0];
             
             //  array image carousel
             $array_image_carousel = explode(Common_enum::MARK, $str_image_carousel);//  [new_carousel.jpg, old_carousel.jpg]
-            if(file_exists($file_temp.$array_image_carousel[0])){                 //  check new carousel
-                $move_file_carousel = $this->common_model->moveFileToDirectory($file_temp.$array_image_carousel[0], $path_carousel.$array_image_carousel[0]);
-                if(!$move_file_carousel){
-                    $this->common_model->setError('Move file carousel '.$move_file_carousel);
-                }
-                else{
-                    $file_carousel = $folder_name.'/images/carousel/'.$array_image_carousel[0];
-                    
-                    if(file_exists($path_carousel.$array_image_carousel[1])){       //  check old carousel
-                        unlink($path_carousel.$array_image_carousel[1]);
-                    }
-                }
+            if(strcmp($array_image_carousel[0], $array_image_carousel[1]) != 0 ){
+              
+//              var_dump('Not match Carousel');
+              
+              if(file_exists($file_temp.$array_image_carousel[0])){                 //  check new carousel
+                  $move_file_carousel = $this->common_model->moveFileToDirectory($file_temp.$array_image_carousel[0], $path_carousel.$array_image_carousel[0]);
+                  if(!$move_file_carousel){
+                      $this->common_model->setError('Move file carousel '.$move_file_carousel);
+                  }
+                  else{
+//                      $file_carousel = $folder_name.'/images/carousel/'.$array_image_carousel[0];
+                      if(file_exists($path_carousel.$array_image_carousel[1])){       //  check old carousel
+                          unlink($path_carousel.$array_image_carousel[1]);
+                      }
+                  }
+              }
             }
+            else{
+              var_dump('match Carousel');
+            }
+            $file_carousel = $folder_name.'/images/carousel/'.$array_image_carousel[0];
             
             //  array image deleted
             if(strcmp(trim($str_image_deleted), 'null') != 0){
                 $array_image_delete = explode(Common_enum::MARK, $str_image_deleted);//  [deleted_introduce_1.jpg,deleted_introduce_2.jpg,...]
-                foreach ($array_image_delete as $value) {
+//                var_dump($array_image_delete);
+                 foreach ($array_image_delete as $value) {
                     if(file_exists($path_introduce.$value)){       //  check old introduce image
                             unlink($path_introduce.$value);
                         }
                 }
             }
+            else{
+              var_dump('$str_image_deleted NULL');
+            }
             
             //  array image introlduce
-            $array_image_introduce = explode(Common_enum::MARK, $str_image_introduce);//  [introduce_1.jpg,introduce_2.jpg,...]
-            foreach ($array_image_introduce as $value) {
-                if(file_exists($file_temp.$value)){       //  check new introduce image
-                        $move_file_carousel = $this->common_model->moveFileToDirectory($file_temp.$value, $path_introduce.$value);
-    //                if(!$move_file_carousel){
-    //                    $this->common_model->setError('Move file carousel '.$move_file_carousel);
-    //                }
-                        $file_introduce []= $folder_name.'/images/introduce/'.$value;
-                    }
+            if(strcmp(trim($str_image_introduce), 'null') != 0){
+              $array_image_introduce = explode(Common_enum::MARK, $str_image_introduce);//  [introduce_1.jpg,introduce_2.jpg,...]
+              foreach ($array_image_introduce as $value) {
+                  if(file_exists($file_temp.$value)){       //  check new introduce image
+                          $move_file_carousel = $this->common_model->moveFileToDirectory($file_temp.$value, $path_introduce.$value);
+      //                if(!$move_file_carousel){
+      //                    $this->common_model->setError('Move file carousel '.$move_file_carousel);
+      //                }
+                          $introduce = str_replace(str_replace(Common_enum::ROOT, Common_enum::DOMAIN_NAME ,$file_temp), 'folder_image_introduce_detail_page/'.$folder_name.'/images/introduce/'.$value, $introduce);
+                  }
+                  $file_introduce []= $folder_name.'/images/introduce/'.$value;
+              }
             }
         }
+        
         //  Update menu_dish
         $id_menu_dish_new = $this->update_menu_dish(Common_enum::INSERT, /*$id_menu_dish, $id,*/ $str_dish_list, $created_date, $updated_date);
         $array_value = array( 
