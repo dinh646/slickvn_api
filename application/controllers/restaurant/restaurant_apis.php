@@ -279,7 +279,7 @@ class restaurant_apis extends REST_Controller{
      *  Response: JSONObject
      * 
      */
-    public function update_menu_dish/*_post*/($action, $id, $id_restaurant, $str_dish_list, $created_date, $updated_date) {
+    public function update_menu_dish/*_post*/($action, /*$id, $id_restaurant,*/ $str_dish_list, $created_date, $updated_date) {
         
         //  Get param from client
 //        $action = $this->post('action');
@@ -318,13 +318,13 @@ class restaurant_apis extends REST_Controller{
         }
         
         $array_value = array(
-            Menu_dish_enum::ID_RESTAURANT => ($id_restaurant == null) ? '' : $id_restaurant,
+            Menu_dish_enum::ID_RESTAURANT => '',
             Menu_dish_enum::DISH_LIST => $dish_list,
             Common_enum::CREATED_DATE => ($created_date==null) ? $this->common_model->getCurrentDate() : $created_date ,
             Common_enum::UPDATED_DATE => ($updated_date==null) ? $this->common_model->getCurrentDate() : $updated_date ,
         );
         
-        $this->restaurant_model->updateMenuDish($action, $id, $array_value);
+        $this->restaurant_model->updateMenuDish($action, /*$id*/null, $array_value);
 //        $error = $this->restaurant_model->getError();
         return ($array_value['_id']->{'$id'});
         
@@ -1707,7 +1707,7 @@ class restaurant_apis extends REST_Controller{
         $landscape_list          = $this->post('landscape_list');
         $other_criteria_list     = $this->post('other_criteria_list');
         $introduce               = $this->post('introduce');
-        $number_view             = $this->post('number_view');
+//        $number_view             = $this->post('number_view');
         $start_date              = $this->post('start_date');
         $end_date                = $this->post('end_date');
         $created_date            = $this->post('created_date');
@@ -1781,6 +1781,8 @@ class restaurant_apis extends REST_Controller{
         }
         else if($is_edit == 0){
             
+            $this->common_model->removeDoc(Menu_dish_enum::COLLECTION_MENU_DISH, $id_menu_dish);
+            
             $array_image_post = explode(Common_enum::MARK_, $str_image_post); //  [ {'new_avatar.jpg,old_avatar.jpg'}, {'new_carousel.jpg,old_carousel.jpg'}, {'deleted_introduce_1.jpg,deleted_introduce_2.jpg,...'}, {'introduce_1.jpg,introduce_2.jpg,...'}]
             
             //  string image
@@ -1841,9 +1843,9 @@ class restaurant_apis extends REST_Controller{
             }
         }
         //  Update menu_dish
-        $id_menu_dish_new = $this->update_menu_dish($action, $id_menu_dish, $id, $str_dish_list, $created_date, $updated_date);
+        $id_menu_dish_new = $this->update_menu_dish(Common_enum::INSERT, /*$id_menu_dish, $id,*/ $str_dish_list, $created_date, $updated_date);
         $array_value = array( 
-            Restaurant_enum::ID_MENU_DISH               => $id_menu_dish_new,
+            Restaurant_enum::ID_MENU_DISH               => ($id_menu_dish == null) ? $id_menu_dish_new : $id_menu_dish,
             Restaurant_enum::ID_COUPON                  => $id_coupon,
             Restaurant_enum::NAME                       => $name,
             Restaurant_enum::FOLDER_NAME                => $folder_name,
@@ -1868,7 +1870,7 @@ class restaurant_apis extends REST_Controller{
             Restaurant_enum::LANDSCAPE_LIST             => ($landscape_list != null ) ? explode(Common_enum::MARK, $landscape_list): array(),
             Restaurant_enum::OTHER_CRITERIA_LIST        => ($other_criteria_list != null ) ? explode(Common_enum::MARK, $other_criteria_list): array(),
             Restaurant_enum::INTRODUCE                  => $introduce,
-            Restaurant_enum::NUMBER_VIEW                => (int)$number_view,
+//            Restaurant_enum::NUMBER_VIEW                => (int)$number_view,
             Restaurant_enum::START_DATE                 => $start_date,
             Restaurant_enum::END_DATE                   => $end_date,
             Common_enum::UPDATED_DATE       => ($updated_date == null ) ? $this->common_model->getCurrentDate(): $updated_date,

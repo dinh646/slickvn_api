@@ -11,7 +11,7 @@ class Common_model extends CI_Model{
         parent::__construct();
         
         $mongodb = 'mongodb://';
-        $host_name = '192.168.1.194';
+        $host_name = 'localhost';
         $port = '27017';
         $database = 'slickvn_test';
         
@@ -605,6 +605,37 @@ class Common_model extends CI_Model{
                     
                     $this->collection ->update($where, $array_value );
                 
+            }
+        }catch ( MongoConnectionException $e ){
+                $this->setError($e->getMessage());
+        }catch ( MongoException $e ){
+                $this->setError($e->getMessage());
+        }
+    }
+    
+    /**
+     * 
+     * Remove an document
+     * 
+     * @param String $collection_name
+     * @param String $id
+     * @param Array $array_value
+     * 
+     * 
+     **/
+    public function removeDoc($collection_name, $id) {
+        
+        try{
+            if($collection_name == null){
+                $this->setError('Collection name is null'); return;
+            }
+            else{
+                // Connect collection $collection_name
+                $collection = $collection_name;
+                $this->collection = $this->slickvn_db->$collection;
+                if($id == null){$this->setError('Id is is null'); return;}
+                $where = array( Common_enum::_ID => new MongoId($id) );
+                $this->collection ->remove($where);
             }
         }catch ( MongoConnectionException $e ){
                 $this->setError($e->getMessage());
