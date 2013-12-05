@@ -940,7 +940,7 @@ class restaurant_apis extends REST_Controller{
                                 Restaurant_enum::ID_MENU_DISH               => $restaurant['id_menu_dish'],
                                 Restaurant_enum::ID_COUPON                  => $restaurant['id_coupon'],
                                 Restaurant_enum::NAME                       => $restaurant['name'],
-                                Restaurant_enum::NUMBER_VIEW                => $restaurant['number_view'],
+//                                Restaurant_enum::NUMBER_VIEW                => $restaurant['number_view'],
                                 Restaurant_enum::NUMBER_ASSESSMENT          => $this->restaurant_model->countAssessmentForRestaurant($restaurant['_id']->{'$id'}),
                                 Restaurant_enum::RATE_POINT                 => $this->restaurant_model->getRatePoint(),
                                 Restaurant_enum::NUMBER_LIKE                => 0,
@@ -1860,7 +1860,7 @@ class restaurant_apis extends REST_Controller{
       //                if(!$move_file_carousel){
       //                    $this->common_model->setError('Move file carousel '.$move_file_carousel);
       //                }
-//                          $introduce = str_replace(str_replace(Common_enum::ROOT, Common_enum::DOMAIN_NAME ,$file_temp), 'folder_image_introduce_detail_page/'.$folder_name.'/images/introduce/'.$value, $introduce);
+                          $introduce = str_replace(str_replace(Common_enum::ROOT, Common_enum::DOMAIN_NAME ,$file_temp), 'folder_image_introduce_detail_page/'.$folder_name.'/images/introduce/'.$value, $introduce);
                   }
                   $file_introduce []= $folder_name.'/images/introduce/'.$value;
               }
@@ -1902,7 +1902,7 @@ class restaurant_apis extends REST_Controller{
             Common_enum::CREATED_DATE       => ($created_date == null ) ? $this->common_model->getCurrentDate(): $created_date,
             Restaurant_enum::IS_DELETE                  => ($is_delete == null ) ? Restaurant_enum::DEFAULT_IS_DELETE : (int)$is_delete
         );
-        if($is_edit){
+        if($is_edit==0){
             unset($array_value['number_view']);
         }
         $this->restaurant_model->updateRestaurant($action, $id, $array_value);
