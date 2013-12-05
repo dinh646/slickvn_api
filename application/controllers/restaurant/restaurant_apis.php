@@ -1739,7 +1739,7 @@ class restaurant_apis extends REST_Controller{
             
             $array_image_post = explode(Common_enum::MARK, $str_image_post); //  ['image.jpg', 'image2.png' ,...]
             
-            for($i=0; $i<sizeof($array_image_post); $i++) {
+            for($i=0; $i<sizeof($array_image_post)-1; $i++) {
                 $file_temp = $file_temp.$array_image_post[$i];
 //                var_dump('temp ['.$i.'] = '.$file_temp);
                 if (file_exists($file_temp)) {
@@ -1751,7 +1751,6 @@ class restaurant_apis extends REST_Controller{
                       }else{
                           $file_avatar = $folder_name.'/images/avatar/'.$array_image_post[0];
                       }
-                      
                     }
                     else if($i==1){
                       $move_file_carousel = $this->common_model->moveFileToDirectory($file_temp, $path_carousel.$array_image_post[$i]);
