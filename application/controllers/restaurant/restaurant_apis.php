@@ -1881,7 +1881,7 @@ class restaurant_apis extends REST_Controller{
         }
         $this->restaurant_model->updateRestaurant($action, $id, $array_value);
         
-        $this->restaurant_model->updateMenuDish(Common_enum::EDIT, $id_menu_dish, array(Menu_dish_enum::ID_RESTAURANT => $array_value['_id']->{'$id'}) );
+        $this->restaurant_model->updateMenuDish(Common_enum::EDIT, $id_menu_dish_new, array(Menu_dish_enum::ID_RESTAURANT => $array_value['_id']->{'$id'}) );
         
         $error = $this->restaurant_model->getError();
         if($error == null){
