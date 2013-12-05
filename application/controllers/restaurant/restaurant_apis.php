@@ -1707,7 +1707,7 @@ class restaurant_apis extends REST_Controller{
         $landscape_list          = $this->post('landscape_list');
         $other_criteria_list     = $this->post('other_criteria_list');
         $introduce               = $this->post('introduce');
-//        $number_view             = $this->post('number_view');
+        $number_view             = $this->post('number_view');
         $start_date              = $this->post('start_date');
         $end_date                = $this->post('end_date');
         $created_date            = $this->post('created_date');
@@ -1820,11 +1820,13 @@ class restaurant_apis extends REST_Controller{
             }
             
             //  array image deleted
-            $array_image_delete = explode(Common_enum::MARK, $str_image_deleted);//  [deleted_introduce_1.jpg,deleted_introduce_2.jpg,...]
-            foreach ($array_image_delete as $value) {
-                if(file_exists($path_introduce.$value)){       //  check old introduce image
-                        unlink($path_introduce.$value);
-                    }
+            if(strcmp(trim($str_image_deleted), 'null') != 0){
+                $array_image_delete = explode(Common_enum::MARK, $str_image_deleted);//  [deleted_introduce_1.jpg,deleted_introduce_2.jpg,...]
+                foreach ($array_image_delete as $value) {
+                    if(file_exists($path_introduce.$value)){       //  check old introduce image
+                            unlink($path_introduce.$value);
+                        }
+                }
             }
             
             //  array image introlduce
@@ -1867,14 +1869,14 @@ class restaurant_apis extends REST_Controller{
             Restaurant_enum::LANDSCAPE_LIST             => ($landscape_list != null ) ? explode(Common_enum::MARK, $landscape_list): array(),
             Restaurant_enum::OTHER_CRITERIA_LIST        => ($other_criteria_list != null ) ? explode(Common_enum::MARK, $other_criteria_list): array(),
             Restaurant_enum::INTRODUCE                  => $introduce,
-//            Restaurant_enum::NUMBER_VIEW                => (int)$number_view,
+            Restaurant_enum::NUMBER_VIEW                => (int)$number_view,
             Restaurant_enum::START_DATE                 => $start_date,
             Restaurant_enum::END_DATE                   => $end_date,
             Common_enum::UPDATED_DATE       => ($updated_date == null ) ? $this->common_model->getCurrentDate(): $updated_date,
             Common_enum::CREATED_DATE       => ($created_date == null ) ? $this->common_model->getCurrentDate(): $created_date,
             Restaurant_enum::IS_DELETE                  => ($is_delete == null ) ? Restaurant_enum::DEFAULT_IS_DELETE : (int)$is_delete
         );
-        
+        unset($array_value['number_view']);
         $this->restaurant_model->updateRestaurant($action, $id, $array_value);
         
         $this->restaurant_model->updateMenuDish(Common_enum::EDIT, $id_menu_dish, array(Menu_dish_enum::ID_RESTAURANT => $array_value['_id']->{'$id'}) );
