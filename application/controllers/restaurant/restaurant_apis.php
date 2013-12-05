@@ -1876,7 +1876,9 @@ class restaurant_apis extends REST_Controller{
             Common_enum::CREATED_DATE       => ($created_date == null ) ? $this->common_model->getCurrentDate(): $created_date,
             Restaurant_enum::IS_DELETE                  => ($is_delete == null ) ? Restaurant_enum::DEFAULT_IS_DELETE : (int)$is_delete
         );
-        unset($array_value['number_view']);
+        if($is_edit){
+            unset($array_value['number_view']);
+        }
         $this->restaurant_model->updateRestaurant($action, $id, $array_value);
         
         $this->restaurant_model->updateMenuDish(Common_enum::EDIT, $id_menu_dish, array(Menu_dish_enum::ID_RESTAURANT => $array_value['_id']->{'$id'}) );
