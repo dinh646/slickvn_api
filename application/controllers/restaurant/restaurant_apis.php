@@ -1860,7 +1860,7 @@ class restaurant_apis extends REST_Controller{
       //                if(!$move_file_carousel){
       //                    $this->common_model->setError('Move file carousel '.$move_file_carousel);
       //                }
-                          $introduce = str_replace(str_replace(Common_enum::ROOT, Common_enum::DOMAIN_NAME ,$file_temp), 'folder_image_introduce_detail_page/'.$folder_name.'/images/introduce/'.$value, $introduce);
+//                          $introduce = str_replace(str_replace(Common_enum::ROOT, Common_enum::DOMAIN_NAME ,$file_temp), 'folder_image_introduce_detail_page/'.$folder_name.'/images/introduce/'.$value, $introduce);
                   }
                   $file_introduce []= $folder_name.'/images/introduce/'.$value;
               }
