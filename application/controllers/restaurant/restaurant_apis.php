@@ -297,14 +297,14 @@ class restaurant_apis extends REST_Controller{
         
         if(is_array($array_dish_list)){
             
-            foreach ($array_dish_list as $value) {
+            foreach ( $array_dish_list as $value ) {
                 $detail_dish = explode(Common_enum::MARK_DETAIL_DISH, $value);
                 
                 if(is_array($detail_dish) && count($detail_dish) > 0){
                     $name = $detail_dish[0];
                     $desc= $detail_dish[1];
                     $price = (int)$detail_dish[2];
-                    $signature_dish = $detail_dish[3];
+                    $signature_dish = trim($detail_dish[3]);
 
                     $dish = array(
                         Menu_dish_enum::NAME =>$name,
