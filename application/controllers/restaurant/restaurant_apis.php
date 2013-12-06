@@ -321,11 +321,13 @@ class restaurant_apis extends REST_Controller{
                 Common_enum::CREATED_DATE => ($created_date==null) ? $this->common_model->getCurrentDate() : $created_date ,
                 Common_enum::UPDATED_DATE => ($updated_date==null) ? $this->common_model->getCurrentDate() : $updated_date ,
             );
+            $this->restaurant_model->updateMenuDish($action, /*$id*/null, $array_value);
+            return ($array_value['_id']->{'$id'});
         }
         
-        $this->restaurant_model->updateMenuDish($action, /*$id*/null, $array_value);
+//        $this->restaurant_model->updateMenuDish($action, /*$id*/null, $array_value);
 //        $error = $this->restaurant_model->getError();
-        return ($array_value['_id']->{'$id'});
+//        return ($array_value['_id']->{'$id'});
         
 //        if($error == null){
 //            $data =  array(
