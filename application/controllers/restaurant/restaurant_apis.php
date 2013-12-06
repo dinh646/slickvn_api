@@ -223,51 +223,51 @@ class restaurant_apis extends REST_Controller{
      *  Response: JSONObject
      * 
      */
-    public function get_all_menu_dish_get() {
-        
-        //  Get limit from client
-        $limit = $this->get("limit");
-        
-        //  Get page from client
-        $page = $this->get("page");
-        
-        //  End
-        $position_end_get   = ($page == 1)? $limit : ($limit * $page);
-        
-        //  Start
-        $position_start_get = ($page == 1)? $page : ( $position_end_get - ($limit - 1) );
-        
-        $list_menu_dish = $this->restaurant_model->getMenuDish();
-        
-        $results = array();
-        
-        $count = 0;
-        if(is_array($list_menu_dish)){
-            foreach ($list_menu_dish as $menu_dish) {
-                $count ++ ;
-                if(($count) >= $position_start_get && ($count) <= $position_end_get){
-
-                    $jsonobject = array(
-                            Menu_dish_enum::ID                => $menu_dish['_id']->{'$id'},
-                            Menu_dish_enum::ID_RESTAURANT     => $menu_dish['id_restaurant'],
-                            Menu_dish_enum::DISH_LIST         => $menu_dish['dish_list'],       
-                            Common_enum::UPDATED_DATE         => $menu_dish['updated_date'],
-                            Common_enum::CREATED_DATE         => $menu_dish['created_date']
-                        );
-                    $results [] = $jsonobject;
-                }
-            }
-        }
-        
-        //  Response
-        $data =  array(
-               'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
-               'Total'      =>  sizeof($results),
-               'Results'    =>$results
-        );
-        $this->response($data);
-        
-    }
+//    public function get_all_menu_dish_get() {
+//        
+//        //  Get limit from client
+//        $limit = $this->get("limit");
+//        
+//        //  Get page from client
+//        $page = $this->get("page");
+//        
+//        //  End
+//        $position_end_get   = ($page == 1)? $limit : ($limit * $page);
+//        
+//        //  Start
+//        $position_start_get = ($page == 1)? $page : ( $position_end_get - ($limit - 1) );
+//        
+//        $list_menu_dish = $this->restaurant_model->getMenuDish();
+//        
+//        $results = array();
+//        
+//        $count = 0;
+//        if(is_array($list_menu_dish)){
+//            foreach ($list_menu_dish as $menu_dish) {
+//                $count ++ ;
+//                if(($count) >= $position_start_get && ($count) <= $position_end_get){
+//
+//                    $jsonobject = array(
+//                            Menu_dish_enum::ID                => $menu_dish['_id']->{'$id'},
+//                            Menu_dish_enum::ID_RESTAURANT     => $menu_dish['id_restaurant'],
+//                            Menu_dish_enum::DISH_LIST         => $menu_dish['dish_list'],       
+//                            Common_enum::UPDATED_DATE         => $menu_dish['updated_date'],
+//                            Common_enum::CREATED_DATE         => $menu_dish['created_date']
+//                        );
+//                    $results [] = $jsonobject;
+//                }
+//            }
+//        }
+//        
+//        //  Response
+//        $data =  array(
+//               'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
+//               'Total'      =>  sizeof($results),
+//               'Results'    =>$results
+//        );
+//        $this->response($data);
+//        
+//    }
     
     
     /**
@@ -845,8 +845,16 @@ class restaurant_apis extends REST_Controller{
                                 Restaurant_enum::NUMBER_ASSESSMENT          => $this->restaurant_model->countAssessmentForRestaurant($restaurant['_id']->{'$id'}),
                                 Restaurant_enum::RATE_POINT                 => $this->restaurant_model->getRatePoint(),
 
-                                Restaurant_enum::NUMBER_LIKE                => 0,
-                                Restaurant_enum::NUMBER_SHARE               => 0,
+                                //  Number LIKE of Restaurant
+                                Restaurant_enum::NUMBER_LIKE                => $this->user_model->countUserLogByAction(array ( 
+                                                                                                                                User_log_enum::ID_RESTAURANT => $restaurant['_id']->{'$id'}, 
+                                                                                                                                User_log_enum::ACTION        => Common_enum::LIKE_RESTAURANT
+                                                                                                                                )),
+                                //  Number SHARE of Restaurant
+                                Restaurant_enum::NUMBER_SHARE               => $this->user_model->countUserLogByAction(array ( 
+                                                                                                                            User_log_enum::ID_RESTAURANT => $restaurant['_id']->{'$id'}, 
+                                                                                                                            User_log_enum::ACTION        => Common_enum::SHARE_RESTAURANT
+                                                                                                                            )),
 
                                 Restaurant_enum::RATE_SERVICE               => $this->restaurant_model->getRateService(),
                                 Restaurant_enum::RATE_LANDSCAPE             => $this->restaurant_model->getRateLandscape(),
@@ -939,11 +947,20 @@ class restaurant_apis extends REST_Controller{
                                 Restaurant_enum::ID_MENU_DISH               => $restaurant['id_menu_dish'],
                                 Restaurant_enum::ID_COUPON                  => $restaurant['id_coupon'],
                                 Restaurant_enum::NAME                       => $restaurant['name'],
-//                                Restaurant_enum::NUMBER_VIEW                => $restaurant['number_view'],
+                                Restaurant_enum::AVATAR                       => $restaurant['avatar'],
+                                Restaurant_enum::NUMBER_VIEW                => $restaurant['number_view'],
                                 Restaurant_enum::NUMBER_ASSESSMENT          => $this->restaurant_model->countAssessmentForRestaurant($restaurant['_id']->{'$id'}),
                                 Restaurant_enum::RATE_POINT                 => $this->restaurant_model->getRatePoint(),
-                                Restaurant_enum::NUMBER_LIKE                => 0,
-                                Restaurant_enum::NUMBER_SHARE               => 0,
+                                //  Number LIKE of Restaurant
+                                Restaurant_enum::NUMBER_LIKE                => $this->user_model->countUserLogByAction(array ( 
+                                                                                                                                User_log_enum::ID_RESTAURANT => $restaurant['_id']->{'$id'}, 
+                                                                                                                                User_log_enum::ACTION        => Common_enum::LIKE_RESTAURANT
+                                                                                                                                )),
+                                //  Number SHARE of Restaurant
+                                Restaurant_enum::NUMBER_SHARE               => $this->user_model->countUserLogByAction(array ( 
+                                                                                                                            User_log_enum::ID_RESTAURANT => $restaurant['_id']->{'$id'}, 
+                                                                                                                            User_log_enum::ACTION        => Common_enum::SHARE_RESTAURANT
+                                                                                                                            )),
                                 Restaurant_enum::RATE_SERVICE               => $this->restaurant_model->getRateService(),
                                 Restaurant_enum::RATE_LANDSCAPE             => $this->restaurant_model->getRateLandscape(),
                                 Restaurant_enum::RATE_TASTE                 => $this->restaurant_model->getRateTaste(),
@@ -1044,11 +1061,10 @@ class restaurant_apis extends REST_Controller{
                         $jsonobject = array( 
 
                             Restaurant_enum::ID                         => $restaurant['_id']->{'$id'},
-                            //Restaurant_enum::ID_USER                    => $restaurant['id_user'],
                             Restaurant_enum::ID_MENU_DISH               => $restaurant['id_menu_dish'],
                             Restaurant_enum::ID_COUPON                  => $restaurant['id_coupon'],
                             Restaurant_enum::NAME                       => $restaurant['name'],
-
+                            Restaurant_enum::AVATAR                       => $restaurant['avatar'],
                             Restaurant_enum::NUMBER_VIEW                => $restaurant['number_view'],
                             Restaurant_enum::NUMBER_ASSESSMENT          => $this->restaurant_model->countAssessmentForRestaurant($id),
                             Restaurant_enum::RATE_POINT                 => $this->restaurant_model->getRatePoint(),
@@ -1789,6 +1805,7 @@ class restaurant_apis extends REST_Controller{
         }
         else if($is_edit == 0){
             $this->common_model->removeDoc(Menu_dish_enum::COLLECTION_MENU_DISH, $id_menu_dish);
+            
             $array_image_post = explode(Common_enum::MARK_, $str_image_post); //  [ {'new_avatar.jpg,old_avatar.jpg'}, {'new_carousel.jpg,old_carousel.jpg'}, {'deleted_introduce_1.jpg,deleted_introduce_2.jpg,...'}, {'introduce_1.jpg,introduce_2.jpg,...'}]
             //  string image
             $str_image_avatar = $array_image_post[0];   //{'new_avatar.jpg,old_avatar.jpg'}
@@ -1815,6 +1832,7 @@ class restaurant_apis extends REST_Controller{
                   }
               }
             }
+            
             else{
               var_dump('match Avatar');
             }
@@ -1867,10 +1885,19 @@ class restaurant_apis extends REST_Controller{
       //                if(!$move_file_carousel){
       //                    $this->common_model->setError('Move file carousel '.$move_file_carousel);
       //                }
-                          $introduce = str_replace(str_replace(Common_enum::ROOT, Common_enum::DOMAIN_NAME ,$file_temp), 'folder_image_introduce_detail_page/'.$folder_name.'/images/introduce/'.$value, $introduce);
+//          var_dump(str_replace(Common_enum::ROOT, Common_enum::DOMAIN_NAME ,$file_temp.$value));
+                          $introduce = str_replace(str_replace(Common_enum::ROOT, Common_enum::DOMAIN_NAME ,$file_temp.$value), 'folder_image_introduce_detail_page/'.$folder_name.'/images/introduce/'.$value, $introduce);
+//                          var_dump($introduce);
                   }
-                  $file_introduce []= $folder_name.'/images/introduce/'.$value;
+                  else{
+                    $introduce = str_replace(Common_enum::DOMAIN_NAME.Common_enum::URL_RESTAURANT_PROFILE, 'folder_image_introduce_detail_page', $introduce);
+                  }
+//          var_dump($introduce);
+                  
               }
+              
+              $file_introduce []= $folder_name.'/images/introduce/'.$value;
+              
             }
         }
         //  Update menu_dish
@@ -2505,7 +2532,6 @@ class restaurant_apis extends REST_Controller{
                         //  Create JSONObject Restaurant
                         $jsonobject = array( 
                             Restaurant_enum::ID                         => $restaurant['_id']->{'$id'},
-                            //Restaurant_enum::ID_USER                    => $restaurant['id_user'],
                             Restaurant_enum::ID_MENU_DISH               => $restaurant['id_menu_dish'],
                             Restaurant_enum::ID_COUPON                  => $restaurant['id_coupon'],
                             Restaurant_enum::NAME                       => $restaurant['name'],

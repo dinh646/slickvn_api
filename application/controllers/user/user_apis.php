@@ -260,47 +260,47 @@ class user_apis extends REST_Controller{
      * 
      * Response: JSONObject
      **/
-    public function get_active_members_get() {
-        //  Get limit from client
-        $limit = $this->get("limit");
-        //  Get page from client
-        $page = $this->get("page");
-        //  End
-        $position_end_get   = ($page == 1)? $limit : ($limit * $page);
-        //  Start
-        $position_start_get = ($page == 1)? $page : ( $position_end_get - ($limit - 1) );
-        //  Get collection 
-        $get_collection = $this->user_model->getAllUser();
-        $results = array();
-        $count = 0;
-        if(is_array($get_collection)){
-            foreach ($get_collection as $value) {
-                $number_assessment = $this->user_model->countUserLogByAction(array ( 
-                                                                                User_log_enum::ID_USER => $value['_id']->{'$id'}, 
-                                                                                User_log_enum::ACTION        => Common_enum::ASSESSMENT_RESTAURANT
-                                                                                ));
-                if($number_assessment>=Common_enum::LEVEL_ACTIVE_MEMBERS){
-                    $count ++;
-                    if(($count) >= $position_start_get && ($count) <= $position_end_get){
-                        //  Create JSONObject Restaurant
-                        $jsonobject = array( 
-                                            User_enum::FULL_NAME => $value['full_name'],
-                                            User_enum::AVATAR => $value['avatar'],
-                                            User_enum::NUMBER_ASSESSMENT => $number_assessment
-                                            );
-                        $results [] = $jsonobject;
-                    }
-                }
-            }
-        }
-        //  Response
-        $data =  array(
-               'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
-               'Total'      =>sizeof($results),
-               'Results'    =>$results
-        );
-        $this->response($data);
-    }
+//    public function get_active_members_get() {
+//        //  Get limit from client
+//        $limit = $this->get("limit");
+//        //  Get page from client
+//        $page = $this->get("page");
+//        //  End
+//        $position_end_get   = ($page == 1)? $limit : ($limit * $page);
+//        //  Start
+//        $position_start_get = ($page == 1)? $page : ( $position_end_get - ($limit - 1) );
+//        //  Get collection 
+//        $get_collection = $this->user_model->getAllUser();
+//        $results = array();
+//        $count = 0;
+//        if(is_array($get_collection)){
+//            foreach ($get_collection as $value) {
+//                $number_assessment = $this->user_model->countUserLogByAction(array ( 
+//                                                                                User_log_enum::ID_USER => $value['_id']->{'$id'}, 
+//                                                                                User_log_enum::ACTION        => Common_enum::ASSESSMENT_RESTAURANT
+//                                                                                ));
+//                if($number_assessment>=Common_enum::LEVEL_ACTIVE_MEMBERS){
+//                    $count ++;
+//                    if(($count) >= $position_start_get && ($count) <= $position_end_get){
+//                        //  Create JSONObject Restaurant
+//                        $jsonobject = array( 
+//                                            User_enum::FULL_NAME => $value['full_name'],
+//                                            User_enum::AVATAR => $value['avatar'],
+//                                            User_enum::NUMBER_ASSESSMENT => $number_assessment
+//                                            );
+//                        $results [] = $jsonobject;
+//                    }
+//                }
+//            }
+//        }
+//        //  Response
+//        $data =  array(
+//               'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
+//               'Total'      =>sizeof($results),
+//               'Results'    =>$results
+//        );
+//        $this->response($data);
+//    }
     
     /**
      * API Update User
@@ -424,51 +424,51 @@ class user_apis extends REST_Controller{
     //  APIs User Log                                     //
     //                                                    //
     //----------------------------------------------------//
-    public function update_user_log_post() {
-        //  Get param from client
-        $id_user        = $this->post('id_user');
-        $id_restaurant  = $this->post('id_restaurant');
-        $id_assessment  = $this->post('id_assessment');
-        $id_comment     = $this->post('id_comment');
-        $id_post        = $this->post('id_post');
-        $action         = $this->post('action');
-        $desc           = $this->post('desc');
-        $created_date   = $this->post('created_date');
-        $updated_date   = $this->post('updated_date');
-        
-        $array_value = array(
-            
-                        User_log_enum::ID_USER              => $id_user,
-                        User_log_enum::ID_RESTAURANT        => $id_restaurant,        
-                        User_log_enum::ID_ASSESSMENT        => $id_assessment,
-                        User_log_enum::ID_COMMENT           => $id_comment,
-                        User_log_enum::ID_POST              => $id_post,
-                        User_log_enum::ACTION               => $action,
-                        User_log_enum::DESC                 => $desc,
-                        Common_enum::UPDATED_DATE    => ($updated_date==null) ? $this->common_model->getCurrentDate() : $updated_date,
-                        Common_enum::CREATED_DATE    => ($created_date == null ) ? $this->common_model->getCurrentDate(): $created_date
-                
-                );
-        
-        $this->user_model->updateUserLog($action, null/*id*/, $array_value);
-        $error = $this->user_model->getError();
-        
-        if($error == null){
-            $data =  array(
-                   'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
-                   'Error'      =>$error
-            );
-            $this->response($data);
-        }
-        else{
-            $data =  array(
-                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
-                   'Error'      =>$error
-            );
-            $this->response($data);
-        }
-        
-    }
+//    public function update_user_log_post() {
+//        //  Get param from client
+//        $id_user        = $this->post('id_user');
+//        $id_restaurant  = $this->post('id_restaurant');
+//        $id_assessment  = $this->post('id_assessment');
+//        $id_comment     = $this->post('id_comment');
+//        $id_post        = $this->post('id_post');
+//        $action         = $this->post('action');
+//        $desc           = $this->post('desc');
+//        $created_date   = $this->post('created_date');
+//        $updated_date   = $this->post('updated_date');
+//        
+//        $array_value = array(
+//            
+//                        User_log_enum::ID_USER              => $id_user,
+//                        User_log_enum::ID_RESTAURANT        => $id_restaurant,        
+//                        User_log_enum::ID_ASSESSMENT        => $id_assessment,
+//                        User_log_enum::ID_COMMENT           => $id_comment,
+//                        User_log_enum::ID_POST              => $id_post,
+//                        User_log_enum::ACTION               => $action,
+//                        User_log_enum::DESC                 => $desc,
+//                        Common_enum::UPDATED_DATE    => ($updated_date==null) ? $this->common_model->getCurrentDate() : $updated_date,
+//                        Common_enum::CREATED_DATE    => ($created_date == null ) ? $this->common_model->getCurrentDate(): $created_date
+//                
+//                );
+//        
+//        $this->user_model->updateUserLog($action, null/*id*/, $array_value);
+//        $error = $this->user_model->getError();
+//        
+//        if($error == null){
+//            $data =  array(
+//                   'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
+//                   'Error'      =>$error
+//            );
+//            $this->response($data);
+//        }
+//        else{
+//            $data =  array(
+//                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
+//                   'Error'      =>$error
+//            );
+//            $this->response($data);
+//        }
+//        
+//    }
     
     /**
      * 
@@ -773,12 +773,9 @@ class user_apis extends REST_Controller{
      * 
      **/
     public function update_role_post() {
-        
         //  Get param from client
         $action             = $this->post('action');
-        
         $id                 = $this->post('id');
-        
         $name               = $this->post('name');
         $desc               = $this->post('desc');
         $function_list      = $this->post('function_list');
