@@ -68,35 +68,35 @@ class common_apis extends REST_Controller{
      * @return boolean
      * 
      **/
-    public function check_permisstion_post() {
-        
-        //  Get param from client
-        $collection_name = $this->post('collection_name');
-        $field           = $this->post('field');
-        $value           = $this->post('value');
-        
-        
-        
-        if($collection_name != null && $field != null && $value != null){
-            
-            $result = $this->common_model->checkExistValue($collection_name, array($field => $value) );
-            
-            $data =  array(
-                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
-                   'Result'      =>$result
-            );
-            $this->response($data);
-            
-        }
-        else{
-            $data =  array(
-                   'Status'     =>Common_enum::MESSAGE_RESPONSE_FALSE,
-                   'Error'      =>'Param is null'
-            );
-            $this->response($data);
-        }
-        
-    }
+//    public function check_permisstion_post() {
+//        
+//        //  Get param from client
+//        $collection_name = $this->post('collection_name');
+//        $field           = $this->post('field');
+//        $value           = $this->post('value');
+//        
+//        
+//        
+//        if($collection_name != null && $field != null && $value != null){
+//            
+//            $result = $this->common_model->checkExistValue($collection_name, array($field => $value) );
+//            
+//            $data =  array(
+//                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
+//                   'Result'      =>$result
+//            );
+//            $this->response($data);
+//            
+//        }
+//        else{
+//            $data =  array(
+//                   'Status'     =>Common_enum::MESSAGE_RESPONSE_FALSE,
+//                   'Error'      =>'Param is null'
+//            );
+//            $this->response($data);
+//        }
+//        
+//    }
     
     /**
      * 
@@ -109,35 +109,35 @@ class common_apis extends REST_Controller{
      * @return boolean
      * 
      **/
-    public function check_exist_value_post() {
-        
-        //  Get param from client
-        $collection_name = $this->post('collection_name');
-        $field           = $this->post('field');
-        $value           = $this->post('value');
-        
-        
-        
-        if($collection_name != null && $field != null && $value != null){
-            
-            $result = $this->common_model->checkExistValue($collection_name, array($field => $value) );
-            
-            $data =  array(
-                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
-                   'Result'      =>$result
-            );
-            $this->response($data);
-            
-        }
-        else{
-            $data =  array(
-                   'Status'     =>Common_enum::MESSAGE_RESPONSE_FALSE,
-                   'Error'      =>'Param is null'
-            );
-            $this->response($data);
-        }
-        
-    }
+//    public function check_exist_value_post() {
+//        
+//        //  Get param from client
+//        $collection_name = $this->post('collection_name');
+//        $field           = $this->post('field');
+//        $value           = $this->post('value');
+//        
+//        
+//        
+//        if($collection_name != null && $field != null && $value != null){
+//            
+//            $result = $this->common_model->checkExistValue($collection_name, array($field => $value) );
+//            
+//            $data =  array(
+//                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
+//                   'Result'      =>$result
+//            );
+//            $this->response($data);
+//            
+//        }
+//        else{
+//            $data =  array(
+//                   'Status'     =>Common_enum::MESSAGE_RESPONSE_FALSE,
+//                   'Error'      =>'Param is null'
+//            );
+//            $this->response($data);
+//        }
+//        
+//    }
     
     //----------------------------------------------------//
     //                                                    //
@@ -978,7 +978,7 @@ class common_apis extends REST_Controller{
      * Response: JSONObject
      * 
      */
-    public function update_introduce_Quote_enumpost() {
+    public function update_introduce_post() {
         //  Get param from client
         $action                     = $this->post('action');
         $id                         = $this->post('id');
