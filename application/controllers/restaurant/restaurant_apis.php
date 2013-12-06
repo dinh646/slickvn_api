@@ -1890,7 +1890,7 @@ class restaurant_apis extends REST_Controller{
 //                          var_dump($introduce);
                   }
                   else{
-                    $introduce = str_replace(Common_enum::DOMAIN_NAME.Common_enum::URL_RESTAURANT_PROFILE, 'folder_image_introduce_detail_page', $introduce);
+                    $introduce = str_replace(Common_enum::DOMAIN_NAME.Common_enum::URL_RESTAURANT_PROFILE, 'folder_image_introduce_detail_page/', $introduce);
                   }
 //          var_dump($introduce);
                   $file_introduce []= $folder_name.'/images/introduce/'.$value;
