@@ -315,14 +315,13 @@ class restaurant_apis extends REST_Controller{
                     $dish_list [] = $dish;
                 }
             }
+            $array_value = array(
+                Menu_dish_enum::ID_RESTAURANT => '',
+                Menu_dish_enum::DISH_LIST => $dish_list,
+                Common_enum::CREATED_DATE => ($created_date==null) ? $this->common_model->getCurrentDate() : $created_date ,
+                Common_enum::UPDATED_DATE => ($updated_date==null) ? $this->common_model->getCurrentDate() : $updated_date ,
+            );
         }
-        
-        $array_value = array(
-            Menu_dish_enum::ID_RESTAURANT => '',
-            Menu_dish_enum::DISH_LIST => $dish_list,
-            Common_enum::CREATED_DATE => ($created_date==null) ? $this->common_model->getCurrentDate() : $created_date ,
-            Common_enum::UPDATED_DATE => ($updated_date==null) ? $this->common_model->getCurrentDate() : $updated_date ,
-        );
         
         $this->restaurant_model->updateMenuDish($action, /*$id*/null, $array_value);
 //        $error = $this->restaurant_model->getError();
