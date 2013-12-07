@@ -671,8 +671,8 @@ class restaurant_apis extends REST_Controller{
 
                     $due_date = $this->common_model->getInterval($current_date, $coupon['coupon_due_date']);
                     
-                    if($interval_expired >=0 && $is_delete == 0){
-
+                    if( ($interval_expired >=0) && ($is_delete == 0) && ($due_date >=0) ){
+                        
                         $count ++;
                         if(($count) >= $position_start_get && ($count) <= $position_end_get){
                             //  Create JSONObject Restaurant
