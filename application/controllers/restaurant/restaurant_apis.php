@@ -1066,7 +1066,7 @@ class restaurant_apis extends REST_Controller{
                         $array_coupon = $this->restaurant_model->getCouponById($restaurant['id_coupon']);
                         $coupon = $array_coupon[$restaurant['id_coupon']];
     //                    var_dump($coupon);
-                        $due_date = $this->common_model->getInterval($current_date, $coupon['due_date']);
+                        $due_date = $this->common_model->getInterval($current_date, $coupon['coupon_due_date']);
                         
                         //  Create JSONObject Restaurant
                         $jsonobject = array( 
@@ -1114,8 +1114,8 @@ class restaurant_apis extends REST_Controller{
                             Restaurant_enum::END_DATE                   => $restaurant['end_date'],
                             Restaurant_enum::DESC                       => $restaurant['desc'],        
                             Coupon_enum::VALUE_COUPON                   => $coupon['value_coupon'],
-                            Coupon_enum::START_DATE                     => $coupon['start_date'],
-                            Coupon_enum::DUE_DATE                       => $coupon['due_date'],        
+                            Coupon_enum::START_DATE                     => $coupon['coupon_start_date'],
+                            Coupon_enum::DUE_DATE                       => $coupon['coupon_due_date'],        
                             Coupon_enum::DESC                           => $coupon['desc'],
                             Common_enum::UPDATED_DATE                   => $restaurant['updated_date'],
                             Common_enum::CREATED_DATE                   => $restaurant['created_date']
