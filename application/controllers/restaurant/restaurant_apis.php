@@ -324,7 +324,9 @@ class restaurant_apis extends REST_Controller{
             $this->restaurant_model->updateMenuDish($action, /*$id*/null, $array_value);
             return ($array_value['_id']->{'$id'});
         }
-        
+        else{
+            return null;
+        }
 //        $this->restaurant_model->updateMenuDish($action, /*$id*/null, $array_value);
 //        $error = $this->restaurant_model->getError();
 //        return ($array_value['_id']->{'$id'});
@@ -1175,6 +1177,7 @@ class restaurant_apis extends REST_Controller{
 
                     $array_menu_dish = $this->common_model->getCollectionById(Menu_dish_enum::COLLECTION_MENU_DISH, $restaurant['id_menu_dish']);
                     $menu_dish = $array_menu_dish[$restaurant['id_menu_dish']];
+                    
                     $menu_dish_object = array(
                             Menu_dish_enum::ID                => $menu_dish['_id']->{'$id'},
                             Menu_dish_enum::DISH_LIST         => $menu_dish['dish_list'],        
@@ -1551,6 +1554,105 @@ class restaurant_apis extends REST_Controller{
     
     /**
      * 
+     *  API get Restaurant Coupon
+     * 
+     *  Menthod: GET
+     * 
+     *  @param int $limit
+     *  @param int $page
+     * 
+     *  Response: JSONObject
+     * 
+     */
+    public function get_restaurant_coupon_list_get() {
+        
+        //  Get limit from client
+        $limit = $this->get("limit");
+        
+        //  Get page from client
+        $page = $this->get("page");
+        
+        //  End
+        $position_end_get   = ($page == 1)? $limit : ($limit * $page);
+        
+        //  Start
+        $position_start_get = ($page == 1)? $page : ( $position_end_get - ($limit - 1) );
+        
+        // Get collection restaurant
+        $collection_name = Restaurant_enum::COLLECTION_RESTAURANT;
+        $list_restaurant = $this->common_model->getCollection($collection_name);
+        //  Array object restaurant
+        $results = array();
+        
+        //  Count object restaurant
+        $count = 0;
+        if(is_array($list_restaurant)){
+            foreach ($list_restaurant as $restaurant){
+                //  Get created date
+                $created_date = $restaurant['created_date'];
+//                print_r($restaurant);
+                
+                //  Current date
+                $current_date = $this->common_model->getCurrentDate();
+                //  End date
+                $end_date = $restaurant['end_date'];
+                
+                //  Get interval expired
+                $interval_expired = $this->common_model->getInterval($current_date, $end_date);
+                //  Is delete
+                $is_delete = $restaurant['is_delete'];
+
+                //  Get interval
+                $interval = $this->common_model->getInterval($created_date, $current_date);
+                
+                if( ($interval_expired >=0 && $is_delete == 0) && ($restaurant['id_coupon'] != null) ){
+                    $count ++ ;
+                    if(($count) >= $position_start_get && ($count) <= $position_end_get){
+                        //  Create JSONObject Restaurant
+                        $jsonobject = array( 
+                            Restaurant_enum::ID                         => $restaurant['_id']->{'$id'},
+                            Restaurant_enum::NAME                       => $restaurant['name'],
+                            Restaurant_enum::DESC                       => $restaurant['desc'],
+                            Restaurant_enum::AVATAR                     => $restaurant['avatar'],
+                            Restaurant_enum::ADDRESS                    => $restaurant['address'].', '.$restaurant['district'].', '.$restaurant['city'],
+                            Restaurant_enum::NUMBER_ASSESSMENT          => $this->restaurant_model->countAssessmentForRestaurant($restaurant['_id']->{'$id'}),
+                            Restaurant_enum::RATE_POINT                 => $this->restaurant_model->getRatePoint(),
+                            //  Number LIKE of Restaurant
+                            Restaurant_enum::NUMBER_LIKE                 => $this->user_model->countUserLogByAction(array ( 
+                                                                                                                            User_log_enum::ID_RESTAURANT => $restaurant['_id']->{'$id'}, 
+                                                                                                                            User_log_enum::ACTION        => Common_enum::LIKE_RESTAURANT
+                                                                                                                            )),
+                            //  Number SHARE of Restaurant
+                            Restaurant_enum::NUMBER_SHARE                => $this->user_model->countUserLogByAction(array ( 
+                                                                                                                            User_log_enum::ID_RESTAURANT => $restaurant['_id']->{'$id'}, 
+                                                                                                                            User_log_enum::ACTION        => Common_enum::SHARE_RESTAURANT
+                                                                                                                            )),
+
+                            Common_enum::UPDATED_DATE         => $restaurant['updated_date'],
+                            Common_enum::CREATED_DATE         => $restaurant['created_date']
+                        );
+
+                        $results[] = $jsonobject;
+
+                        $this->restaurant_model->setRateService(0);
+                        $this->restaurant_model->setRateLandscape(0);
+                        $this->restaurant_model->setRateTaste(0);
+                        $this->restaurant_model->setRatePrice(0);
+                    }
+                }
+            }
+        }
+        //  Response
+        $data =  array(
+               'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
+               'Total'      =>  sizeof($results),
+               'Results'    =>$results
+        );
+        $this->response($data);
+    }
+    
+    /**
+     * 
      *  API get Order Restaurant
      * 
      *  Menthod: GET
@@ -1901,7 +2003,7 @@ class restaurant_apis extends REST_Controller{
         //  Update menu_dish
         $id_menu_dish_new = $this->update_menu_dish(Common_enum::INSERT, /*$id_menu_dish, $id,*/ $str_dish_list, $created_date, $updated_date);
         $array_value = array( 
-            Restaurant_enum::ID_MENU_DISH               => $id_menu_dish_new,
+            Restaurant_enum::ID_MENU_DISH               => ($id_menu_dish_new == null) ? '' : $id_menu_dish_new,
             Restaurant_enum::ID_COUPON                  => $id_coupon,
             Restaurant_enum::NAME                       => $name,
             Restaurant_enum::FOLDER_NAME                => $folder_name,
@@ -2397,28 +2499,18 @@ class restaurant_apis extends REST_Controller{
         
         //  Count object subscribed_email
         $count = 0;
-        
         foreach ($list_subscribed_email as $subscribed_email){
-            
             $count++;
-
             if(($count) >= $position_start_get && ($count) <= $position_end_get){
-
-
                 //  Create JSONObject Post
                 $jsonobject = array( 
-                    
                            Subscribed_email_enum::ID        => $subscribed_email['_id']->{'$id'},
                            Subscribed_email_enum::EMAIL     => $subscribed_email['email'],
                            Common_enum::UPDATED_DATE        => $subscribed_email['updated_date'],
                            Common_enum::CREATED_DATE        => $subscribed_email['created_date']
-                           
                            );
-
                 $results[] = $jsonobject;
-
             }
-            
         }
         
         //  Response
