@@ -13,12 +13,13 @@ class User_enum {
     const ROLE_LIST                 = 'role_list';
     const NUMBER_ASSESSMENT         = 'number_assessment';
     const DESC                      = 'desc';
-    const IS_DELETE                  = 'is_delete';
+    const IS_DELETE                 = 'is_delete';
+    const POINT                     = 'point';
     //  More
     const COLLECTION_USER           = 'user';
     const DEFAULT_ROLE_LIST         = '527b567a3fce119ed62d859a';
-    const DEFAULT_POINT             = 50;
-    const DEFAULT_IS_DELETE                  = 0;
+    const DEFAULT_POINT             = 0;
+    const DEFAULT_IS_DELETE         = 0;
     
 }
 

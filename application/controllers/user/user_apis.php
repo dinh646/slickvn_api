@@ -22,6 +22,7 @@ class user_apis extends REST_Controller{
         $this->load->model('user/user_log_enum');
         $this->load->model('common/encode_utf8');
         
+        $this->load->model('common/list_point_enum');
         
     }
     
@@ -30,6 +31,64 @@ class user_apis extends REST_Controller{
     //  APIs User                                         //
     //                                                    //
     //----------------------------------------------------//
+    
+    /**
+     * API get point of User by id
+     * 
+     * Menthod: GET
+     * @param String $id
+     * Response: JSONObject
+     * 
+     */
+    public function get_point_of_user_get() {
+        //  Get param from client
+        $id = $this->get('id');
+        
+        //  Get collection 
+        $get_collection = $this->user_model->getUserById($id);
+        
+        $error = $this->user_model->getError();
+//        echo $error;
+        if($error == null){
+        
+            //  Array object
+            $results = array();
+            //  Count object
+            $count = 0;
+            if(is_array($get_collection)){
+                foreach ($get_collection as $value){
+
+                    if($value['is_delete'] == 0){
+                        $count ++;
+                        //  Create JSONObject
+                        $jsonobject = array( 
+
+                                    User_enum::ID                => $value['_id']->{'$id'},
+                                    User_enum::FULL_NAME         => $value['full_name'],
+                                    User_enum::POINT             => $value['point'],
+                                    Common_enum::UPDATED_DATE    => $value['updated_date'],
+                                    Common_enum::CREATED_DATE    => $value['created_date']
+
+                                   );
+                        $results[] = $jsonobject;
+                    }
+                }
+            }
+            $data =  array(
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
+                   'Total'      =>  sizeof($results),
+                   'Results'    =>$results
+            );
+            $this->response($data);
+            
+        }else{
+            $data =  array(
+                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
+                   'Error'      =>$error
+            );
+            $this->response($data);
+        }
+    }
     
     /**
      * API search User by name
@@ -152,8 +211,10 @@ class user_apis extends REST_Controller{
                                         User_enum::ADDRESS           => $value['address'],
                                         User_enum::LOCATION          => $value['location'],
                                         User_enum::AVATAR            => $value['avatar'],
+                                        User_enum::POINT             => $value['point'],
                                         User_enum::IS_DELETE         => $value['is_delete'],
                                         User_enum::DESC              => $value['desc'],
+                                        User_enum::POINT             => $value['point'],
                                         User_enum::ROLE_LIST         => $value['role_list'],
                                         Common_enum::UPDATED_DATE    => $value['updated_date'],
                                         Common_enum::CREATED_DATE    => $value['created_date']
@@ -222,8 +283,10 @@ class user_apis extends REST_Controller{
                                     User_enum::ADDRESS           => $value['address'],
                                     User_enum::LOCATION          => $value['location'],
                                     User_enum::AVATAR            => $value['avatar'],
+                                    User_enum::POINT            => $value['point'],
                                     User_enum::ROLE_LIST         => $value['role_list'],
                                     User_enum::DESC              => $value['desc'],
+                                    User_enum::POINT             => $value['point'],
                                     User_enum::IS_DELETE         => $value['is_delete'],
                                     Common_enum::UPDATED_DATE    => $value['updated_date'],
                                     Common_enum::CREATED_DATE    => $value['created_date']
@@ -335,6 +398,7 @@ class user_apis extends REST_Controller{
         $location       = $this->post('location');
         $avatar         = $this->post('avatar');
         $desc           = $this->post('desc');
+        $point          = $this->post('point');
         $delete         = $this->post('delete');
         $created_date   = $this->post('created_date');
         $updated_date   = $this->post('updated_date');
@@ -391,16 +455,17 @@ class user_apis extends REST_Controller{
                         User_enum::LOCATION          => $location,
                         User_enum::AVATAR            => $avatar,
                         User_enum::DESC              => $desc,
+                        User_enum::POINT             => ($is_insert == 0)? 0 : null,
                         User_enum::IS_DELETE         => ($delete == null) ? 0 : $delete,
-                        User_enum::ROLE_LIST         => ( ($role_list == null) ) ? array(User_enum::DEFAULT_ROLE_LIST) : explode(Common_enum::MARK, $role_list),
+                        User_enum::ROLE_LIST         => ($role_list == null) ? array(User_enum::DEFAULT_ROLE_LIST) : explode(Common_enum::MARK, $role_list),
                         Common_enum::UPDATED_DATE    => ($updated_date==null) ? $this->common_model->getCurrentDate() : $updated_date,
-                        Common_enum::CREATED_DATE    => ($created_date == null ) ? $this->common_model->getCurrentDate(): $created_date
+                        Common_enum::CREATED_DATE    => ($created_date == null) ? $this->common_model->getCurrentDate(): $created_date
                 ) : array();
         if( $array_value['password'] == null ){
             unset($array_value['password']);
         }
-        var_dump($array_value);
-        $this->user_model->updateUser($action, $id, $array_value);
+//        var_dump($array_value);
+        $this->user_model->updateUser($action, $id, $this->common_model->removeElementArrayNull($array_value));
         $error = $this->user_model->getError();
         
         if($error == null){
@@ -558,6 +623,7 @@ class user_apis extends REST_Controller{
         $this->user_model->updateUserLog(Common_enum::INSERT, Common_enum::SHARE, $array_value);
         $error = $this->user_model->getError();
         if($error == null){
+            $this->common_model->editSpecialField(User_enum::COLLECTION_USER, $id_user, array('$inc' => array(User_enum::POINT => List_point_enum::SHARE) ) );
             $data =  array(
                    'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Error'      =>$error
@@ -584,24 +650,21 @@ class user_apis extends REST_Controller{
      * 
      */
     public function login_post() {
-        
         //  Get param from client
         $email      = $this->post('email');
         $password   = $this->post('password');
         $user = $this->user_model->login($email, $password);
         $results= array();
-        
         if(is_array($user)){
             foreach ($user as $value) {
-
                 $results[] = array( 
-
                             Common_enum::ID              => $value['_id']->{'$id'},
                             User_enum::FULL_NAME         => $value['full_name'],
                             User_enum::EMAIL             => $value['email'],        
                             User_enum::PHONE_NUMBER      => $value['phone_number'],
                             User_enum::ADDRESS           => $value['address'],
                             User_enum::LOCATION          => $value['location'],
+                            User_enum::POINT             => $value['point'],
                             User_enum::AVATAR            => $value['avatar'],
                             User_enum::ROLE_LIST         => $value['role_list'],
                             Common_enum::UPDATED_DATE    => $value['updated_date'],
@@ -630,7 +693,7 @@ class user_apis extends REST_Controller{
                                                     Common_enum::CREATED_DATE           => $this->common_model->getCurrentDate()
                                                 )
                                             );
-            
+            $this->common_model->editSpecialField(User_enum::COLLECTION_USER, $results['id'], array('$inc' => array(User_enum::POINT => List_point_enum::LOGIN) ) );
             $data =  array(
                    'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Total'      =>  sizeof($results),

@@ -23,7 +23,7 @@ class common_apis extends REST_Controller{
         $this->load->model('common/member_card_enum');
         $this->load->model('common/my_favourites_enum');
         $this->load->model('common/quote_enum');
-        
+        $this->load->model('common/list_point_enum');
         
     }
     
@@ -1025,16 +1025,12 @@ class common_apis extends REST_Controller{
      * 
      */
     public function get_base_collection_get() {
-        
         //  Get param from client
         $collection = $this->get('collection_name');
         //  Get collection 
         $get_collection = $this->common_model->getCollection($collection);
-        
         $error = $this->common_model->getError();
-        
         if($error == null){
-        
             //  Array object
             $results = array();
             //  Count object
@@ -1044,12 +1040,10 @@ class common_apis extends REST_Controller{
                     $count ++;
                     //  Create JSONObject
                     $jsonobject = array( 
-
                                 Common_enum::ID              => $value['_id']->{'$id'},
                                 Common_enum::NAME            => $value['name'],
                                 Common_enum::UPDATED_DATE    => $value['updated_date'],
                                 Common_enum::CREATED_DATE    => $value['created_date']
-
                                );
                     $results[] = $jsonobject;
                 }
@@ -1060,7 +1054,6 @@ class common_apis extends REST_Controller{
                    'Results'    =>$results
             );
             $this->response($data);
-            
         }else{
             $data =  array(
                    'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
@@ -1068,7 +1061,6 @@ class common_apis extends REST_Controller{
             );
             $this->response($data);
         }
-        
     }
     
     /**
@@ -1082,18 +1074,13 @@ class common_apis extends REST_Controller{
      * 
      */
     public function get_base_collection_by_id_get() {
-        
         //  Get param from client
         $collection = $this->get('collection_name');
         $id         = $this->get('id');
-        
         //  Get collection 
         $get_collection = $this->common_model->getCollectionById($collection, $id);
-        
         $error = $this->common_model->getError();
-        
         if($error == null){
-        
             //  Array object
             $results = array();
             //  Count object
@@ -1103,12 +1090,10 @@ class common_apis extends REST_Controller{
                     $count ++;
                     //  Create JSONObject
                     $jsonobject = array( 
-
                                 Common_enum::ID              => $value['_id']->{'$id'},
                                 Common_enum::NAME            => $value['name'],
                                 Common_enum::UPDATED_DATE    => $value['updated_date'],
                                 Common_enum::CREATED_DATE    => $value['created_date']
-
                                );
                     $results[] = $jsonobject;
                 }
@@ -1119,7 +1104,6 @@ class common_apis extends REST_Controller{
                    'Results'    =>$results
             );
             $this->response($data);
-            
         }else{
             $data =  array(
                    'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
@@ -1127,7 +1111,6 @@ class common_apis extends REST_Controller{
             );
             $this->response($data);
         }
-        
     }
     
     /**
@@ -1144,7 +1127,6 @@ class common_apis extends REST_Controller{
      * Response: JSONObject
      */
     public function update_base_collection_post(){
-        
         //  Get param from client
         $action         = $this->post('action');
         $collection     = $this->post('collection_name');
@@ -1152,57 +1134,159 @@ class common_apis extends REST_Controller{
         $name           = $this->post('name');
         $updated_date   = $this->post('updated_date');
         $created_date   = $this->post('created_date');
-        
         if($name == null){
             //  Response
             $resulte =  array(
                'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                'Error'      =>'Name is null'
             );
-
             $this->response($resulte);
             return;
         }
-        
         (int)$is_insert = strcmp( strtolower($action), Common_enum::INSERT );
         (int)$is_edit = strcmp( strtolower($action), Common_enum::EDIT );
         (int)$is_delete = strcmp( strtolower($action), Common_enum::DELETE );
-        
         //  Array value
         $array_value = ($is_delete != 0) ? array(
-            
             Common_enum::NAME            => $name,
             Common_enum::UPDATED_DATE    => ($updated_date==null) ? $this->common_model->getCurrentDate() : $updated_date,
             Common_enum::CREATED_DATE    => ($created_date==null) ? $this->common_model->getCurrentDate() : $created_date
-            
         ) : array();
-        
         //  Resulte
         $resulte = array();
-        
         $this->common_model->updateBaseCollection($action, $collection, $id, $array_value);
-        
         $error = $this->common_model->getError();
         if( $error == null ){
-
             //  Response
             $resulte =  array(
                'Status'     =>  Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                'Error'      =>$error
             );
-
             $this->response($resulte);
-
         }else{
             //  Response
             $resulte =  array(
                'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                'Error'      =>$error
             );
-
             $this->response($resulte);
         }
+    }
+    
+    //----------------------------------------------------//
+    //                                                    //
+    //  APIs LIST_POINT                                   //
+    //                                                    //
+    //----------------------------------------------------//
+    
+    /**
+     * API Get Collection List Point
+     * 
+     * Menthod: GET
+     * 
+     * Response: JSONObject
+     */
+    public function get_all_list_point_get() {
+        //  Get collection 
+        $get_collection = $this->common_model->getCollection(List_point_enum::COLLECTION_LIST_POINT);
+        $error = $this->common_model->getError();
+        if($error == null){
+            //  Array object
+            $results = array();
+            //  Count object
+            $count = 0;
+            if(is_array($get_collection)){
+                foreach ($get_collection as $value){
+                    $is_use = $value['is_use'];
+                    if($is_use == 1){
+                        $count ++;
+                        //  Create JSONObject
+                        $jsonobject = array( 
+                                    List_point_enum::ID              => $value['_id']->{'$id'},
+                                    List_point_enum::POINT            => $value['point'],
+                                    List_point_enum::DESC            => $value['desc'],
+                                    List_point_enum::KEY_CODE            => $value['key_code'],
+                                    Common_enum::UPDATED_DATE    => $value['updated_date'],
+                                    Common_enum::CREATED_DATE    => $value['created_date']
+                                   );
+                        $results[] = $jsonobject;
+                    }
+                }
+            }
+            $data =  array(
+                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
+                   'Total'      =>  sizeof($results),
+                   'Results'    =>$results
+            );
+            $this->response($data);
+        }else{
+            $data =  array(
+                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
+                   'Error'      =>$error
+            );
+            $this->response($data);
+        }
+    }
+    
+    /**
+     * API Update Collection List Point
+     * 
+     * Menthod: POST
+     * 
+     * Response: JSONObject
+     */
+    public function update_list_point_post() {
+        //  Get param from client
+        $action         = $this->post('action');
+        $id             = $this->post('id');
+        $point          = $this->post('point');
+        $key_code       = $this->post('key_code');
+        $desc           = $this->post('desc');
+        $is_use         = $this->post('is_use');
+        $updated_date   = $this->post('updated_date');
+        $created_date   = $this->post('created_date');
+        if($point == null || $key_code == null || $desc == null){
+            //  Response
+            $resulte =  array(
+               'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
+               'Error'      =>'Param is null'
+            );
+            $this->response($resulte);
+            return;
+        }
+        (int)$is_insert = strcmp( strtolower($action), Common_enum::INSERT );
+        (int)$is_edit = strcmp( strtolower($action), Common_enum::EDIT );
+        (int)$is_delete = strcmp( strtolower($action), Common_enum::DELETE );
+        //  Array value
+        $array_value = ($is_delete != 0) ? array(
+            List_point_enum::POINT            => (int)$point,
+            List_point_enum::KEY_CODE            => $key_code,
+            List_point_enum::DESC            => $desc,
+            List_point_enum::IS_USE           => ($is_use != null)? $is_use : 1,
+            Common_enum::UPDATED_DATE    => ($updated_date==null) ? $this->common_model->getCurrentDate() : $updated_date,
+            Common_enum::CREATED_DATE    => ($created_date==null) ? $this->common_model->getCurrentDate() : $created_date
+        ) : array();
         
+        //  Resulte
+        $resulte = array();
+        $this->common_model->updateCollection(List_point_enum::COLLECTION_LIST_POINT, $action, $id, 
+                                              $this->common_model->removeElementArrayNull($array_value));
+        $error = $this->common_model->getError();
+        if( $error == null ){
+            //  Response
+            $resulte =  array(
+               'Status'     =>  Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
+               'Error'      =>$error
+            );
+            $this->response($resulte);
+        }else{
+            //  Response
+            $resulte =  array(
+               'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
+               'Error'      =>$error
+            );
+            $this->response($resulte);
+        }
     }
     
 }

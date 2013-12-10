@@ -682,7 +682,7 @@ class restaurant_apis extends REST_Controller{
                                 Coupon_enum::VALUE_COUPON                   => $coupon['value_coupon'],
                                 Coupon_enum::START_DATE                     => $coupon['coupon_start_date'],
                                 Coupon_enum::DUE_DATE                       => $coupon['coupon_due_date'],
-                                Coupon_enum::DESC                           => $coupon['desc'],
+                                Coupon_enum::DESC                           => $coupon['coupon_desc'],
                                 Restaurant_enum::NAME                       => $restaurant['name'],
                                 Restaurant_enum::AVATAR                     => $restaurant['avatar'],
 
@@ -1116,7 +1116,7 @@ class restaurant_apis extends REST_Controller{
                             Coupon_enum::VALUE_COUPON                   => $coupon['value_coupon'],
                             Coupon_enum::START_DATE                     => $coupon['coupon_start_date'],
                             Coupon_enum::DUE_DATE                       => $coupon['coupon_due_date'],        
-                            Coupon_enum::DESC                           => $coupon['desc'],
+                            Coupon_enum::DESC                           => $coupon['coupon_desc'],
                             Common_enum::UPDATED_DATE                   => $restaurant['updated_date'],
                             Common_enum::CREATED_DATE                   => $restaurant['created_date']
                         );
@@ -1649,7 +1649,7 @@ class restaurant_apis extends REST_Controller{
                                 Coupon_enum::VALUE_COUPON => $coupon['value_coupon'],
                                 Coupon_enum::START_DATE => $coupon['coupon_start_date'],
                                 Coupon_enum::DUE_DATE => $coupon['coupon_due_date'],        
-                                Coupon_enum::DESC => $coupon['desc'],
+                                Coupon_enum::DESC => $coupon['coupon_desc'],
                                                                                                                                         
                                 
                                                                                                                                         
