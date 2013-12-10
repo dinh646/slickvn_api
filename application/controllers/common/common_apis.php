@@ -1337,12 +1337,20 @@ class common_apis extends REST_Controller{
         $send = $this->email->send();
         
         if($send){
-            //  TODO
+            //  Response
+            $resulte =  array(
+               'Status'     =>  Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
+               'Error'      =>''
+            );
+            $this->response($resulte);
+        }else{
+            //  Response
+            $resulte =  array(
+               'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
+               'Error'      =>'Send email fail'
+            );
+            $this->response($resulte);
         }
-         else{
-            //  TODO
-            show_error($this->email->print_debugger());
-         }
     }
     
 }
