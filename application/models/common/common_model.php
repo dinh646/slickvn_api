@@ -884,52 +884,6 @@ class Common_model extends CI_Model{
         }
         
     }
-    /**
-     * 
-     * Send Mail
-     * 
-     * @param type $from_mail
-     * @param type $pass
-     * @param type $full_name
-     * @param type $to_mail
-     * @param type $subject
-     * @param type $message
-     * 
-     */
-    function sendMail($from_mail=null, $pass=null, $full_name=null, $to_mail=null, $subject=null, $message=null){
-        $TAG = 'sendMail';
-        
-        $config = array(
-            'protocol' => 'smtp',
-            'smtp_host' => 'ssl://smtp.googlemail.com',
-            'smtp_port' => 465,
-            'smtp_user' => $from_mail,
-            'smtp_pass' => $pass,
-            'mailtype' => 'html'
-        );
- 
-        // load the email library that provided by CI
-        $this->load->library('email', $config);
-        // this will bind your attributes to email library
-        $this->email->set_newline("\r\n");
-        $this->email->from($from_mail, $full_name);
-        $this->email->to($to_mail);
-        $this->email->subject($subject);
-        $this->email->message($message);
- 
-        // send your email. if it produce an error it will print 'Fail to send your message!' for you
-        $send = $this->email->send();
-        
-        if($send){
-            //  TODO
-        }
-         else{
-            //  TODO
-            show_error($this->email->print_debugger());
-         }
-    }
-    
-    
 }
 
 ?>

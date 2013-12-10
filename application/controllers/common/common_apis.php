@@ -1289,6 +1289,62 @@ class common_apis extends REST_Controller{
         }
     }
     
+    /**
+     * 
+     * API Update Collection List Point
+     * 
+     * Menthod: POST
+     * 
+     * @param type $from_mail
+     * @param type $pass
+     * @param type $full_name
+     * @param type $to_mail
+     * @param type $subject
+     * @param type $message
+     * 
+     * Response: JSONObject
+     */
+    public function send_mail_post(){
+        //  Get param from client
+        $from_mail = $this->post('from_mail');
+        $pass = $this->post('password');
+        $full_name = $this->post('full_name');
+        $to_mail = $this->post('to_mail');
+        $subject = $this->post('subject');
+        $message = $this->post('message');
+                
+        $TAG = 'sendMail';
+        
+        $config = array(
+            'protocol' => 'smtp',
+            'smtp_host' => 'ssl://smtp.googlemail.com',
+            'smtp_port' => 465,
+            'smtp_user' => $from_mail,
+            'smtp_pass' => $pass,
+            'mailtype' => 'html'
+        );
+ 
+        // load the email library that provided by CI
+        $this->load->library('email', $config);
+        // this will bind your attributes to email library
+        $this->email->set_newline("\r\n");
+        $this->email->from($from_mail, $full_name);
+        $this->email->to($to_mail);
+        $this->email->subject($subject);
+        $this->email->message($message);
+ 
+        // send your email. if it produce an error it will print 'Fail to send your message!' for you
+        $send = $this->email->send();
+        
+        if($send){
+            //  TODO
+        }
+         else{
+            //  TODO
+            show_error($this->email->print_debugger());
+         }
+    }
+    
 }
 
 ?>
