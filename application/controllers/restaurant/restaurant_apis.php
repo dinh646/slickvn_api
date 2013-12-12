@@ -1618,52 +1618,53 @@ class restaurant_apis extends REST_Controller{
                 if( ($interval_expired >=0 && $is_delete == 0) && ($restaurant['id_coupon'] != null) ){
                     
                     $array_coupon = $this->restaurant_model->getCouponById($restaurant['id_coupon']);
-                    $coupon = $array_coupon[$restaurant['id_coupon']];
-//                    var_dump($coupon);
-                    $due_date = $this->common_model->getInterval($current_date, $coupon['coupon_due_date']);
-//                    var_dump($due_date);
-                    if($due_date >= 0){
-                        
-                        $count ++ ;
-                        if(($count) >= $position_start_get && ($count) <= $position_end_get){
-                            //  Create JSONObject Restaurant
-                            $jsonobject = array( 
-                                Restaurant_enum::ID                         => $restaurant['_id']->{'$id'},
-                                Restaurant_enum::NAME                       => $restaurant['name'],
-                                Restaurant_enum::DESC                       => $restaurant['desc'],
-                                Restaurant_enum::AVATAR                     => $restaurant['avatar'],
-                                Restaurant_enum::ADDRESS                    => $restaurant['address'].', '.$restaurant['district'].', '.$restaurant['city'],
-                                Restaurant_enum::NUMBER_ASSESSMENT          => $this->restaurant_model->countAssessmentForRestaurant($restaurant['_id']->{'$id'}),
-                                Restaurant_enum::RATE_POINT                 => $this->restaurant_model->getRatePoint(),
-                                //  Number LIKE of Restaurant
-                                Restaurant_enum::NUMBER_LIKE                 => $this->user_model->countUserLogByAction(array ( 
-                                                                                                                                User_log_enum::ID_RESTAURANT => $restaurant['_id']->{'$id'}, 
-                                                                                                                                User_log_enum::ACTION        => Common_enum::LIKE_RESTAURANT
-                                                                                                                                )),
-                                //  Number SHARE of Restaurant
-                                Restaurant_enum::NUMBER_SHARE                => $this->user_model->countUserLogByAction(array ( 
-                                                                                                                                User_log_enum::ID_RESTAURANT => $restaurant['_id']->{'$id'}, 
-                                                                                                                                User_log_enum::ACTION        => Common_enum::SHARE_RESTAURANT
-                                                                                                                                )),
+                    
+                    if($array_coupon != null){
+                      $coupon = $array_coupon[$restaurant['id_coupon']];
+                      $due_date = $this->common_model->getInterval($current_date, $coupon['coupon_due_date']);
+                      if($due_date >= 0){
 
-                                Coupon_enum::VALUE_COUPON => $coupon['value_coupon'],
-                                Coupon_enum::START_DATE => $coupon['coupon_start_date'],
-                                Coupon_enum::DUE_DATE => $coupon['coupon_due_date'],        
-                                Coupon_enum::DESC => $coupon['coupon_desc'],
-                                                                                                                                        
-                                
-                                                                                                                                        
-                                Common_enum::UPDATED_DATE         => $restaurant['updated_date'],
-                                Common_enum::CREATED_DATE         => $restaurant['created_date']
-                            );
+                          $count ++ ;
+                          if(($count) >= $position_start_get && ($count) <= $position_end_get){
+                              //  Create JSONObject Restaurant
+                              $jsonobject = array( 
+                                  Restaurant_enum::ID                         => $restaurant['_id']->{'$id'},
+                                  Restaurant_enum::NAME                       => $restaurant['name'],
+                                  Restaurant_enum::DESC                       => $restaurant['desc'],
+                                  Restaurant_enum::AVATAR                     => $restaurant['avatar'],
+                                  Restaurant_enum::ADDRESS                    => $restaurant['address'].', '.$restaurant['district'].', '.$restaurant['city'],
+                                  Restaurant_enum::NUMBER_ASSESSMENT          => $this->restaurant_model->countAssessmentForRestaurant($restaurant['_id']->{'$id'}),
+                                  Restaurant_enum::RATE_POINT                 => $this->restaurant_model->getRatePoint(),
+                                  //  Number LIKE of Restaurant
+                                  Restaurant_enum::NUMBER_LIKE                 => $this->user_model->countUserLogByAction(array ( 
+                                                                                                                                  User_log_enum::ID_RESTAURANT => $restaurant['_id']->{'$id'}, 
+                                                                                                                                  User_log_enum::ACTION        => Common_enum::LIKE_RESTAURANT
+                                                                                                                                  )),
+                                  //  Number SHARE of Restaurant
+                                  Restaurant_enum::NUMBER_SHARE                => $this->user_model->countUserLogByAction(array ( 
+                                                                                                                                  User_log_enum::ID_RESTAURANT => $restaurant['_id']->{'$id'}, 
+                                                                                                                                  User_log_enum::ACTION        => Common_enum::SHARE_RESTAURANT
+                                                                                                                                  )),
 
-                            $results[] = $jsonobject;
+                                  Coupon_enum::VALUE_COUPON => $coupon['value_coupon'],
+                                  Coupon_enum::START_DATE => $coupon['coupon_start_date'],
+                                  Coupon_enum::DUE_DATE => $coupon['coupon_due_date'],        
+                                  Coupon_enum::DESC => $coupon['coupon_desc'],
 
-                            $this->restaurant_model->setRateService(0);
-                            $this->restaurant_model->setRateLandscape(0);
-                            $this->restaurant_model->setRateTaste(0);
-                            $this->restaurant_model->setRatePrice(0);
-                        }
+
+
+                                  Common_enum::UPDATED_DATE         => $restaurant['updated_date'],
+                                  Common_enum::CREATED_DATE         => $restaurant['created_date']
+                              );
+
+                              $results[] = $jsonobject;
+
+                              $this->restaurant_model->setRateService(0);
+                              $this->restaurant_model->setRateLandscape(0);
+                              $this->restaurant_model->setRateTaste(0);
+                              $this->restaurant_model->setRatePrice(0);
+                          }
+                      }
                     }
                     
                 }
