@@ -11,7 +11,7 @@ class Common_model extends CI_Model{
         parent::__construct();
         
         $mongodb = 'mongodb://';
-        $host_name = '192.168.1.194';
+        $host_name = '192.168.0.100';
         $port = '27017';
         $database = 'slickvn_test';
         
@@ -867,7 +867,7 @@ class Common_model extends CI_Model{
      * @return Array collection
      * 
      **/
-    public function checkExistValue($collection_name, array $array_value) {
+    public function checkExistValue($collection_name, $array_value = array()) {
         
         try{
             // Connect collection 
@@ -876,7 +876,7 @@ class Common_model extends CI_Model{
             
             $result = iterator_to_array( $this->collection->find($array_value) );
 
-            return $result;
+            return ((sizeof($result) > 0)? TRUE : FALSE);
             
         }catch ( MongoConnectionException $e ){
                 $this->setError($e->getMessage());

@@ -2084,7 +2084,7 @@ class restaurant_apis extends REST_Controller{
             }
             
             else{
-              var_dump('match Avatar');
+//              var_dump('match Avatar');
             }
             $file_avatar = $folder_name.'/images/avatar/'.$array_image_avatar[0];
             
@@ -2108,7 +2108,7 @@ class restaurant_apis extends REST_Controller{
               }
             }
             else{
-              var_dump('match Carousel');
+//              var_dump('match Carousel');
             }
             $file_carousel = $folder_name.'/images/carousel/'.$array_image_carousel[0];
             
@@ -2123,7 +2123,7 @@ class restaurant_apis extends REST_Controller{
                 }
             }
             else{
-              var_dump('$str_image_deleted NULL');
+//              var_dump('$str_image_deleted NULL');
             }
             
             //  array image introlduce
@@ -2147,11 +2147,16 @@ class restaurant_apis extends REST_Controller{
               }
             }
         }
-        //  Update menu_dish
-        $id_menu_dish_new = $this->update_menu_dish(Common_enum::INSERT, /*$id_menu_dish, $id,*/ $str_dish_list, $created_date, $updated_date);
+        if($delete == 0){
+            
+        }
+        else{
+            //  Update menu_dish
+            $id_menu_dish_new = $this->update_menu_dish(Common_enum::INSERT, /*$id_menu_dish, $id,*/ $str_dish_list, $created_date, $updated_date);
+        }
         $array_value = ($delete != 0)? array( 
             Restaurant_enum::ID_MENU_DISH               => ($id_menu_dish_new == null) ? '' : $id_menu_dish_new,
-            Restaurant_enum::ID_COUPON                  => $id_coupon,
+            Restaurant_enum::ID_COUPON                  => /*($delete != 0)?*/ $id_coupon /*: ''*/,
             Restaurant_enum::NAME                       => $name,
             Restaurant_enum::FOLDER_NAME                => $folder_name,
             Restaurant_enum::EMAIL                      => $email,
@@ -2187,11 +2192,19 @@ class restaurant_apis extends REST_Controller{
             unset($array_value['number_view']);
         }
         $this->restaurant_model->updateRestaurant($action, $id, $array_value);
-        
-        $this->restaurant_model->updateMenuDish(Common_enum::EDIT, $id_menu_dish_new, array(Menu_dish_enum::ID_RESTAURANT => $array_value['_id']->{'$id'}) );
+        if($delete != 0){
+            $this->restaurant_model->updateMenuDish(Common_enum::EDIT, $id_menu_dish_new, array(Menu_dish_enum::ID_RESTAURANT => $array_value['_id']->{'$id'}) );
+        }
         
         $error = $this->restaurant_model->getError();
         if($error == null){
+            
+//            if($delete == 0){
+//                var_dump('Id_coupon'.[$id_coupon);
+//                //  delete all coupon of this restaurant
+//                $this->common_model->removeDoc(Coupon_enum::COLLECTION_COUPON, $id_coupon);
+//            }
+            
             $data =  array(
                    'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Error'      =>$error
@@ -2286,12 +2299,17 @@ class restaurant_apis extends REST_Controller{
         //  Get collection 
         $array_coupon = $this->restaurant_model->getCouponByRestaurant($id_restaurant);
         
+        $current_date = $this->common_model->getCurrentDate();
+        
         $results = array();
         if($array_coupon == null){
             //  
         }
         else{
             foreach ($array_coupon as $value) {
+                
+                $due_date = $this->common_model->getInterval($current_date, $value[Coupon_enum::DUE_DATE]);
+                
 //                var_dump($value);
                 $jsonobject = array(
                     Coupon_enum::ID => $value[Common_enum::_ID]->{'$id'},
@@ -2301,7 +2319,8 @@ class restaurant_apis extends REST_Controller{
                     Coupon_enum::DUE_DATE => $value[Coupon_enum::DUE_DATE],
                     Coupon_enum::DESC => $value[Coupon_enum::DESC],
                     Common_enum::UPDATED_DATE => $value[Common_enum::UPDATED_DATE],
-                    Common_enum::CREATED_DATE => $value[Common_enum::CREATED_DATE]
+                    Common_enum::CREATED_DATE => $value[Common_enum::CREATED_DATE],
+                    Coupon_enum::START_DATE => ($due_date >=0)? Common_enum::MESSAGE_RESPONSE_TRUE : Common_enum::MESSAGE_RESPONSE_FALSE
                 );
                 $results[] = $jsonobject;
             }

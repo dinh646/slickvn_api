@@ -84,7 +84,10 @@ class Common_enum {
     
     //  MESSAGE RESPONSE
     const MESSAGE_RESPONSE_SUCCESSFUL      = 'SUCCESSFUL';
-    const MESSAGE_RESPONSE_FALSE            = 'FALSE';
+    const MESSAGE_RESPONSE_TRUE           = 'TRUE';
+    const MESSAGE_RESPONSE_FALSE           = 'FALSE';
+    const MESSAGE_RESPONSE_ALLOWED         = 'ALLOWED';
+    const MESSAGE_RESPONSE_DENY            = 'DENY';
     
     //  OS
     const WINDOWN = 1;

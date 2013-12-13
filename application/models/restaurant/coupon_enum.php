@@ -11,8 +11,6 @@
  * @author Admin
  */
 class Coupon_enum {
-    
-
    const ID             = 'id';
    const ID_RESTAURANT  = 'id_restaurant';
    const VALUE_COUPON   = 'value_coupon';
@@ -22,6 +20,7 @@ class Coupon_enum {
 
    //   More
    const COLLECTION_COUPON    = 'coupon';
+   const STATUS_COUPON = 'status_coupon';
 }
 
 ?>

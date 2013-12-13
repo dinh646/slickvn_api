@@ -318,7 +318,6 @@ class user_apis extends REST_Controller{
         $id_role = $this->post('id_role');
         $array_role = $this->user_model->getRoleById($id_role);
 //        var_dump($array_role);  
-        
         if($array_role == null){
             $data =  array(
                    'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
@@ -328,8 +327,17 @@ class user_apis extends REST_Controller{
         }
         else{
             $role = $array_role[$id_role];
-            $function_list = $role['function_list'];
-            var_dump($function_list);
+            $function_list = $role['function_list'];    // id of function
+            $array_object_id = array();
+            foreach ($function_list as $value) {
+                $object_id  = array(
+                            Common_enum::_ID => new MongoId($value)
+                        );
+                $array_object_id[]=$object_id;
+            }
+            $where = array(Common_enum::_ID => array('$in' => $array_object_id) );
+            var_dump($array_object_id);
+            var_dump($this->common_model->checkExistValue(Function_enum::COLLECTION_FUNCTION, $where));
         }
     }
     
@@ -924,13 +932,12 @@ class user_apis extends REST_Controller{
                     $count ++;
                     //  Create JSONObject
                     $jsonobject = array( 
-
-                                function_enum::ID                    => $value['_id']->{'$id'},
-                                function_enum::NAME                  => $value['name'],
-                                function_enum::DESC                  => $value['desc'],        
+                                Function_enum::ID                    => $value['_id']->{'$id'},
+                                Function_enum::NAME                  => $value['name'],
+                                Function_enum::CODE                  => $value['code'],        
+                                Function_enum::DESC                  => $value['desc'],        
                                 Common_enum::UPDATED_DATE    => $value['updated_date'],
                                 Common_enum::CREATED_DATE    => $value['created_date']
-
                                );
                     $results[] = $jsonobject;
                 }
@@ -982,9 +989,10 @@ class user_apis extends REST_Controller{
                     //  Create JSONObject
                     $jsonobject = array( 
 
-                                Role_enum::ID                    => $value['_id']->{'$id'},
-                                Role_enum::NAME                  => $value['name'],
-                                Role_enum::DESC                  => $value['desc'],        
+                                Function_enum::ID                    => $value['_id']->{'$id'},
+                                Function_enum::NAME                  => $value['name'],
+                                Function_enum::CODE                  => $value['code'],        
+                                Function_enum::DESC                  => $value['desc'],        
                                 Common_enum::UPDATED_DATE    => $value['updated_date'],
                                 Common_enum::CREATED_DATE    => $value['created_date']
 
@@ -1030,22 +1038,19 @@ class user_apis extends REST_Controller{
         $id                 = $this->post('id');
         
         $name               = $this->post('name');
+        $code               = $this->post('code');
         $desc               = $this->post('desc');
         $created_date       = $this->post('created_date');
         $updated_date       = $this->post('updated_date');
-        
         $array_value = array(
-            
-                        Role_enum::NAME              => $name,
-                        Role_enum::DESC              => $desc,        
+                        Function_enum::NAME              => $name,
+                        Function_enum::CODE              => $code,
+                        Function_enum::DESC              => $desc,        
                         Common_enum::UPDATED_DATE    => ($updated_date==null) ? $this->common_model->getCurrentDate() : $updated_date,
                         Common_enum::CREATED_DATE    => ($created_date == null ) ? $this->common_model->getCurrentDate(): $created_date
-                
                 );
-        
         $this->user_model->updateFunction($action, $id, $array_value);
         $error = $this->user_model->getError();
-        
         if($error == null){
             $data =  array(
                    'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
