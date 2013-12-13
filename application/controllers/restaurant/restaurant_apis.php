@@ -387,8 +387,8 @@ class restaurant_apis extends REST_Controller{
         $where_email = array(Restaurant_enum::EMAIL => $key);
         $where_phone = (is_numeric($key))? array(Restaurant_enum::PHONE_NUMBER => $key) : array();
         
-        $list_restaurant = $this->restaurant_model->searchRestaurant(array( '$or'=>array($where_name) ));
-        var_dump($array_key_word);
+        $list_restaurant = $this->restaurant_model->searchRestaurant(array( '$or'=>$where_name ));
+//        var_dump($array_key_word);
         //  End
         $position_end_get   = ($page == 1)? $limit : ($limit * $page);
         
