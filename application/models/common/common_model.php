@@ -563,7 +563,7 @@ class Common_model extends CI_Model{
                     
                     ($array_value == null)? $this->collection ->remove( $where )
                             :
-                    $this->collection ->update($where, $array_value );
+                    $this->collection ->update($where, array('$set' => $array_value) );
                 }
                 else{
                     $this->setError('Action '.$action.' NOT support');
