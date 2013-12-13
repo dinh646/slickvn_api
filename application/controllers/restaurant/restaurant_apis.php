@@ -380,15 +380,15 @@ class restaurant_apis extends REST_Controller{
 //        var_dump($array_key_word);
         
         //  Query
-        $where_name = array();
+        $where = array();
         foreach ($array_key_word as $value) {
-            $where_name[] = array(Restaurant_enum::NAME => new MongoRegex('/'.$value.'/i'));
+            $where[] = array(Restaurant_enum::NAME => new MongoRegex('/'.$value.'/i'));
         }
-        $where_email = array(Restaurant_enum::EMAIL => $key);
-        $where_phone = (is_numeric($key))? array(Restaurant_enum::PHONE_NUMBER => $key) : array();
+        $where[] = array(Restaurant_enum::EMAIL => new MongoRegex('/'.$key.'/i'));
+        $where[] = (is_numeric($key))? array(Restaurant_enum::PHONE_NUMBER => new MongoRegex('/'.$key.'/i')) : null;
         
-        $list_restaurant = $this->restaurant_model->searchRestaurant(array( '$or'=>$where_name ));
-//        var_dump($array_key_word);
+        $list_restaurant = $this->restaurant_model->searchRestaurant(array( '$or'=>  $this->common_model->removeElementArrayNull($where)));
+//        var_dump($this->common_model->removeElementArrayNull($where));
         //  End
         $position_end_get   = ($page == 1)? $limit : ($limit * $page);
         
