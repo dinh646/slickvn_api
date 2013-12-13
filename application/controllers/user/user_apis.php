@@ -283,7 +283,7 @@ class user_apis extends REST_Controller{
                                     User_enum::ADDRESS           => $value['address'],
                                     User_enum::LOCATION          => $value['location'],
                                     User_enum::AVATAR            => $value['avatar'],
-                                    User_enum::POINT            => $value['point'],
+                                    User_enum::POINT             => $value['point'],
                                     User_enum::ROLE_LIST         => $value['role_list'],
                                     User_enum::DESC              => $value['desc'],
                                     User_enum::POINT             => $value['point'],
@@ -311,6 +311,26 @@ class user_apis extends REST_Controller{
             $this->response($data);
         }
         
+    }
+    
+    public function check_permission_user_post() {
+        //  Get param from client
+        $id_role = $this->post('id_role');
+        $array_role = $this->user_model->getRoleById($id_role);
+//        var_dump($array_role);  
+        
+        if($array_role == null){
+            $data =  array(
+                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
+                   'Error'      =>''
+            );
+            $this->response($data);
+        }
+        else{
+            $role = $array_role[$id_role];
+            $function_list = $role['function_list'];
+            var_dump($function_list);
+        }
     }
     
     /**

@@ -468,6 +468,15 @@ class Restaurant_model extends CI_Model{
         
     }
     
+    public function getCouponByRestaurant($id_restaurant) {
+        $value = array(
+            Coupon_enum::ID_RESTAURANT => $id_restaurant,
+        );
+        $sort = array(Common_enum::CREATED_DATE => -1);
+        return $this->common_model->getCollectionByField(Coupon_enum::COLLECTION_COUPON, $value, $sort);
+        
+    }
+    
     /**
      * 
      * Search Collection Coupon

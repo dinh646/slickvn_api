@@ -16,10 +16,10 @@ class List_point_enum {
     const ID = 'id';
     const POINT = 'point';
     const DESC = 'desc';
-    const KEY_CODE = 'key_code';
+    const KEY_ACTION = 'key_action';
     const IS_USE = 'is_use';
     
-    //  LIST POINT
+    //  LIST DEFAULT POINT
     const SIGNUP = 50;
     const FILL_INFO_ACCOUNT = 100;
     const JOIN_SOCIAL_NETWORKING = 30;
@@ -32,6 +32,6 @@ class List_point_enum {
     const LOGIN = 2;
     
     //  More
-    const COLLECTION_LIST_POINT           = 'list_point';
+    const COLLECTION_LIST_POINT = 'list_point';
     
 }

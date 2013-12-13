@@ -1613,12 +1613,8 @@ class restaurant_apis extends REST_Controller{
 
                 //  Get interval
                 $interval = $this->common_model->getInterval($created_date, $current_date);
-                
-                
                 if( ($interval_expired >=0 && $is_delete == 0) && ($restaurant['id_coupon'] != null) ){
-                    
                     $array_coupon = $this->restaurant_model->getCouponById($restaurant['id_coupon']);
-                    
                     if($array_coupon != null){
                       $coupon = $array_coupon[$restaurant['id_coupon']];
                       $due_date = $this->common_model->getInterval($current_date, $coupon['coupon_due_date']);
@@ -2155,6 +2151,41 @@ class restaurant_apis extends REST_Controller{
             $this->response($data);
         }
         
+    }
+    
+    public function get_coupon_of_restaurant_get() {
+        //  Get param from client
+        $id_restaurant = $this->get('id_restaurant');
+        //  Get collection 
+        $array_coupon = $this->restaurant_model->getCouponByRestaurant($id_restaurant);
+        
+        $results = array();
+        if($array_coupon == null){
+            //  
+        }
+        else{
+            foreach ($array_coupon as $value) {
+//                var_dump($value);
+                $jsonobject = array(
+                    Coupon_enum::ID => $value[Common_enum::_ID]->{'$id'},
+                    Coupon_enum::ID_RESTAURANT => $value[Coupon_enum::ID_RESTAURANT],
+                    Coupon_enum::VALUE_COUPON => $value[Coupon_enum::VALUE_COUPON],
+                    Coupon_enum::START_DATE => $value[Coupon_enum::START_DATE],
+                    Coupon_enum::DUE_DATE => $value[Coupon_enum::DUE_DATE],
+                    Coupon_enum::DESC => $value[Coupon_enum::DESC],
+                    Common_enum::UPDATED_DATE => $value[Common_enum::UPDATED_DATE],
+                    Common_enum::CREATED_DATE => $value[Common_enum::CREATED_DATE]
+                );
+                $results[] = $jsonobject;
+            }
+        }
+        //  Response
+        $data =  array(
+               'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
+               'Total'      =>  sizeof($results),
+               'Results'    =>$results
+        );
+        $this->response($data);
     }
     
     //------------------------------------------------------

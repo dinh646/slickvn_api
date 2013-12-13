@@ -11,7 +11,7 @@ class Common_model extends CI_Model{
         parent::__construct();
         
         $mongodb = 'mongodb://';
-        $host_name = '192.168.0.100';
+        $host_name = '192.168.1.194';
         $port = '27017';
         $database = 'slickvn_test';
         
@@ -43,8 +43,7 @@ class Common_model extends CI_Model{
     //                                                                      //
     //----------------------------------------------------------------------//
     
-	
-	/**
+    /**
      * 
      * Move file to new directory
      * 
@@ -98,7 +97,7 @@ class Common_model extends CI_Model{
      * @param int $mode
      * 
      */
-    public function createDirectory($path, $mode){
+    public function createDirectory($path, $mode=Common_enum::WINDOWN){
         
         switch ($mode){
             
@@ -371,7 +370,7 @@ class Common_model extends CI_Model{
      * @return a document
      * 
      */
-    public function getCollectionByField($collection_name, array $value){
+    public function getCollectionByField($collection_name, array $value, $sort=array()){
         
         try{
         
@@ -386,7 +385,7 @@ class Common_model extends CI_Model{
                 $this->collection = $this->slickvn_db->$collection_name;
 
                 //  Query select collection_name by id
-                $select_collection = $this->collection->find( $value );
+                $select_collection = $this->collection->find( $value )->sort($sort);
 
                 $array = iterator_to_array($select_collection);
                 return (is_array($array)) ? $array : array();
