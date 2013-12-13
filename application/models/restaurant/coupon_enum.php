@@ -17,6 +17,7 @@ class Coupon_enum {
    const START_DATE     = 'coupon_start_date';
    const DUE_DATE       = 'coupon_due_date';
    const DESC           = 'coupon_desc';
+   const IS_USE         = 'is_use';
 
    //   More
    const COLLECTION_COUPON    = 'coupon';

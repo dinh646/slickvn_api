@@ -2252,7 +2252,7 @@ class restaurant_apis extends REST_Controller{
         $start_date     = $this->post('start_date');
         $due_date       = $this->post('due_date');
         $desc           = $this->post('desc');
-        
+        $is_use         = $this->post('is_use');
         $created_date   = $this->post('created_date');
         $updated_date = $this->post('updated_date');
         
@@ -2264,19 +2264,19 @@ class restaurant_apis extends REST_Controller{
             Coupon_enum::START_DATE => $start_date,
             Coupon_enum::DUE_DATE => $due_date,
             Coupon_enum::DESC => $desc,
+            Coupon_enum::IS_USE => ($is_use == null)? 0 : 1,
             Common_enum::UPDATED_DATE       => ($updated_date == null ) ? $this->common_model->getCurrentDate(): $updated_date,
             Common_enum::CREATED_DATE       => ($created_date == null ) ? $this->common_model->getCurrentDate(): $created_date
         )
          : array();
         
-        
-        $this->restaurant_model->updateCoupon($action, $id, $array_value);
+        $this->restaurant_model->updateCoupon($action, $id, $this->common_model->removeElementArrayNull($array_value));
         $error = $this->restaurant_model->getError();
         if($error == null){
-            
-            $this->common_model->editSpecialField(Restaurant_enum::COLLECTION_RESTAURANT, 
+            if($array_value[Coupon_enum::IS_USE] == 1){
+                $this->common_model->editSpecialField(Restaurant_enum::COLLECTION_RESTAURANT, 
                                                   $id_restaurant, array('$set' => array(Restaurant_enum::ID_COUPON=>$array_value['_id']->{'$id'} )));
-            
+            }
             $data =  array(
                    'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Error'      =>$error
@@ -2290,7 +2290,6 @@ class restaurant_apis extends REST_Controller{
             );
             $this->response($data);
         }
-        
     }
     
     public function get_coupon_of_restaurant_get() {
@@ -2307,10 +2306,7 @@ class restaurant_apis extends REST_Controller{
         }
         else{
             foreach ($array_coupon as $value) {
-                
                 $due_date = $this->common_model->getInterval($current_date, $value[Coupon_enum::DUE_DATE]);
-                
-//                var_dump($value);
                 $jsonobject = array(
                     Coupon_enum::ID => $value[Common_enum::_ID]->{'$id'},
                     Coupon_enum::ID_RESTAURANT => $value[Coupon_enum::ID_RESTAURANT],
@@ -2318,6 +2314,7 @@ class restaurant_apis extends REST_Controller{
                     Coupon_enum::START_DATE => $value[Coupon_enum::START_DATE],
                     Coupon_enum::DUE_DATE => $value[Coupon_enum::DUE_DATE],
                     Coupon_enum::DESC => $value[Coupon_enum::DESC],
+                    Coupon_enum::IS_USE => $value[Coupon_enum::IS_USE],
                     Common_enum::UPDATED_DATE => $value[Common_enum::UPDATED_DATE],
                     Common_enum::CREATED_DATE => $value[Common_enum::CREATED_DATE],
                     Coupon_enum::STATUS_COUPON => ($due_date >=0)? Common_enum::MESSAGE_RESPONSE_TRUE : Common_enum::MESSAGE_RESPONSE_FALSE

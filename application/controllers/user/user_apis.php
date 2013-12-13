@@ -313,32 +313,51 @@ class user_apis extends REST_Controller{
         
     }
     
+    /**
+     * API Check permission a user
+     * 
+     * Menthod: POST
+     * 
+     * @param String $id_user
+     * 
+     * Response: JSONObject
+     * 
+     */
     public function check_permission_user_post() {
         //  Get param from client
-        $id_role = $this->post('id_role');
-        $array_role = $this->user_model->getRoleById($id_role);
-//        var_dump($array_role);  
-        if($array_role == null){
-            $data =  array(
-                   'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
-                   'Error'      =>''
-            );
-            $this->response($data);
-        }
-        else{
-            $role = $array_role[$id_role];
-            $function_list = $role['function_list'];    // id of function
-            $array_object_id = array();
-            foreach ($function_list as $value) {
-                $object_id  = array(
-                            Common_enum::_ID => new MongoId($value)
-                        );
-                $array_object_id[]=$object_id;
+        $id_user = $this->post('id_user');
+        $array_user = $this->user_model->getUserById($id_user);
+        $user = $array_user[$id_user];
+//        var_dump($user[User_enum::ROLE_LIST]);
+        
+        foreach ($user[User_enum::ROLE_LIST] as $value) {
+//            var_dump($value); 
+            $array_role = $this->user_model->getRoleById($value);
+//            var_dump($array_role);  
+            
+            if($array_role != null){
+                $role = $array_role[$value];
+                $function_list = $role['function_list'];    // id of function
+                foreach ($function_list as $p => $id_function) {
+                    $function_list[$p]= new MongoId($id_function);
+                }
+                $where = array(Common_enum::_ID => array('$in' => $function_list) );
+    //            var_dump($function_list);
+                $check = $this->common_model->checkExistValue(Function_enum::COLLECTION_FUNCTION, $where);
+                if($check == TRUE){
+                    $data =  array(
+                           'Status'     =>  Common_enum::MESSAGE_RESPONSE_TRUE,
+                           'Error'      =>''
+                    );
+                    $this->response($data);
+                }
             }
-            $where = array(Common_enum::_ID => array('$in' => $array_object_id) );
-            var_dump($where);
-            var_dump($this->common_model->checkExistValue(Function_enum::COLLECTION_FUNCTION, $where));
         }
+        $data =  array(
+               'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
+               'Error'      =>''
+        );
+        $this->response($data);
     }
     
     /**
