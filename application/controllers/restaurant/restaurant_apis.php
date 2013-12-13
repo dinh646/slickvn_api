@@ -405,31 +405,22 @@ class restaurant_apis extends REST_Controller{
             foreach ($list_restaurant as $restaurant){
                 //  Current date
                 $current_date = $this->common_model->getCurrentDate();
-
                 //  End date
                 $end_date = $restaurant['end_date'];
                 //  Get interval expired
                 $interval_expired = $this->common_model->getInterval($current_date, $end_date);
-
                 //  Is delete
                 $is_delete = $restaurant['is_delete'];
-
                 if($interval_expired >=0 && $is_delete == 0){
-
                     $count ++;
-
                     if(($count) >= $position_start_get && ($count) <= $position_end_get){
-
                         //  Create JSONObject Restaurant
                         $jsonobject = array( 
-
                             Restaurant_enum::ID                         => $restaurant['_id']->{'$id'},
                             Restaurant_enum::NAME                       => $restaurant[Restaurant_enum::NAME],
                             Restaurant_enum::EMAIL                       => $restaurant[Restaurant_enum::EMAIL],
                             Restaurant_enum::PHONE_NUMBER               => $restaurant[Restaurant_enum::PHONE_NUMBER],
-                                                                                                                                
                         );
-
                         $results[] = $jsonobject;
                     }
                 }
@@ -1047,6 +1038,80 @@ class restaurant_apis extends REST_Controller{
                             //  Create JSONObject Restaurant
                             $jsonobject = array( 
 
+                                Restaurant_enum::ID                         => $restaurant['_id']->{'$id'},
+                                Restaurant_enum::NAME                       => $restaurant[Restaurant_enum::NAME],
+                                Restaurant_enum::EMAIL                       => $restaurant[Restaurant_enum::EMAIL],
+                                Restaurant_enum::PHONE_NUMBER               => $restaurant[Restaurant_enum::PHONE_NUMBER],
+                            );
+                            $results[] = $jsonobject;
+                        }
+                    }
+                }
+//            }
+            //  Response
+            $data =  array(
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
+                   'Total'      =>  sizeof($results),
+                   'Results'    =>$results
+            );
+            $this->response($data);
+        }
+        else{
+            //  Response
+            $data =  array(
+                   'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
+                   'Total'      =>  sizeof($results),
+                   'Results'    =>$results
+            );
+            $this->response($data);
+        }
+    }
+    
+    /**
+     * 
+     *  API get all Restaurant deleted
+     * 
+     *  Menthod: GET
+     * 
+     *  @param int    $limit
+     *  @param int    $page
+     * 
+     *  Response: JSONObject
+     * 
+     */
+    public function get_all_restaurant_deleted_get(){
+        
+        //  Get param from client
+        $limit = $this->get("limit");
+        $page = $this->get("page");
+
+        //  End
+        $position_end_get   = ($page == 1) ? $limit : ($limit * $page);
+        
+        //  Start
+        $position_start_get = ($page == 1) ? $page : ( $position_end_get - ($limit - 1) );
+        
+        //  Array object restaurant
+        $results = array();
+        
+        $list_restaurant = $this->restaurant_model->getAllRestaurant();
+        
+        //  Count object restaurant
+        $count = 0;
+        if (is_array($list_restaurant)){
+            
+//            foreach ($list_restaurant as $array_restaurant){
+                
+                foreach ($list_restaurant as $restaurant){
+//                    var_dump($restaurant[Restaurant_enum::NAME]);
+                    //  Is delete
+                    $is_delete = $restaurant['is_delete'];
+
+                    if($is_delete == 1){
+                        $count ++;
+                        if(($count) >= $position_start_get && ($count) <= $position_end_get){
+                            //  Create JSONObject Restaurant
+                            $jsonobject = array( 
                                 Restaurant_enum::ID                         => $restaurant['_id']->{'$id'},
                                 Restaurant_enum::NAME                       => $restaurant[Restaurant_enum::NAME],
                                 Restaurant_enum::EMAIL                       => $restaurant[Restaurant_enum::EMAIL],
