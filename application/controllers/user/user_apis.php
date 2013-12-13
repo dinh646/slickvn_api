@@ -336,7 +336,7 @@ class user_apis extends REST_Controller{
                 $array_object_id[]=$object_id;
             }
             $where = array(Common_enum::_ID => array('$in' => $array_object_id) );
-            var_dump($array_object_id);
+            var_dump($where);
             var_dump($this->common_model->checkExistValue(Function_enum::COLLECTION_FUNCTION, $where));
         }
     }

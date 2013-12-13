@@ -2320,7 +2320,7 @@ class restaurant_apis extends REST_Controller{
                     Coupon_enum::DESC => $value[Coupon_enum::DESC],
                     Common_enum::UPDATED_DATE => $value[Common_enum::UPDATED_DATE],
                     Common_enum::CREATED_DATE => $value[Common_enum::CREATED_DATE],
-                    Coupon_enum::START_DATE => ($due_date >=0)? Common_enum::MESSAGE_RESPONSE_TRUE : Common_enum::MESSAGE_RESPONSE_FALSE
+                    Coupon_enum::STATUS_COUPON => ($due_date >=0)? Common_enum::MESSAGE_RESPONSE_TRUE : Common_enum::MESSAGE_RESPONSE_FALSE
                 );
                 $results[] = $jsonobject;
             }
