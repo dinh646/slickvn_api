@@ -424,6 +424,7 @@ class restaurant_apis extends REST_Controller{
                         $jsonobject = array( 
 
                             Restaurant_enum::ID                         => $restaurant['_id']->{'$id'},
+                            Restaurant_enum::NAME                       => $restaurant[Restaurant_enum::NAME],
                             Restaurant_enum::EMAIL                       => $restaurant[Restaurant_enum::EMAIL],
                             Restaurant_enum::PHONE_NUMBER               => $restaurant[Restaurant_enum::PHONE_NUMBER],
                                                                                                                                 
@@ -1047,6 +1048,7 @@ class restaurant_apis extends REST_Controller{
                             $jsonobject = array( 
 
                                 Restaurant_enum::ID                         => $restaurant['_id']->{'$id'},
+                                Restaurant_enum::NAME                       => $restaurant[Restaurant_enum::NAME],
                                 Restaurant_enum::EMAIL                       => $restaurant[Restaurant_enum::EMAIL],
                                 Restaurant_enum::PHONE_NUMBER               => $restaurant[Restaurant_enum::PHONE_NUMBER],
                             );
