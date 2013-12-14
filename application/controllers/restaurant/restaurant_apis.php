@@ -2263,7 +2263,7 @@ class restaurant_apis extends REST_Controller{
             Coupon_enum::START_DATE => $start_date,
             Coupon_enum::DUE_DATE => $due_date,
             Coupon_enum::DESC => $desc,
-            Coupon_enum::IS_USE => ($is_use == null)? 0 : 1,
+            Coupon_enum::IS_USE => ($is_use == null)? 0 : (int)$is_use,
             Common_enum::UPDATED_DATE       => ($updated_date == null ) ? $this->common_model->getCurrentDate(): $updated_date,
             Common_enum::CREATED_DATE       => ($created_date == null ) ? $this->common_model->getCurrentDate(): $created_date
         )
