@@ -498,19 +498,6 @@ class Restaurant_model extends CI_Model{
     
     /**
      * 
-     * Get Collection Coupon by Id
-     * 
-     * @param String $id
-     * 
-     * Return: Array Collection Coupon
-     * 
-     */
-    public function insertCouponByRestaurant($id) {
-        return $this->common_model->getCollectionById(Coupon_enum::COLLECTION_COUPON, $id);
-    }
-    
-    /**
-     * 
      * Update Collection Coupon
      * 
      * @param String $id
@@ -520,6 +507,19 @@ class Restaurant_model extends CI_Model{
      * 
      **/
     public function updateCoupon($action, $id, array $array_value) {
+        
+        if(strcmp( strtolower($action), Common_enum::EDIT ) == 0){
+            $current_date = $this->common_model->getCurrentDate();
+            $where = array(
+                //  not due date
+                Coupon_enum::DUE_DATE => array('$gt'=>$current_date),
+                //is_use=1
+                Coupon_enum::IS_USE => 1
+            );
+            $value = array(Coupon_enum::IS_USE => 0);
+            $this->common_model->editSpecialField(Coupon_enum::COLLECTION_COUPON, $where, array('$set'=>$value));
+            
+        }
         
         $this->common_model->updateCollection(Coupon_enum::COLLECTION_COUPON, $action, $id, $array_value);
         
