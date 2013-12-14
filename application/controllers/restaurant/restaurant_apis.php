@@ -116,7 +116,6 @@ class restaurant_apis extends REST_Controller{
                             Common_enum::UPDATED_DATE                   => $assessment['updated_date'],
                             Common_enum::CREATED_DATE                    => $assessment['created_date']
 
-
                         );
 
                         $results[] = $jsonobject;
@@ -2297,6 +2296,45 @@ class restaurant_apis extends REST_Controller{
         $id_restaurant = $this->get('id_restaurant');
         //  Get collection 
         $array_coupon = $this->restaurant_model->getCouponByRestaurant($id_restaurant);
+        
+        $current_date = $this->common_model->getCurrentDate();
+        
+        $results = array();
+        if($array_coupon == null){
+            //  
+        }
+        else{
+            foreach ($array_coupon as $value) {
+                $due_date = $this->common_model->getInterval($current_date, $value[Coupon_enum::DUE_DATE]);
+                $jsonobject = array(
+                    Coupon_enum::ID => $value[Common_enum::_ID]->{'$id'},
+                    Coupon_enum::ID_RESTAURANT => $value[Coupon_enum::ID_RESTAURANT],
+                    Coupon_enum::VALUE_COUPON => $value[Coupon_enum::VALUE_COUPON],
+                    Coupon_enum::START_DATE => $value[Coupon_enum::START_DATE],
+                    Coupon_enum::DUE_DATE => $value[Coupon_enum::DUE_DATE],
+                    Coupon_enum::DESC => $value[Coupon_enum::DESC],
+                    Coupon_enum::IS_USE => $value[Coupon_enum::IS_USE],
+                    Common_enum::UPDATED_DATE => $value[Common_enum::UPDATED_DATE],
+                    Common_enum::CREATED_DATE => $value[Common_enum::CREATED_DATE],
+                    Coupon_enum::STATUS_COUPON => ($due_date >=0)? Common_enum::MESSAGE_RESPONSE_TRUE : Common_enum::MESSAGE_RESPONSE_FALSE
+                );
+                $results[] = $jsonobject;
+            }
+        }
+        //  Response
+        $data =  array(
+               'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
+               'Total'      =>  sizeof($results),
+               'Results'    =>$results
+        );
+        $this->response($data);
+    }
+    
+    public function get_coupon_of_restaurant_by_id_get() {
+        //  Get param from client
+        $id_coupon = $this->get('id_coupon');
+        //  Get collection 
+        $array_coupon = $this->restaurant_model->getCouponById($id_coupon);
         
         $current_date = $this->common_model->getCurrentDate();
         
