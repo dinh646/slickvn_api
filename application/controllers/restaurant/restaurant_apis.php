@@ -2254,7 +2254,8 @@ class restaurant_apis extends REST_Controller{
         $is_use         = $this->post('is_use');
         $created_date   = $this->post('created_date');
         $updated_date = $this->post('updated_date');
-        
+
+        $action_insert = strcmp( strtolower($action), Common_enum::INSERT );
         $action_delete = strcmp( strtolower($action), Common_enum::DELETE );
         
         $array_value = ($action_delete != null)? array(
@@ -2269,7 +2270,9 @@ class restaurant_apis extends REST_Controller{
         )
          : array();
         
-        $this->restaurant_model->updateCoupon($action, $id, $this->common_model->removeElementArrayNull($array_value));
+        //  If action insert
+        $array_value = ($action_insert == 0)? $array_value : $this->common_model->removeElementArrayNull($array_value);
+        $this->restaurant_model->updateCoupon($action, $id, $array_value);
         $error = $this->restaurant_model->getError();
         if($error == null){
             if($array_value[Coupon_enum::IS_USE] == 1){
