@@ -586,7 +586,6 @@ class Common_model extends CI_Model{
      * 
      **/
     public function editSpecialField($collection_name, $id, array $array_value) {
-        
         try{
             if($collection_name == null){
                 $this->setError('Collection name is null'); return;
@@ -602,6 +601,37 @@ class Common_model extends CI_Model{
                     $where = array( Common_enum::_ID => new MongoId($id) );
                     
                     $this->collection ->update($where, $array_value );
+                
+            }
+        }catch ( MongoConnectionException $e ){
+                $this->setError($e->getMessage());
+        }catch ( MongoException $e ){
+                $this->setError($e->getMessage());
+        }
+    }
+    
+    /**
+     * 
+     * Edit Doc Collection
+     * 
+     * @param String $collection_name
+     * @param String $id
+     * @param Array $array_value
+     * 
+     * 
+     **/
+    public function edit($collection_name, $where = array(), $value = array(), $options = null) {
+        try{
+            if($collection_name == null){
+                $this->setError('Collection name is null'); return;
+            }
+            else{
+                
+                // Connect collection $collection_name
+                $collection = $collection_name;
+                $this->collection = $this->slickvn_db->$collection;
+                    
+                    $this->collection ->update($where, $value, $options);
                 
             }
         }catch ( MongoConnectionException $e ){

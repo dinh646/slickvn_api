@@ -517,7 +517,8 @@ class Restaurant_model extends CI_Model{
             );
             var_dump($where);
             $value = array(Coupon_enum::IS_USE => 0);
-            $this->common_model->editSpecialField(Coupon_enum::COLLECTION_COUPON, $where, array('$set'=>$value));
+            $options = array('multiple' => true);
+            $this->common_model->edit(Coupon_enum::COLLECTION_COUPON, $where, array('$set'=>$value), $options);
         }
         $this->common_model->updateCollection(Coupon_enum::COLLECTION_COUPON, $action, $id, $array_value);
     }
