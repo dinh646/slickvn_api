@@ -511,11 +511,11 @@ class Restaurant_model extends CI_Model{
             $current_date = $this->common_model->getCurrentDate();
             $where = array(
                 //  not due date
-//                Coupon_enum::DUE_DATE => array('$gt'=>$current_date),
+//                Coupon_enum::DUE_DATE => array('$gte'=>$current_date),
                 //  is_use=1
                 Coupon_enum::IS_USE => 1
             );
-            var_dump($where);
+//            var_dump($where);
             $value = array(Coupon_enum::IS_USE => 0);
             $options = array('multiple' => true);
             $this->common_model->edit(Coupon_enum::COLLECTION_COUPON, $where, array('$set'=>$value), $options);

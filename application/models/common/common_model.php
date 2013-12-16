@@ -11,7 +11,7 @@ class Common_model extends CI_Model{
         parent::__construct();
         
         $mongodb = 'mongodb://';
-        $host_name = 'localhost';
+        $host_name = '192.168.0.105';
         $port = '27017';
         $database = 'slickvn_test';
         
@@ -912,6 +912,32 @@ class Common_model extends CI_Model{
         }
         
     }
+    
+    /**
+     * 
+     * Check Login
+     * 
+     * @param String $collection_name
+     * @param Array $array_value
+     * 
+     * @return Array collection
+     * 
+     **/
+    public function checkLogin($array_value = array()) {
+        try{
+            // Connect collection 
+            $collection = User_enum::COLLECTION_USER;
+            $this->collection = $this->slickvn_db->$collection;
+            
+            $result = iterator_to_array( $this->collection->find($array_value) );
+            return $result;
+        }catch ( MongoConnectionException $e ){
+                $this->setError($e->getMessage());
+        }catch ( MongoException $e ){
+                $this->setError($e->getMessage());
+        }
+    }
+    
 }
 
 ?>

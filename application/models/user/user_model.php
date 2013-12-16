@@ -345,14 +345,12 @@ class User_model extends CI_Model{
      */
     public function login($email, $pass) {
         
-        $collection     = User_enum::COLLECTION_USER;
-        
         $array_value = array(
                                 User_enum::EMAIL => $email,
-                                User_enum::PASSWORD => $pass,
+                                User_enum::PASSWORD => $pass
                             );
         
-        $user = $this->common_model->checkExistValue($collection, $array_value);
+        $user = $this->common_model->checkLogin($array_value);
         
         return $user;
         

@@ -717,7 +717,7 @@ class user_apis extends REST_Controller{
                 );
             }
         }
-//        var_dump(is_array($results));
+//        var_dump($results);
         if(!is_array($results) || sizeof($results) == 0){
             $data =  array(
                    'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
@@ -738,7 +738,8 @@ class user_apis extends REST_Controller{
                                                     Common_enum::CREATED_DATE           => $this->common_model->getCurrentDate()
                                                 )
                                             );
-            $this->common_model->editSpecialField(User_enum::COLLECTION_USER, $results['id'], array('$inc' => array(User_enum::POINT => List_point_enum::LOGIN) ) );
+            $result = $results[0];
+            $this->common_model->editSpecialField(User_enum::COLLECTION_USER, $result['id'], array('$inc' => array(User_enum::POINT => List_point_enum::LOGIN) ) );
             $data =  array(
                    'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Total'      =>  sizeof($results),
