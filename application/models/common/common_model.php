@@ -11,7 +11,7 @@ class Common_model extends CI_Model{
         parent::__construct();
         
         $mongodb = 'mongodb://';
-        $host_name = '192.168.1.194';
+        $host_name = 'localhost';
         $port = '27017';
         $database = 'slickvn_test';
         
@@ -555,12 +555,10 @@ class Common_model extends CI_Model{
                     
                     if($id == null){$this->setError('Is is null'); return;}
                     
-                    
-                    
                     $where = array(
                                     Common_enum::_ID => new MongoId($id)
                                 );
-                    
+                                var_dump($array_value);
                     ($array_value == null)? $this->collection ->remove( $where )
                             :
                     $this->collection ->update($where, array('$set' => $array_value) );
@@ -598,7 +596,6 @@ class Common_model extends CI_Model{
                 // Connect collection $collection_name
                 $collection = $collection_name;
                 $this->collection = $this->slickvn_db->$collection;
-                
 
                     if($id == null){$this->setError('Id Is is null'); return;}
                     

@@ -2256,6 +2256,7 @@ class restaurant_apis extends REST_Controller{
         $updated_date = $this->post('updated_date');
 
         $action_insert = strcmp( strtolower($action), Common_enum::INSERT );
+        $action_edit = strcmp( strtolower($action), Common_enum::EDIT );
         $action_delete = strcmp( strtolower($action), Common_enum::DELETE );
         
         $array_value = ($action_delete != null)? array(
@@ -2271,13 +2272,23 @@ class restaurant_apis extends REST_Controller{
          : array();
         
         //  If action insert
-        $array_value = ($action_insert == 0)? $array_value : $this->common_model->removeElementArrayNull($array_value);
+//        $array_value = ($action_insert == 0)? $array_value : $this->common_model->removeElementArrayNull($array_value);
+//        var_dump($id);
         $this->restaurant_model->updateCoupon($action, $id, $array_value);
         $error = $this->restaurant_model->getError();
+//        var_dump($array_value);
         if($error == null){
-            if($array_value[Coupon_enum::IS_USE] == 1){
+            if( $action_insert == 0 && $array_value[Coupon_enum::IS_USE] == 1){
                 $this->common_model->editSpecialField(Restaurant_enum::COLLECTION_RESTAURANT, 
                                                   $id_restaurant, array('$set' => array(Restaurant_enum::ID_COUPON=>$array_value['_id']->{'$id'} )));
+            }
+            else if( $action_edit == 0){
+                $this->common_model->editSpecialField(Restaurant_enum::COLLECTION_RESTAURANT, 
+                                                  $id_restaurant, array('$set' => array(Restaurant_enum::ID_COUPON=>($array_value[Coupon_enum::IS_USE] == 1)? $id: '' )));
+            }
+            else if($action_delete == 0){
+                $this->common_model->editSpecialField(Restaurant_enum::COLLECTION_RESTAURANT, 
+                                                  $id_restaurant, array('$set' => array(Restaurant_enum::ID_COUPON=>'')));
             }
             $data =  array(
                    'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,

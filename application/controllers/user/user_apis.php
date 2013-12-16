@@ -329,12 +329,10 @@ class user_apis extends REST_Controller{
         $array_user = $this->user_model->getUserById($id_user);
         $user = $array_user[$id_user];
 //        var_dump($user[User_enum::ROLE_LIST]);
-        
         foreach ($user[User_enum::ROLE_LIST] as $value) {
 //            var_dump($value); 
             $array_role = $this->user_model->getRoleById($value);
 //            var_dump($array_role);  
-            
             if($array_role != null){
                 $role = $array_role[$value];
                 $function_list = $role['function_list'];    // id of function
