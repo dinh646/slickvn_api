@@ -1,6 +1,5 @@
 <?php
 
-require APPPATH.'/libraries/REST_Controller.php';
 /**
  * 
  * This class support APIs Restaurant for client
@@ -9,7 +8,7 @@ require APPPATH.'/libraries/REST_Controller.php';
  * Date: 8/11/2013
  * 
  */
-class restaurant_apis extends REST_Controller{
+class Restaurant_apis extends CI_Model{
     
     public function __construct() {
         parent::__construct();
@@ -37,7 +36,6 @@ class restaurant_apis extends REST_Controller{
     //  APIs Assessment                                   //
     //                                                    //
     //----------------------------------------------------//
-    
     /**
      * 
      * Get Assessment by Id Restaurant
@@ -49,15 +47,15 @@ class restaurant_apis extends REST_Controller{
      * Response: JSONObject
      * 
      */
-    public function get_assessment_by_id_restaurant_get() {
+    public function get_assessment_by_id_restaurant($limit=0, $page=0, $id_restaurant='') {
         
         //  Get limit from client
-        $limit = $this->get("limit");
+//        $limit = $this->get("limit");
         
         //  Get page from client
-        $page = $this->get("page");
+//        $page = $this->get("page");
         
-        $id_restaurant = $this->get('id_restaurant');
+//        $id_restaurant = $this->get('id_restaurant');
         
         //  End
         $position_end_get   = ($page == 1)? $limit : ($limit * $page);
@@ -130,7 +128,7 @@ class restaurant_apis extends REST_Controller{
                'Total'      =>  sizeof($results),
                'Results'    =>$results
         );
-        $this->response($data);
+        return $data;
         
     }
     
@@ -143,22 +141,26 @@ class restaurant_apis extends REST_Controller{
      *  Response: JSONObject
      * 
      */
-    public function update_assement_post(){
+    public function update_assement($action, $id, $id_user, $id_restaurant,
+                                    $content, $rate_service, $rate_landscape,
+                                    $rate_taste, $rate_price, $approval,
+                                    $updated_date, $created_date
+                                    ){
         
         //  Get param from client
-        $action = $this->post('action');
-        $id = $this->post('id');
-        
-        $id_user = $this->post('id_user');
-        $id_restaurant = $this->post('id_restaurant');
-        $content = $this->post('content');
-        $rate_service = $this->post('rate_service');
-        $rate_landscape = $this->post('rate_landscape');
-        $rate_taste = $this->post('rate_taste');
-        $rate_price = $this->post('rate_price');
-        $approval = $this->post('approval');
-        $updated_date = $this->post('updated_date');
-        $created_date = $this->post('created_date');
+//        $action = $this->post('action');
+//        $id = $this->post('id');
+//        
+//        $id_user = $this->post('id_user');
+//        $id_restaurant = $this->post('id_restaurant');
+//        $content = $this->post('content');
+//        $rate_service = $this->post('rate_service');
+//        $rate_landscape = $this->post('rate_landscape');
+//        $rate_taste = $this->post('rate_taste');
+//        $rate_price = $this->post('rate_price');
+//        $approval = $this->post('approval');
+//        $updated_date = $this->post('updated_date');
+//        $created_date = $this->post('created_date');
             
         $array_value = array(
             Assessment_enum::ID_USER => $id_user,
@@ -195,14 +197,14 @@ class restaurant_apis extends REST_Controller{
                    'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Error'      =>$error
             );
-            $this->response($data);
+            return $data;
         }
         else{
             $data =  array(
                    'Status'     =>Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
-            $this->response($data);
+            return $data;
         }
         
     }
@@ -366,14 +368,14 @@ class restaurant_apis extends REST_Controller{
      *  Response: JSONObject
      * 
      */
-    public function search_restaurant_get(){
+    public function search_restaurant($limit, $page, $key){
         
         //  Get param from client
-        $limit = $this->get("limit");
-        $page = $this->get("page");
+//        $limit = $this->get("limit");
+//        $page = $this->get("page");
 
         //  Key search
-        $key = Encode_utf8::toUTF8($this->get('key'));
+        $key = Encode_utf8::toUTF8($key);
         
         $array_key_word = explode(' ', $key);
 //        var_dump($array_key_word);
@@ -430,7 +432,7 @@ class restaurant_apis extends REST_Controller{
                    'Total'      =>  sizeof($results),
                    'Results'    =>$results
             );
-            $this->response($data);
+            return $data;
         }
         else{
             //  Response
@@ -439,7 +441,7 @@ class restaurant_apis extends REST_Controller{
                    'Total'      =>  sizeof($results),
                    'Results'    =>$results
             );
-            $this->response($data);
+            return $data;
         }
     }
     
@@ -456,14 +458,14 @@ class restaurant_apis extends REST_Controller{
      *  Response: JSONObject
      * 
      */
-    public function search_restaurant_by_name_get(){
+    public function search_restaurant_by_name($limit, $page, $key){
         
         //  Get param from client
-        $limit = $this->get("limit");
-        $page = $this->get("page");
+//        $limit = $this->get("limit");
+//        $page = $this->get("page");
 
         //  Key search
-        $key = Encode_utf8::toUTF8($this->get('key'));
+        $key = Encode_utf8::toUTF8($key);
         
         $array_key_word = explode(' ', $key);
 //        var_dump($array_key_word);
@@ -563,7 +565,7 @@ class restaurant_apis extends REST_Controller{
                    'Total'      =>  sizeof($results),
                    'Results'    =>$results
             );
-            $this->response($data);
+            return $data;
         }
         else{
             //  Response
@@ -572,7 +574,7 @@ class restaurant_apis extends REST_Controller{
                    'Total'      =>  sizeof($results),
                    'Results'    =>$results
             );
-            $this->response($data);
+            return $data;
         }
     }
     
@@ -589,16 +591,16 @@ class restaurant_apis extends REST_Controller{
      *  Response: JSONObject
      * 
      */
-    public function search_restaurant_by_id_base_collection_get() {
+    public function search_restaurant_by_id_base_collection($limit, $page, $field, $key) {
         
         //  Get param from client
-        $limit = $this->get("limit");
-        $page  = $this->get("page");
+//        $limit = $this->get("limit");
+//        $page  = $this->get("page");
 
         //  Field search
-        $field = $this->get('field');
+//        $field = $this->get('field');
         //  Key search
-        $key  = $this->get('key');
+//        $key  = $this->get('key');
         
         //  Query
         $where = array($field => array('$in' => array($key)) );
@@ -690,7 +692,7 @@ class restaurant_apis extends REST_Controller{
                    'Total'      =>  sizeof($results),
                    'Results'    =>$results
             );
-            $this->response($data);
+            return $data;
         }
         else{
             //  Response
@@ -699,7 +701,7 @@ class restaurant_apis extends REST_Controller{
                    'Total'      =>  sizeof($results),
                    'Results'    =>$results
             );
-            $this->response($data);
+            return $data;
         }
     }
     
@@ -716,14 +718,14 @@ class restaurant_apis extends REST_Controller{
      *  Response: JSONObject
      * 
      */
-    public function search_restaurant_by_coupon_get() {
+    public function search_restaurant_by_coupon($limit, $page, $key) {
         
         //  Get param from client
-        $limit = $this->get("limit");
-        $page = $this->get("page");
+//        $limit = $this->get("limit");
+//        $page = $this->get("page");
 
         //  Key search
-        $key = Encode_utf8::toUTF8($this->get('key'));
+        $key = Encode_utf8::toUTF8($key);
         
         //  Query
         $where = array(Coupon_enum::DESC => new MongoRegex('/'.$key.'/i'));
@@ -827,7 +829,7 @@ class restaurant_apis extends REST_Controller{
                'Total'      =>  sizeof($results),
                'Results'    =>$results
         );
-        $this->response($data);
+        return $data;
     }
     
     /**
@@ -843,14 +845,14 @@ class restaurant_apis extends REST_Controller{
      *  Response: JSONObject
      * 
      */
-    public function search_restaurant_by_meal_get() {
+    public function search_restaurant_by_meal($limit, $page, $key) {
         
         //  Get param from client
-        $limit = $this->get("limit");
-        $page = $this->get("page");
-
-        //  Key search
-        $key = $this->get('key');
+//        $limit = $this->get("limit");
+//        $page = $this->get("page");
+//
+//        //  Key search
+//        $key = $this->get('key');
         
         $key_ = iconv('UTF-8', 'UTF-8//IGNORE', $key);
         
@@ -975,7 +977,7 @@ class restaurant_apis extends REST_Controller{
                    'Total'      =>  sizeof($results),
                    'Results'    =>$results
             );
-            $this->response($data);
+            return $data;
         }
         else{
             //  Response
@@ -984,7 +986,7 @@ class restaurant_apis extends REST_Controller{
                    'Total'      =>  sizeof($results),
                    'Results'    =>$results
             );
-            $this->response($data);
+            return $data;
         }
     }
     
@@ -1000,11 +1002,11 @@ class restaurant_apis extends REST_Controller{
      *  Response: JSONObject
      * 
      */
-    public function get_all_restaurant_get(){
+    public function get_all_restaurant($limit, $page){
         
         //  Get param from client
-        $limit = $this->get("limit");
-        $page = $this->get("page");
+//        $limit = $this->get("limit");
+//        $page = $this->get("page");
 
         //  End
         $position_end_get   = ($page == 1) ? $limit : ($limit * $page);
@@ -1016,7 +1018,6 @@ class restaurant_apis extends REST_Controller{
         $results = array();
         
         $list_restaurant = $this->restaurant_model->getAllRestaurant();
-        
         //  Count object restaurant
         $count = 0;
         if (is_array($list_restaurant)){
@@ -1031,7 +1032,6 @@ class restaurant_apis extends REST_Controller{
                     if($is_delete == 0){
 
                         $count ++;
-
                         if(($count) >= $position_start_get && ($count) <= $position_end_get){
 
                             //  Create JSONObject Restaurant
@@ -1053,7 +1053,7 @@ class restaurant_apis extends REST_Controller{
                    'Total'      =>  sizeof($results),
                    'Results'    =>$results
             );
-            $this->response($data);
+            return $data;
         }
         else{
             //  Response
@@ -1062,7 +1062,7 @@ class restaurant_apis extends REST_Controller{
                    'Total'      =>  sizeof($results),
                    'Results'    =>$results
             );
-            $this->response($data);
+            return $data;
         }
     }
     
@@ -1078,11 +1078,11 @@ class restaurant_apis extends REST_Controller{
      *  Response: JSONObject
      * 
      */
-    public function get_all_restaurant_deleted_get(){
+    public function get_all_restaurant_deleted($limit, $page){
         
         //  Get param from client
-        $limit = $this->get("limit");
-        $page = $this->get("page");
+//        $limit = $this->get("limit");
+//        $page = $this->get("page");
 
         //  End
         $position_end_get   = ($page == 1) ? $limit : ($limit * $page);
@@ -1127,7 +1127,7 @@ class restaurant_apis extends REST_Controller{
                    'Total'      =>  sizeof($results),
                    'Results'    =>$results
             );
-            $this->response($data);
+            return $data;
         }
         else{
             //  Response
@@ -1136,7 +1136,7 @@ class restaurant_apis extends REST_Controller{
                    'Total'      =>  sizeof($results),
                    'Results'    =>$results
             );
-            $this->response($data);
+            return $data;
         }
     }
     
@@ -1150,10 +1150,10 @@ class restaurant_apis extends REST_Controller{
      * Response: JSONObject
      * 
      */
-    public function get_detail_restaurant_get() {
+    public function get_detail_restaurant($id) {
         
         //  Get param from client
-        $id = $this->get('id');
+//        $id = $this->get('id');
         
         //
         //  Edit field number_view: +1
@@ -1267,7 +1267,7 @@ class restaurant_apis extends REST_Controller{
                    'Total'      =>  sizeof($results),
                    'Results'    =>$results
             );
-            $this->response($data);
+            return $data;
         }
         else{
             //  Response
@@ -1275,7 +1275,7 @@ class restaurant_apis extends REST_Controller{
                    'Status'     =>Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>  $error
             );
-            $this->response($data);
+            return $data;
         }
         
     }
@@ -1290,10 +1290,10 @@ class restaurant_apis extends REST_Controller{
      * Response: JSONObject
      * 
      */
-    public function get_restaurant_by_id_get(){
+    public function get_restaurant_by_id($id){
         
         //  Get param from client
-        $id = $this->get('id');
+//        $id = $this->get('id');
         
         //  Get collection 
         $get_collection = $this->restaurant_model->getRestaurantById($id);
@@ -1358,7 +1358,7 @@ class restaurant_apis extends REST_Controller{
                    'Total'      =>  sizeof($results),
                    'Results'    =>$results
             );
-            $this->response($data);
+            return $data;
         }
         else{
             //  Response
@@ -1366,7 +1366,7 @@ class restaurant_apis extends REST_Controller{
                    'Status'     =>Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>  $error
             );
-            $this->response($data);
+            return $data;
         }
         
     }
@@ -1383,13 +1383,13 @@ class restaurant_apis extends REST_Controller{
      *  Response: JSONObject
      * 
      */
-    public function get_all_restaurant_approval_show_carousel_get() {
+    public function get_all_restaurant_approval_show_carousel($limit, $page) {
         
         //  Get limit from client
-        $limit = $this->get("limit");
-        
-        //  Get page from client
-        $page = $this->get("page");
+//        $limit = $this->get("limit");
+//        
+//        //  Get page from client
+//        $page = $this->get("page");
         
         //  End
         $position_end_get   = ($page == 1)? $limit : ($limit * $page);
@@ -1446,7 +1446,7 @@ class restaurant_apis extends REST_Controller{
             );
 
 
-            $this->response($data);
+            return $data;
         }
         else{
             //  Response
@@ -1454,7 +1454,7 @@ class restaurant_apis extends REST_Controller{
                    'Status'     =>Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error,
             );
-            $this->response($data);
+            return $data;
         }
         
     }
@@ -1472,15 +1472,14 @@ class restaurant_apis extends REST_Controller{
      *  Response: JSONObject
      * 
      */
-    public function get_order_by_restaurant_get() {
+    public function get_order_by_restaurant($limit, $page, $order_by = 1) {
         
         //  Get limit from client
-        $limit = $this->get("limit");
-        
+//        $limit = $this->get("limit");
         //  Get page from client
-        $page = $this->get("page");
+//        $page = $this->get("page");
         
-        $order_by = ($this->get("order_by") == null)? 1 : (int)$this->get("order_by");
+//        $order_by = ($this->get("order_by") == null)? 1 : (int)$this->get("order_by");
         
         //  End
         $position_end_get   = ($page == 1)? $limit : ($limit * $page);
@@ -1563,7 +1562,7 @@ class restaurant_apis extends REST_Controller{
             );
 
 
-            $this->response($data);
+            return $data;
         }
         else{
             //  Response
@@ -1571,7 +1570,7 @@ class restaurant_apis extends REST_Controller{
                    'Status'     =>Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error,
             );
-            $this->response($data);
+            return $data;
         }
         
     }
@@ -1588,13 +1587,12 @@ class restaurant_apis extends REST_Controller{
      *  Response: JSONObject
      * 
      */
-    public function get_newest_restaurant_list_get() {
+    public function get_newest_restaurant_list($limit, $page) {
         
         //  Get limit from client
-        $limit = $this->get("limit");
-        
+//        $limit = $this->get("limit");
         //  Get page from client
-        $page = $this->get("page");
+//        $page = $this->get("page");
         
         //  End
         $position_end_get   = ($page == 1)? $limit : ($limit * $page);
@@ -1680,7 +1678,7 @@ class restaurant_apis extends REST_Controller{
                'Total'      =>  sizeof($results),
                'Results'    =>$results
         );
-        $this->response($data);
+        return $data;
     }
     
     /**
@@ -1695,17 +1693,16 @@ class restaurant_apis extends REST_Controller{
      *  Response: JSONObject
      * 
      */
-    public function get_restaurant_coupon_list_get() {
+    public function get_restaurant_coupon_list($limit, $page) {
         
         //  Get limit from client
-        $limit = $this->get("limit");
+//        $limit = $this->get("limit");
         
         //  Get page from client
-        $page = $this->get("page");
+//        $page = $this->get("page");
         
         //  End
         $position_end_get   = ($page == 1)? $limit : ($limit * $page);
-        
         //  Start
         $position_start_get = ($page == 1)? $page : ( $position_end_get - ($limit - 1) );
         
@@ -1794,7 +1791,7 @@ class restaurant_apis extends REST_Controller{
                'Total'      =>  sizeof($results),
                'Results'    =>$results
         );
-        $this->response($data);
+        return $data;
     }
     
     /**
@@ -1809,13 +1806,13 @@ class restaurant_apis extends REST_Controller{
      *  Response: JSONObject
      * 
      */
-    public function get_orther_restaurant_list_get() {
+    public function get_orther_restaurant_list($limit, $page) {
         
         //  Get limit from client
-        $limit = $this->get("limit");
+//        $limit = $this->get("limit");
         
         //  Get page from client
-        $page = $this->get("page");
+//        $page = $this->get("page");
                 
         //  End
         $position_end_get   = ($page == 1)? $limit : ($limit * $page);
@@ -1905,7 +1902,7 @@ class restaurant_apis extends REST_Controller{
                'Results'    =>$results
         );
 
-        $this->response($data);
+        return $data;
     }
     
     
@@ -1949,41 +1946,50 @@ class restaurant_apis extends REST_Controller{
      *  Response: JSONObject
      * 
      */
-   public function update_restaurant_post(){
+   public function update_restaurant($action, $id, $id_menu_dish, $id_coupon,
+                                    $name, $folder_name, $email, $desc, $approval_show_carousel,
+                                    $address, $city, $district, $link_to, $link_to, 
+                                    $phone_number, $working_time, $status_active, 
+                                    $str_dish_list, $favourite_list, $price_person_list,
+                                    $culinary_style_list, $mode_use_list, $payment_type_list,
+                                    $landscape_list, $other_criteria_list, $introduce,
+                                    $number_view=null, $start_date, $end_date, $created_date = null,
+                                    $updated_date=null, $is_delete, $str_image_post
+                                    ){
         
         //  Get param from client
-        $action                  = $this->post('action'); 
-        $id                      = $this->post('id'); 
-        $id_menu_dish            = $this->post('id_menu_dish');
-        $id_coupon               = $this->post('id_coupon');
-        $name                    = $this->post('name');
-        $folder_name             = $this->post('folder_name');
-        $email                   = $this->post('email');
-        $desc                    = $this->post('desc');
-        $approval_show_carousel  = $this->post('approval_show_carousel');
-        $address                 = $this->post('address');
-        $city                    = $this->post('city');
-        $district                = $this->post('district');
-        $link_to                 = $this->post('link_to');
-        $phone_number            = $this->post('phone_number');
-        $working_time            = $this->post('working_time');
-        $status_active           = $this->post('status_active');
-        $str_dish_list           = $this->post('dish_list');
-        $favourite_list          = $this->post('favourite_list');
-        $price_person_list       = $this->post('price_person_list');
-        $culinary_style_list     = $this->post('culinary_style_list');
-        $mode_use_list           = $this->post('mode_use_list');
-        $payment_type_list       = $this->post('payment_type_list');
-        $landscape_list          = $this->post('landscape_list');
-        $other_criteria_list     = $this->post('other_criteria_list');
-        $introduce               = $this->post('introduce');
-        $number_view             = $this->post('number_view');
-        $start_date              = $this->post('start_date');
-        $end_date                = $this->post('end_date');
-        $created_date            = $this->post('created_date');
-        $updated_date            = $this->post('updated_date');
-        $is_delete               = $this->post('is_delete');
-        $str_image_post          = $this->post('array_image');                   //  image.jpg,image2.png,...
+//        $action                  = $this->post('action'); 
+//        $id                      = $this->post('id'); 
+//        $id_menu_dish            = $this->post('id_menu_dish');
+//        $id_coupon               = $this->post('id_coupon');
+//        $name                    = $this->post('name');
+//        $folder_name             = $this->post('folder_name');
+//        $email                   = $this->post('email');
+//        $desc                    = $this->post('desc');
+//        $approval_show_carousel  = $this->post('approval_show_carousel');
+//        $address                 = $this->post('address');
+//        $city                    = $this->post('city');
+//        $district                = $this->post('district');
+//        $link_to                 = $this->post('link_to');
+//        $phone_number            = $this->post('phone_number');
+//        $working_time            = $this->post('working_time');
+//        $status_active           = $this->post('status_active');
+//        $str_dish_list           = $this->post('dish_list');
+//        $favourite_list          = $this->post('favourite_list');
+//        $price_person_list       = $this->post('price_person_list');
+//        $culinary_style_list     = $this->post('culinary_style_list');
+//        $mode_use_list           = $this->post('mode_use_list');
+//        $payment_type_list       = $this->post('payment_type_list');
+//        $landscape_list          = $this->post('landscape_list');
+//        $other_criteria_list     = $this->post('other_criteria_list');
+//        $introduce               = $this->post('introduce');
+//        $number_view             = $this->post('number_view');
+//        $start_date              = $this->post('start_date');
+//        $end_date                = $this->post('end_date');
+//        $created_date            = $this->post('created_date');
+//        $updated_date            = $this->post('updated_date');
+//        $is_delete               = $this->post('is_delete');
+//        $str_image_post          = $this->post('array_image');                   //  image.jpg,image2.png,...
         
         $file_avatar='';
         $file_carousel='';
@@ -2208,14 +2214,14 @@ class restaurant_apis extends REST_Controller{
                    'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Error'      =>$error
             );
-            $this->response($data);
+            return $data;
         }
         else{
             $data =  array(
                    'Status'     =>Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
-            $this->response($data);
+            return $data;
         }
     }
 
@@ -2241,19 +2247,22 @@ class restaurant_apis extends REST_Controller{
      *  Response: JSONObject
      * 
      */
-    public function update_coupon_post(){
+    public function update_coupon($action, $id, $id_restaurant, $value_coupon, 
+                                  $start_date, $due_date, $desc, $is_use=0,
+                                  $created_date = null, $updated_date = null
+                                 ){
         
         //  Get param from client
-        $action         = $this->post('action');
-        $id             = $this->post('id');
-        $id_restaurant  = $this->post('id_restaurant');
-        $value_coupon   = $this->post('value_coupon');
-        $start_date     = $this->post('start_date');
-        $due_date       = $this->post('due_date');
-        $desc           = $this->post('desc');
-        $is_use         = $this->post('is_use');
-        $created_date   = $this->post('created_date');
-        $updated_date = $this->post('updated_date');
+//        $action         = $this->post('action');
+//        $id             = $this->post('id');
+//        $id_restaurant  = $this->post('id_restaurant');
+//        $value_coupon   = $this->post('value_coupon');
+//        $start_date     = $this->post('start_date');
+//        $due_date       = $this->post('due_date');
+//        $desc           = $this->post('desc');
+//        $is_use         = $this->post('is_use');
+//        $created_date   = $this->post('created_date');
+//        $updated_date = $this->post('updated_date');
 
         $action_insert = strcmp( strtolower($action), Common_enum::INSERT );
         $action_edit = strcmp( strtolower($action), Common_enum::EDIT );
@@ -2294,20 +2303,20 @@ class restaurant_apis extends REST_Controller{
                    'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Error'      =>$error
             );
-            $this->response($data);
+            return $data;
         }
         else{
             $data =  array(
                    'Status'     =>Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
-            $this->response($data);
+            return $data;
         }
     }
     
-    public function get_coupon_of_restaurant_get() {
+    public function get_coupon_of_restaurant($id_restaurant) {
         //  Get param from client
-        $id_restaurant = $this->get('id_restaurant');
+//        $id_restaurant = $this->get('id_restaurant');
         //  Get collection 
         $array_coupon = $this->restaurant_model->getCouponByRestaurant($id_restaurant);
         
@@ -2341,12 +2350,12 @@ class restaurant_apis extends REST_Controller{
                'Total'      =>  sizeof($results),
                'Results'    =>$results
         );
-        $this->response($data);
+        return $data;
     }
     
-    public function get_coupon_of_restaurant_by_id_get() {
+    public function get_coupon_of_restaurant_by_id($id_coupon) {
         //  Get param from client
-        $id_coupon = $this->get('id_coupon');
+//        $id_coupon = $this->get('id_coupon');
         //  Get collection 
         $array_coupon = $this->restaurant_model->getCouponById($id_coupon);
         
@@ -2380,7 +2389,7 @@ class restaurant_apis extends REST_Controller{
                'Total'      =>  sizeof($results),
                'Results'    =>$results
         );
-        $this->response($data);
+        return $data;
     }
     
     //------------------------------------------------------
@@ -2402,17 +2411,17 @@ class restaurant_apis extends REST_Controller{
      *  Response: JSONObject
      * 
      */    
-    public function search_post_get(){
+    public function search_post($limit, $page, $key){
         
         //  Get limit from client
-        $limit = $this->get("limit");
+//        $limit = $this->get("limit");
         
         //  Get page from client
-        $page = $this->get("page");
+//        $page = $this->get("page");
         
         //  Key search
-        $key = $this->get('key');
-        $key = Encode_utf8::toUTF8($this->get('key'));
+//        $key = $this->get('key');
+        $key = Encode_utf8::toUTF8($key);
         
         //  End
         $position_end_get   = ($page == 1)? $limit : ($limit * $page);
@@ -2465,7 +2474,7 @@ class restaurant_apis extends REST_Controller{
                'Results'    =>$results
         );
 
-        $this->response($data);
+        return $data;
     }
     
     /**
@@ -2480,11 +2489,11 @@ class restaurant_apis extends REST_Controller{
      *  Response: JSONObject
      * 
      */    
-    public function get_all_post_get(){
+    public function get_all_post($limit, $page){
         //  Get limit from client
-        $limit = $this->get("limit");
+//        $limit = $this->get("limit");
         //  Get page from client
-        $page = $this->get("page");
+//        $page = $this->get("page");
         //  End
         $position_end_get   = ($page == 1)? $limit : ($limit * $page);
         //  Start
@@ -2529,7 +2538,7 @@ class restaurant_apis extends REST_Controller{
                'Results'    =>$results
         );
 
-        $this->response($data);
+        return $data;
     }
     
     /**
@@ -2544,10 +2553,10 @@ class restaurant_apis extends REST_Controller{
      *  Response: JSONObject
      * 
      */    
-    public function get_detail_post_get(){
+    public function get_detail_post($id){
         //  Get limit from client
         
-        $id = $this->get('id');
+//        $id = $this->get('id');
         
         $list_post = $this->restaurant_model->getPostById($id);
         //  Array object post
@@ -2591,7 +2600,7 @@ class restaurant_apis extends REST_Controller{
                'Results'    =>$results
         );
 
-        $this->response($data);
+        return $data;
     }
     
     /**
@@ -2612,26 +2621,28 @@ class restaurant_apis extends REST_Controller{
      * Response: JSONObject
      * 
      */
-   public function update_post_post(){
+   public function update_post($action, $id, $id_user, $title, $address, $favourite_type_list,
+                                $price_person_list, $culinary_style_list, $number_view,
+                                $content, $updated_date=null, $created_date=null,
+                                $str_image_post
+                                ){
         
         //  Get param from client
-        $action                 = $this->post('action');
-        
-        $id                     = $this->post('id');
-        
-        $id_user                = $this->post('id_user');
-        $title                  = $this->post('title');
-        $address                = $this->post('address');
-        $favourite_type_list    = $this->post('favourite_type_list');
-        $price_person_list      = $this->post('price_person_list');
-        $culinary_style_list    = $this->post('culinary_style_list');
-        $number_view             = $this->post('number_view');
-        $content                = $this->post('content');
-        $updated_date = $this->post('updated_date');
-        $created_date = $this->post('created_date');
+//        $action                 = $this->post('action');
+//        $id                     = $this->post('id');
+//        $id_user                = $this->post('id_user');
+//        $title                  = $this->post('title');
+//        $address                = $this->post('address');
+//        $favourite_type_list    = $this->post('favourite_type_list');
+//        $price_person_list      = $this->post('price_person_list');
+//        $culinary_style_list    = $this->post('culinary_style_list');
+//        $number_view             = $this->post('number_view');
+//        $content                = $this->post('content');
+//        $updated_date = $this->post('updated_date');
+//        $created_date = $this->post('created_date');
         
         //  More
-        $str_image_post = $this->post('array_image');                   //  image.jpg,image2.png,...
+//        $str_image_post = $this->post('array_image');                   //  image.jpg,image2.png,...
         $array_image_post = explode(Common_enum::MARK, $str_image_post); //  ['image.jpg', 'image2.png' ,...]
         
         $file_avatar='';
@@ -2703,14 +2714,14 @@ class restaurant_apis extends REST_Controller{
                    'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Error'      =>$error
             );
-            $this->response($data);
+            return $data;
         }
         else{
             $data =  array(
                    'Status'     =>Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
-            $this->response($data);
+            return $data;
         }
     }
     //------------------------------------------------------
@@ -2730,13 +2741,12 @@ class restaurant_apis extends REST_Controller{
      *  Response: JSONObject
      * 
      */
-    public function get_all_subscribed_email_get() {
+    public function get_all_subscribed_email($limit, $page) {
         
         //  Get limit from client
-        $limit = $this->get("limit");
-        
+//        $limit = $this->get("limit");
         //  Get page from client
-        $page = $this->get("page");
+//        $page = $this->get("page");
                 
         //  End
         $position_end_get   = ($page == 1)? $limit : ($limit * $page);
@@ -2775,7 +2785,7 @@ class restaurant_apis extends REST_Controller{
                'Results'    =>$results
         );
 
-        $this->response($data);
+        return $data;
     }
     
     /**
@@ -2790,7 +2800,9 @@ class restaurant_apis extends REST_Controller{
      *  Response: JSONObject
      * 
      */
-    public function update_email_post(){
+    public function update_email($action, $id, $email, $updated_date = null,
+                                $created_date = null
+                                ){
         
         //  Get param from client
         $action                     = $this->post('action');
@@ -2846,14 +2858,14 @@ class restaurant_apis extends REST_Controller{
      *  Response: JSONObject
      * 
      */
-    public function get_list_restaurant_liked_by_user_get() {
+    public function get_list_restaurant_liked_by_user($limit, $page, $id_user) {
         
         //  Get limit from client
-        $limit = $this->get("limit");
+//        $limit = $this->get("limit");
         //  Get page from client
-        $page = $this->get("page");
+//        $page = $this->get("page");
         
-        $id_user = $this->get('id_user');
+//        $id_user = $this->get('id_user');
         
         //  End
         $position_end_get   = ($page == 1)? $limit : ($limit * $page);
@@ -2925,7 +2937,7 @@ class restaurant_apis extends REST_Controller{
                    'Results'    =>$results
             );
 
-            $this->response($data);
+            return $data;
         }
         //  Response
         $data =  array(
@@ -2934,7 +2946,7 @@ class restaurant_apis extends REST_Controller{
                'Results'    =>$results
         );
 
-        $this->response($data);
+        return $data;
     }
     
     /**
@@ -2948,14 +2960,14 @@ class restaurant_apis extends REST_Controller{
      *  Response: JSONObject
      * 
      */
-    public function get_list_user_liked_restaurant_get() {
+    public function get_list_user_liked_restaurant($limit, $page, $id_restaurant) {
         
         //  Get limit from client
-        $limit = $this->get("limit");
+//        $limit = $this->get("limit");
         //  Get page from client
-        $page = $this->get("page");
+//        $page = $this->get("page");
         
-        $id_restaurant = $this->get('id_restaurant');
+//        $id_restaurant = $this->get('id_restaurant');
         //  End
         $position_end_get   = ($page == 1)? $limit : ($limit * $page);
         
@@ -2998,7 +3010,7 @@ class restaurant_apis extends REST_Controller{
                    'Total'      =>sizeof($results),
                    'Results'    =>$results
             );
-            $this->response($data);
+            return $data;
         }
         //  Response
         $data =  array(
@@ -3006,7 +3018,7 @@ class restaurant_apis extends REST_Controller{
                'Total'      =>sizeof($results),
                'Results'    =>$results
         );
-        $this->response($data);
+        return $data;
     }
     
 }

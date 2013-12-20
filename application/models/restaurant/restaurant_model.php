@@ -35,6 +35,10 @@ class Restaurant_model extends CI_Model{
         
     }
     
+    public function test() {
+        return 'Hello';
+    }
+    
     //  Get rate service
     public function getRateService() {
         return $this->rate_service;

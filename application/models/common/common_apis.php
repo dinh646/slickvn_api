@@ -1,12 +1,12 @@
 <?php
 
-require APPPATH.'/libraries/REST_Controller.php';
+
 /**
  * 
  * This class support APIs Common for client
  * 
  */
-class common_apis extends REST_Controller{
+class Common_apis extends CI_Model{
     
     public function __construct() {
         parent::__construct();
@@ -26,7 +26,6 @@ class common_apis extends REST_Controller{
         $this->load->model('common/list_point_enum');
         
     }
-    
     //----------------------------------------------------//
     //                                                    //
     //  APIs Common                                       //
@@ -154,7 +153,7 @@ class common_apis extends REST_Controller{
      * Response: JSONObject
      * 
      */
-    public function get_info_website_get() {
+    public function get_info_website() {
         $collection = Info_website_enum::COLLECTION_INFO_WEBSITE;
         //  Get collection 
         $get_collection = $this->common_model->getCollection($collection);
@@ -186,14 +185,14 @@ class common_apis extends REST_Controller{
                    'Total'      =>$count,
                    'Results'    =>$results
             );
-            $this->response($data);
+            return $data;
             
         }else{
             $data =  array(
                    'Status'     =>'FALSE',
                    'Error'      =>$error
             );
-            $this->response($data);
+            return $data;
         }
     }
     
@@ -206,15 +205,18 @@ class common_apis extends REST_Controller{
      * Response: JSONObject
      * 
      */
-    public function update_info_website_post() {
+    public function update_info_website_post($action, $id=null, $security_policies=null,
+                                             $terms_of_use=null, $career_opportunities=null,
+                                             $updated_date=null, $created_date=null
+                                            ) {
         //  Get param from client
-        $action                     = $this->post('action');
-        $id                         = $this->post('id');
-        $security_policies          = $this->post('security_policies');
-        $terms_of_use               = $this->post('terms_of_use');
-        $career_opportunities       = $this->post('career_opportunities');
-        $updated_date               = $this->post('updated_date');
-        $created_date               = $this->post('created_date');
+//        $action                     = $this->post('action');
+//        $id                         = $this->post('id');
+//        $security_policies          = $this->post('security_policies');
+//        $terms_of_use               = $this->post('terms_of_use');
+//        $career_opportunities       = $this->post('career_opportunities');
+//        $updated_date               = $this->post('updated_date');
+//        $created_date               = $this->post('created_date');
         
         $array_value = array(
                         Info_website_enum::SECURITY_POLICIES    => $security_policies,
@@ -230,14 +232,14 @@ class common_apis extends REST_Controller{
                    'Status'     =>  Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Error'      =>$error
             );
-            $this->response($data);
+            return $data;
         }
         else{
             $data =  array(
                    'Status'     =>Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
-            $this->response($data);
+            return $data;
         }
     }
     
@@ -256,7 +258,7 @@ class common_apis extends REST_Controller{
      * Response: JSONObject
      * 
      */
-    public function get_communications_get() {
+    public function get_communications() {
         $collection = Communications_enum::COLLECTION_COMMUNICATIONS;
         //  Get collection 
         $get_collection = $this->common_model->getCollection($collection);
@@ -288,14 +290,14 @@ class common_apis extends REST_Controller{
                    'Total'      =>  sizeof($results),
                    'Results'    =>$results
             );
-            $this->response($data);
+            return $data;
             
         }else{
             $data =  array(
                    'Status'     =>Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
-            $this->response($data);
+            return $data;
         }
     }
     
@@ -308,17 +310,21 @@ class common_apis extends REST_Controller{
      * Response: JSONObject
      * 
      */
-    public function update_communications_post() {
+    public function update_communications($action, $id=null,
+            $title=null, $content=null, $full_name=null,
+            $email=null, $phone=null, $updated_date=null,
+            $created_date=null
+            ) {
         //  Get param from client
-        $action                     = $this->post('action');
-        $id                         = $this->post('id');
-        $title                      = $this->post('title');
-        $content                    = $this->post('content');
-        $full_name                  = $this->post('full_name');
-        $email                      = $this->post('email');
-        $phone                      = $this->post('phone');
-        $updated_date               = $this->post('updated_date');
-        $created_date               = $this->post('created_date');
+//        $action                     = $this->post('action');
+//        $id                         = $this->post('id');
+//        $title                      = $this->post('title');
+//        $content                    = $this->post('content');
+//        $full_name                  = $this->post('full_name');
+//        $email                      = $this->post('email');
+//        $phone                      = $this->post('phone');
+//        $updated_date               = $this->post('updated_date');
+//        $created_date               = $this->post('created_date');
         $array_value = array(
                         Communications_enum::TITLE          => $title,
                         Communications_enum::CONTENT        => $content,
@@ -335,14 +341,14 @@ class common_apis extends REST_Controller{
                    'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Error'      =>$error
             );
-            $this->response($data);
+            return $data;
         }
         else{
             $data =  array(
                    'Status'     =>Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
-            $this->response($data);
+            return $data;
         }
     }
     
@@ -361,7 +367,7 @@ class common_apis extends REST_Controller{
      * Response: JSONObject
      * 
      */
-    public function get_quote_get() {
+    public function get_quote() {
         
         $collection = Quote_enum::COLLECTION_QUOTE;
         //  Get collection 
@@ -390,14 +396,14 @@ class common_apis extends REST_Controller{
                    'Total'      =>  sizeof($results),
                    'Results'    =>$results
             );
-            $this->response($data);
+            return $data;
             
         }else{
             $data =  array(
                    'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
-            $this->response($data);
+            return $data;
         }
     }
     
@@ -410,14 +416,16 @@ class common_apis extends REST_Controller{
      * Response: JSONObject
      * 
      */
-    public function update_quote_post() {
+    public function update_quote($action=null, $id=null, 
+                                $updated_date=null, $created_date=null
+                                ) {
         //  Get param from client
-        $action                     = $this->post('action');
-        $id                         = $this->post('id');
-        
-        //  param
-        $updated_date               = $this->post('updated_date');
-        $created_date               = $this->post('created_date');
+//        $action                     = $this->post('action');
+//        $id                         = $this->post('id');
+//        
+//        //  param
+//        $updated_date               = $this->post('updated_date');
+//        $created_date               = $this->post('created_date');
         $array_value = array(
                         //  TODO
                 );
@@ -428,14 +436,14 @@ class common_apis extends REST_Controller{
                    'Status'     =>  Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Error'      =>$error
             );
-            $this->response($data);
+            return $data;
         }
         else{
             $data =  array(
                    'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
-            $this->response($data);
+            return $data;
         }
     }
     
@@ -454,7 +462,7 @@ class common_apis extends REST_Controller{
      * Response: JSONObject
      * 
      */
-    public function get_information_inquiry_get() {
+    public function get_information_inquiry() {
         
         $collection = Information_inquiry_enum::COLLECTION_INFORMATION_INQUIRY;
         //  Get collection 
@@ -487,14 +495,14 @@ class common_apis extends REST_Controller{
                    'Total'      =>  sizeof($results),
                    'Results'    =>$results
             );
-            $this->response($data);
+            return $data;
             
         }else{
             $data =  array(
                    'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
-            $this->response($data);
+            return $data;
         }
     }
     
@@ -507,14 +515,17 @@ class common_apis extends REST_Controller{
      * Response: JSONObject
      * 
      */
-    public function update_information_inquiry_post() {
+    public function update_information_inquiry($action=null, $id=null, $question=null,
+                                                $answer=null, $updated_date=null, 
+                                                $created_date=null
+            ) {
         //  Get param from client
-        $action                     = $this->post('action');
-        $id                         = $this->post('id');
-        $question                   = $this->post('question');
-        $answer                     = $this->post('answer');
-        $updated_date               = $this->post('updated_date');
-        $created_date               = $this->post('created_date');
+//        $action                     = $this->post('action');
+//        $id                         = $this->post('id');
+//        $question                   = $this->post('question');
+//        $answer                     = $this->post('answer');
+//        $updated_date               = $this->post('updated_date');
+//        $created_date               = $this->post('created_date');
         $array_value = array(
                         Information_inquiry_enum::QUESTION  => $question,
                         Information_inquiry_enum::ANSWER    => $answer,
@@ -528,14 +539,14 @@ class common_apis extends REST_Controller{
                    'Status'     =>  Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Error'      =>$error
             );
-            $this->response($data);
+            return $data;
         }
         else{
             $data =  array(
                    'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
-            $this->response($data);
+            return $data;
         }
     }
     
@@ -554,7 +565,7 @@ class common_apis extends REST_Controller{
      * Response: JSONObject
      * 
      */
-    public function get_card_get() {
+    public function get_card() {
         
         $collection = Card_enum::COLLECTION_CARD;
         //  Get collection 
@@ -583,14 +594,14 @@ class common_apis extends REST_Controller{
                    'Total'      =>  sizeof($results),
                    'Results'    =>$results
             );
-            $this->response($data);
+            return $data;
             
         }else{
             $data =  array(
                    'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
-            $this->response($data);
+            return $data;
         }
     }
     
@@ -603,14 +614,15 @@ class common_apis extends REST_Controller{
      * Response: JSONObject
      * 
      */
-    public function update_card_post(){
+    public function update_card($action=null, $id=null,
+                                $updated_date=null, $created_date=null
+            ){
         //  Get param from client
-        $action                     = $this->post('action');
-        $id                         = $this->post('id');
-        
-        //  param
-        $updated_date               = $this->post('updated_date');
-        $created_date               = $this->post('created_date');
+//        $action                     = $this->post('action');
+//        $id                         = $this->post('id');
+//        //  param
+//        $updated_date               = $this->post('updated_date');
+//        $created_date               = $this->post('created_date');
         $array_value = array(
                         //  TODO
                 );
@@ -621,14 +633,14 @@ class common_apis extends REST_Controller{
                    'Status'     =>  Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Error'      =>$error
             );
-            $this->response($data);
+            return $data;
         }
         else{
             $data =  array(
                    'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
-            $this->response($data);
+            return $data;
         }
     }
     
@@ -647,7 +659,7 @@ class common_apis extends REST_Controller{
      * Response: JSONObject
      * 
      */
-    public function get_member_card_get() {
+    public function get_member_card() {
         
         $collection = Member_card_enum::COLLECTION_MEMBER_CARD;
         //  Get collection 
@@ -676,14 +688,14 @@ class common_apis extends REST_Controller{
                    'Total'      =>$count,
                    'Results'    =>$results
             );
-            $this->response($data);
+            return $data;
             
         }else{
             $data =  array(
                    'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
-            $this->response($data);
+            return $data;
         }
     }
     
@@ -696,15 +708,15 @@ class common_apis extends REST_Controller{
      * Response: JSONObject
      * 
      */
-    public function update_member_card_post() {
+    public function update_member_card($action=null, $id=null,
+                                        $updated_date=null, $created_date=null
+            ) {
         //  Get param from client
-        $action                     = $this->post('action');
-        $id                         = $this->post('id');
-        
-        //  param
-        
-        $updated_date               = $this->post('updated_date');
-        $created_date               = $this->post('created_date');
+//        $action                     = $this->post('action');
+//        $id                         = $this->post('id');
+//        //  param
+//        $updated_date               = $this->post('updated_date');
+//        $created_date               = $this->post('created_date');
         $array_value = array(
                         //  TODO
                 );
@@ -715,14 +727,14 @@ class common_apis extends REST_Controller{
                    'Status'     =>  Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Error'      =>$error
             );
-            $this->response($data);
+            return $data;
         }
         else{
             $data =  array(
                    'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
-            $this->response($data);
+            return $data;
         }
     }
     
@@ -741,7 +753,7 @@ class common_apis extends REST_Controller{
      * Response: JSONObject
      * 
      */
-    public function get_my_favourite_get() {
+    public function get_my_favourite() {
         
         $collection = My_favourites_enum::COLLECTION_MY_FAVOURITES;
         //  Get collection 
@@ -770,14 +782,14 @@ class common_apis extends REST_Controller{
                    'Total'      =>  sizeof($results),
                    'Results'    =>$results
             );
-            $this->response($data);
+            return $data;
             
         }else{
             $data =  array(
                    'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
-            $this->response($data);
+            return $data;
         }
     }
     
@@ -790,15 +802,15 @@ class common_apis extends REST_Controller{
      * Response: JSONObject
      * 
      */
-    public function update_my_favourite_post() {
+    public function update_my_favourite($action=null, $id=null,
+                                        $updated_date=null, $created_date=null
+            ) {
         //  Get param from client
-        $action                     = $this->post('action');
-        $id                         = $this->post('id');
-        
-        //  param
-        
-        $updated_date                = $this->post('updated_date');
-        $created_date               = $this->post('created_date');
+//        $action                     = $this->post('action');
+//        $id                         = $this->post('id');
+//        //  param
+//        $updated_date                = $this->post('updated_date');
+//        $created_date               = $this->post('created_date');
         $array_value = array(
                         //  TODO
                 );
@@ -809,14 +821,14 @@ class common_apis extends REST_Controller{
                    'Status'     =>  Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Error'      =>$error
             );
-            $this->response($data);
+            return $data;
         }
         else{
             $data =  array(
                    'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
-            $this->response($data);
+            return $data;
         }
     }
     
@@ -835,7 +847,7 @@ class common_apis extends REST_Controller{
      * Response: JSONObject
      * 
      */
-    public function get_booking_get() {
+    public function get_booking() {
         
         $collection = Booking_enum::COLLECTION_BOOKING_ENUM;
         //  Get collection 
@@ -864,14 +876,14 @@ class common_apis extends REST_Controller{
                    'Total'      =>  sizeof($results),
                    'Results'    =>$results
             );
-            $this->response($data);
+            return $data;
             
         }else{
             $data =  array(
                    'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
-            $this->response($data);
+            return $data;
         }
     }
     
@@ -884,15 +896,15 @@ class common_apis extends REST_Controller{
      * Response: JSONObject
      * 
      */
-    public function update_booking_post() {
+    public function update_booking($action=null, $id=null,
+                                    $updated_date=null, $created_date=null
+            ) {
         //  Get param from client
-        $action                     = $this->post('action');
-        $id                         = $this->post('id');
-        
-        //  param
-        
-        $updated_date               = $this->post('updated_date');
-        $created_date               = $this->post('created_date');
+//        $action                     = $this->post('action');
+//        $id                         = $this->post('id');
+//        //  param
+//        $updated_date               = $this->post('updated_date');
+//        $created_date               = $this->post('created_date');
         $array_value = array(
                         //  TODO
                 );
@@ -903,14 +915,14 @@ class common_apis extends REST_Controller{
                    'Status'     =>  Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Error'      =>$error
             );
-            $this->response($data);
+            return $data;
         }
         else{
             $data =  array(
                    'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
-            $this->response($data);
+            return $data;
         }
     }
     
@@ -929,7 +941,7 @@ class common_apis extends REST_Controller{
      * Response: JSONObject
      * 
      */
-    public function get_introduce_get() {
+    public function get_introduce() {
         
         $collection = Introduce_enum::COLLECTION_INTRODUCE;
         //  Get collection 
@@ -958,14 +970,14 @@ class common_apis extends REST_Controller{
                    'Total'      =>  sizeof($results),
                    'Results'    =>$results
             );
-            $this->response($data);
+            return $data;
             
         }else{
             $data =  array(
                    'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
-            $this->response($data);
+            return $data;
         }
     }
     
@@ -978,15 +990,15 @@ class common_apis extends REST_Controller{
      * Response: JSONObject
      * 
      */
-    public function update_introduce_post() {
+    public function update_introduce($action=null, $id=null,
+                                     $updated_date=null, $created_date=null
+            ) {
         //  Get param from client
-        $action                     = $this->post('action');
-        $id                         = $this->post('id');
-        
-        //  param
-        
-        $updated_date               = $this->post('updated_date');
-        $created_date               = $this->post('created_date');
+//        $action                     = $this->post('action');
+//        $id                         = $this->post('id');
+//        //  param
+//        $updated_date               = $this->post('updated_date');
+//        $created_date               = $this->post('created_date');
         $array_value = array(
                         //  TODO
                 );
@@ -997,14 +1009,14 @@ class common_apis extends REST_Controller{
                    'Status'     => Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Error'      =>$error
             );
-            $this->response($data);
+            return $data;
         }
         else{
             $data =  array(
                    'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
-            $this->response($data);
+            return $data;
         }
     }
     
@@ -1024,9 +1036,9 @@ class common_apis extends REST_Controller{
      * Response: JSONObject
      * 
      */
-    public function get_base_collection_get() {
+    public function get_base_collection($collection) {
         //  Get param from client
-        $collection = $this->get('collection_name');
+//        $collection = $this->get('collection_name');
         //  Get collection 
         $get_collection = $this->common_model->getCollection($collection);
         $error = $this->common_model->getError();
@@ -1053,13 +1065,13 @@ class common_apis extends REST_Controller{
                    'Total'      =>  sizeof($results),
                    'Results'    =>$results
             );
-            $this->response($data);
+            return $data;
         }else{
             $data =  array(
                    'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
-            $this->response($data);
+            return $data;
         }
     }
     
@@ -1073,10 +1085,11 @@ class common_apis extends REST_Controller{
      * Response: JSONObject
      * 
      */
-    public function get_base_collection_by_id_get() {
+    public function get_base_collection_by_id($collection=null, $id=null 
+                                                ) {
         //  Get param from client
-        $collection = $this->get('collection_name');
-        $id         = $this->get('id');
+//        $collection = $this->get('collection_name');
+//        $id         = $this->get('id');
         //  Get collection 
         $get_collection = $this->common_model->getCollectionById($collection, $id);
         $error = $this->common_model->getError();
@@ -1103,13 +1116,13 @@ class common_apis extends REST_Controller{
                    'Total'      =>  sizeof($results),
                    'Results'    =>$results
             );
-            $this->response($data);
+            return $data;
         }else{
             $data =  array(
                    'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
-            $this->response($data);
+            return $data;
         }
     }
     
@@ -1126,13 +1139,15 @@ class common_apis extends REST_Controller{
      * 
      * Response: JSONObject
      */
-    public function update_base_collection_post(){
+    public function update_base_collection($action, $collection=null, $id=null,
+                                            $name=null, $updated_date=null, $created_date=null
+                                           ){
         //  Get param from client
-        $action         = $this->post('action');
-        $collection     = $this->post('collection_name');
-        $id             = $this->post('id');
-        $name           = $this->post('name');
-        $updated_date   = $this->post('updated_date');
+//        $action         = $this->post('action');
+//        $collection     = $this->post('collection_name');
+//        $id             = $this->post('id');
+//        $name           = $this->post('name');
+//        $updated_date   = $this->post('updated_date');
         $created_date   = $this->post('created_date');
         if($name == null){
             //  Response
@@ -1162,14 +1177,14 @@ class common_apis extends REST_Controller{
                'Status'     =>  Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                'Error'      =>$error
             );
-            $this->response($resulte);
+            return $resulte;
         }else{
             //  Response
             $resulte =  array(
                'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                'Error'      =>$error
             );
-            $this->response($resulte);
+            return $resulte;
         }
     }
     
@@ -1186,7 +1201,7 @@ class common_apis extends REST_Controller{
      * 
      * Response: JSONObject
      */
-    public function get_all_list_point_get() {
+    public function get_all_list_point() {
         //  Get collection 
         $get_collection = $this->common_model->getCollection(List_point_enum::COLLECTION_LIST_POINT);
         $error = $this->common_model->getError();
@@ -1218,13 +1233,13 @@ class common_apis extends REST_Controller{
                    'Total'      =>  sizeof($results),
                    'Results'    =>$results
             );
-            $this->response($data);
+            return $data;
         }else{
             $data =  array(
                    'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
-            $this->response($data);
+            return $data;
         }
     }
     
@@ -1235,7 +1250,10 @@ class common_apis extends REST_Controller{
      * 
      * Response: JSONObject
      */
-    public function update_list_point_post() {
+    public function update_list_point($action, $id=null, $point=null, $key_code=null,
+                                      $desc=null, $is_use=null, $updated_date=null,
+                                      $created_date=null
+                                     ) {
         //  Get param from client
         $action         = $this->post('action');
         $id             = $this->post('id');
@@ -1251,7 +1269,7 @@ class common_apis extends REST_Controller{
                'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                'Error'      =>'Param is null'
             );
-            $this->response($resulte);
+            return $resulte;
             return;
         }
         (int)$is_insert = strcmp( strtolower($action), Common_enum::INSERT );
@@ -1278,14 +1296,14 @@ class common_apis extends REST_Controller{
                'Status'     =>  Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                'Error'      =>$error
             );
-            $this->response($resulte);
+            return $resulte;
         }else{
             //  Response
             $resulte =  array(
                'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                'Error'      =>$error
             );
-            $this->response($resulte);
+            return $resulte;
         }
     }
     
@@ -1304,14 +1322,16 @@ class common_apis extends REST_Controller{
      * 
      * Response: JSONObject
      */
-    public function send_mail_post(){
+    public function send_mail($from_mail, $pass, $full_name=null, $to_mail,
+                              $subject = null, $message
+            ){
         //  Get param from client
-        $from_mail = $this->post('from_mail');
-        $pass = $this->post('password');
-        $full_name = $this->post('full_name');
-        $to_mail = $this->post('to_mail');
-        $subject = $this->post('subject');
-        $message = $this->post('message');
+//        $from_mail = $this->post('from_mail');
+//        $pass = $this->post('password');
+//        $full_name = $this->post('full_name');
+//        $to_mail = $this->post('to_mail');
+//        $subject = $this->post('subject');
+//        $message = $this->post('message');
                 
         $TAG = 'sendMail';
         

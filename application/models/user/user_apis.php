@@ -1,7 +1,5 @@
 <?php
 
-require APPPATH.'/libraries/REST_Controller.php';
-
 /**
  * 
  * This class support APIs User for client
@@ -10,7 +8,7 @@ require APPPATH.'/libraries/REST_Controller.php';
  * Date: 8/11/2013
  * 
  */
-class user_apis extends REST_Controller{
+class user_apis extends CI_Model{
     
     public function __construct() {
         parent::__construct();
@@ -40,9 +38,9 @@ class user_apis extends REST_Controller{
      * Response: JSONObject
      * 
      */
-    public function get_point_of_user_get() {
+    public function get_point_of_user($id) {
         //  Get param from client
-        $id = $this->get('id');
+//        $id = $this->get('id');
         
         //  Get collection 
         $get_collection = $this->user_model->getUserById($id);
@@ -79,14 +77,14 @@ class user_apis extends REST_Controller{
                    'Total'      =>  sizeof($results),
                    'Results'    =>$results
             );
-            $this->response($data);
+            return $data;
             
         }else{
             $data =  array(
                    'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
-            $this->response($data);
+            return $data;
         }
     }
     
@@ -98,11 +96,11 @@ class user_apis extends REST_Controller{
      * Response: JSONObject
      * 
      */
-    public function search_user_get() {
+    public function search_user_get($limit, $page, $key=null) {
         //  Get limit from client
-        $limit = $this->get("limit");
+//        $limit = $this->get("limit");
         //  Get page from client
-        $page = $this->get("page");
+//        $page = $this->get("page");
         
         $key = Encode_utf8::toUTF8($this->get('key'));
         
@@ -163,7 +161,7 @@ class user_apis extends REST_Controller{
                'Total'      =>  sizeof($results),
                'Results'    =>$results
         );
-        $this->response($data);
+        return $data;
     }
     
     /**
@@ -174,11 +172,11 @@ class user_apis extends REST_Controller{
      * Response: JSONObject
      * 
      */
-    public function get_all_user_get() {
+    public function get_all_user($limit, $page) {
         //  Get limit from client
-        $limit = $this->get("limit");
+//        $limit = $this->get("limit");
         //  Get page from client
-        $page = $this->get("page");
+//        $page = $this->get("page");
         //  End
         $position_end_get   = ($page == 1)? $limit : ($limit * $page);
         //  Start
@@ -230,14 +228,14 @@ class user_apis extends REST_Controller{
                    'Total'      =>  sizeof($results),
                    'Results'    =>$results
             );
-            $this->response($data);
+            return $data;
             
         }else{
             $data =  array(
                    'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
-            $this->response($data);
+            return $data;
         }
         
     }
@@ -252,10 +250,10 @@ class user_apis extends REST_Controller{
      * Response: JSONObject
      * 
      */
-    public function get_user_by_id_get() {
+    public function get_user_by_id($id) {
         
         //  Get param from client
-        $id = $this->get('id');
+//        $id = $this->get('id');
         
         //  Get collection 
         $get_collection = $this->user_model->getUserById($id);
@@ -301,14 +299,14 @@ class user_apis extends REST_Controller{
                    'Total'      =>  sizeof($results),
                    'Results'    =>$results
             );
-            $this->response($data);
+            return $data;
             
         }else{
             $data =  array(
                    'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
-            $this->response($data);
+            return $data;
         }
         
     }
@@ -323,9 +321,9 @@ class user_apis extends REST_Controller{
      * Response: JSONObject
      * 
      */
-    public function check_permission_user_post() {
+    public function check_permission_user($id_user) {
         //  Get param from client
-        $id_user = $this->post('id_user');
+//        $id_user = $this->post('id_user');
         $array_user = $this->user_model->getUserById($id_user);
         $user = $array_user[$id_user];
 //        var_dump($user[User_enum::ROLE_LIST]);
@@ -347,7 +345,7 @@ class user_apis extends REST_Controller{
                            'Status'     =>  Common_enum::MESSAGE_RESPONSE_TRUE,
                            'Error'      =>''
                     );
-                    $this->response($data);
+                    return $data;
                 }
             }
         }
@@ -355,7 +353,7 @@ class user_apis extends REST_Controller{
                'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                'Error'      =>''
         );
-        $this->response($data);
+        return $data;
     }
     
     /**
@@ -430,25 +428,30 @@ class user_apis extends REST_Controller{
      * Response: JSONObject
      * 
      **/
-    public function update_user_post() {
+    public function update_user($action, $id=null, $full_name=null, $email=null,
+                                $password=null, $phone_number=null, $address=null,
+                                $location=null, $avatar=null, $desc=null, $point=0,
+                                $delete=null, $created_date=null, $updated_date=null,
+                                $role_list
+                                ) {
         
         //  Get param from client
-        $action         = $this->post('action');
-        $id             = $this->post('id');
-        $full_name      = $this->post('full_name');
-        $email          = $this->post('email');
-        $password       = $this->post('password');
-        $phone_number   = $this->post('phone_number');
-        $address        = $this->post('address');
-        $location       = $this->post('location');
-        $avatar         = $this->post('avatar');
-        $desc           = $this->post('desc');
-        $point          = $this->post('point');
-        $delete         = $this->post('delete');
-        $created_date   = $this->post('created_date');
-        $updated_date   = $this->post('updated_date');
+//        $action         = $this->post('action');
+//        $id             = $this->post('id');
+//        $full_name      = $this->post('full_name');
+//        $email          = $this->post('email');
+//        $password       = $this->post('password');
+//        $phone_number   = $this->post('phone_number');
+//        $address        = $this->post('address');
+//        $location       = $this->post('location');
+//        $avatar         = $this->post('avatar');
+//        $desc           = $this->post('desc');
+//        $point          = $this->post('point');
+//        $delete         = $this->post('delete');
+//        $created_date   = $this->post('created_date');
+//        $updated_date   = $this->post('updated_date');
         
-        $role_list      = $this->post('role_list');// 527b512b3fce119ed62d8599, 527b512b3fce119ed62d8599
+//        $role_list      = $this->post('role_list');// 527b512b3fce119ed62d8599, 527b512b3fce119ed62d8599
         
         $file_temp = Common_enum::ROOT.Common_enum::PATH_TEMP;
         $path_avatar = Common_enum::ROOT.Common_enum::DIR_USER_PROFILE;
@@ -500,7 +503,7 @@ class user_apis extends REST_Controller{
                         User_enum::LOCATION          => $location,
                         User_enum::AVATAR            => $avatar,
                         User_enum::DESC              => $desc,
-                        User_enum::POINT             => ($is_insert == 0)? 0 : null,
+//                        User_enum::POINT             => ($is_insert == 0)? 0 : null,
                         User_enum::IS_DELETE         => ($delete == null) ? 0 : $delete,
                         User_enum::ROLE_LIST         => ($role_list == null) ? array(User_enum::DEFAULT_ROLE_LIST) : explode(Common_enum::MARK, $role_list),
                         Common_enum::UPDATED_DATE    => ($updated_date==null) ? $this->common_model->getCurrentDate() : $updated_date,
@@ -518,14 +521,14 @@ class user_apis extends REST_Controller{
                    'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Error'      =>$error
             );
-            $this->response($data);
+            return $data;
         }
         else{
             $data =  array(
                    'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
-            $this->response($data);
+            return $data;
         }
     }
     
@@ -592,12 +595,14 @@ class user_apis extends REST_Controller{
      * Response: JSONObject
      * 
      */
-    public function like_restaurant_post() {
+    public function like_restaurant($id_user, $id_restaurant, $created_date=null,
+                                    $updated_date=null
+            ) {
         //  Get param from client
-        $id_user        = $this->post('id_user');
-        $id_restaurant  = $this->post('id_restaurant');
-        $created_date   = $this->post('created_date');
-        $updated_date   = $this->post('updated_date');
+//        $id_user        = $this->post('id_user');
+//        $id_restaurant  = $this->post('id_restaurant');
+//        $created_date   = $this->post('created_date');
+//        $updated_date   = $this->post('updated_date');
         
         if($id_user == null || $id_restaurant == null){return;}
         
@@ -621,14 +626,14 @@ class user_apis extends REST_Controller{
                    'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Error'      =>$error
             );
-            $this->response($data);
+            return $data;
         }
         else{
             $data =  array(
                    'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
-            $this->response($data);
+            return $data;
         }
     }
     
@@ -644,12 +649,14 @@ class user_apis extends REST_Controller{
      * Response: JSONObject
      * 
      */
-    public function share_restaurant_post() {
+    public function share_restaurant($id_user, $id_restaurant, 
+                                    $created_date=null, $updated_date=null
+                                    ) {
         //  Get param from client
-        $id_user        = $this->post('id_user');
-        $id_restaurant  = $this->post('id_restaurant');
-        $created_date   = $this->post('created_date');
-        $updated_date   = $this->post('updated_date');
+//        $id_user        = $this->post('id_user');
+//        $id_restaurant  = $this->post('id_restaurant');
+//        $created_date   = $this->post('created_date');
+//        $updated_date   = $this->post('updated_date');
         
         if($id_user == null || $id_restaurant == null){return;}
         
@@ -673,14 +680,14 @@ class user_apis extends REST_Controller{
                    'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Error'      =>$error
             );
-            $this->response($data);
+            return $data;
         }
         else{
             $data =  array(
                    'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
-            $this->response($data);
+            return $data;
         }
     }
     
@@ -694,10 +701,10 @@ class user_apis extends REST_Controller{
      * Response: JSONObject
      * 
      */
-    public function login_post() {
+    public function login($email, $password) {
         //  Get param from client
-        $email      = $this->post('email');
-        $password   = $this->post('password');
+//        $email      = $this->post('email');
+//        $password   = $this->post('password');
         $user = $this->user_model->login($email, $password);
         $results= array();
         if(is_array($user)){
@@ -723,7 +730,7 @@ class user_apis extends REST_Controller{
                    'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'    =>'Login fail'
             );
-            $this->response($data);
+            return $data;
         }
         else{
             $this->user_model->updateUserLog(Common_enum::INSERT, null, 
@@ -745,7 +752,7 @@ class user_apis extends REST_Controller{
                    'Total'      =>  sizeof($results),
                    'Results'    =>$results
             );
-            $this->response($data);
+            return $data;
         }
     }
     
@@ -763,7 +770,7 @@ class user_apis extends REST_Controller{
      * Response: JSONObject
      * 
      */
-    public function get_all_role_get() {
+    public function get_all_role() {
         
         //  Get collection 
         $get_collection = $this->user_model->getAllRole();
@@ -797,14 +804,14 @@ class user_apis extends REST_Controller{
                    'Total'      =>$count,
                    'Results'    =>$results
             );
-            $this->response($data);
+            return $data;
             
         }else{
             $data =  array(
                    'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
-            $this->response($data);
+            return $data;
         }
     }
     
@@ -818,10 +825,10 @@ class user_apis extends REST_Controller{
      * Response: JSONObject
      * 
      */
-    public function get_role_by_id_get() {
+    public function get_role_by_id($id) {
         
         //  Get param from client
-        $id = $this->get('id');
+//        $id = $this->get('id');
         
         //  Get collection 
         $get_collection = $this->user_model->getRoleById($id);
@@ -855,14 +862,14 @@ class user_apis extends REST_Controller{
                    'Total'      =>$count,
                    'Results'    =>$results
             );
-            $this->response($data);
+            return $data;
             
         }else{
             $data =  array(
                    'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
-            $this->response($data);
+            return $data;
         }
     }
     
@@ -881,15 +888,17 @@ class user_apis extends REST_Controller{
      * Response: JSONObject
      * 
      **/
-    public function update_role_post() {
+    public function update_role($action, $id=null, $name, $desc, $function_list, 
+                                $created_date=null, $updated_date=null
+                                ) {
         //  Get param from client
-        $action             = $this->post('action');
-        $id                 = $this->post('id');
-        $name               = $this->post('name');
-        $desc               = $this->post('desc');
-        $function_list      = $this->post('function_list');
-        $created_date       = $this->post('created_date');
-        $updated_date       = $this->post('updated_date');
+//        $action             = $this->post('action');
+//        $id                 = $this->post('id');
+//        $name               = $this->post('name');
+//        $desc               = $this->post('desc');
+//        $function_list      = $this->post('function_list');
+//        $created_date       = $this->post('created_date');
+//        $updated_date       = $this->post('updated_date');
         
         $array_value = array(
                         Role_enum::NAME              => $name,
@@ -908,14 +917,14 @@ class user_apis extends REST_Controller{
                    'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Error'      =>$error
             );
-            $this->response($data);
+            return $data;
         }
         else{
             $data =  array(
                    'Status'     =>'FALSE',
                    'Error'      =>$error
             );
-            $this->response($data);
+            return $data;
         }
     }
     
@@ -933,7 +942,7 @@ class user_apis extends REST_Controller{
      * Response: JSONObject
      * 
      */
-    public function get_all_function_get() {
+    public function get_all_function() {
         
         //  Get collection 
         $get_collection = $this->user_model->getAllFunction();
@@ -965,14 +974,14 @@ class user_apis extends REST_Controller{
                    'Total'      =>$count,
                    'Results'    =>$results
             );
-            $this->response($data);
+            return $data;
             
         }else{
             $data =  array(
                    'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
-            $this->response($data);
+            return $data;
         }
     }
     
@@ -986,10 +995,10 @@ class user_apis extends REST_Controller{
      * Response: JSONObject
      * 
      */
-    public function get_function_by_id_get() {
+    public function get_function_by_id($id) {
         
         //  Get param from client
-        $id = $this->get('id');
+//        $id = $this->get('id');
         
         //  Get collection 
         $get_collection = $this->user_model->getFunctionById($id);
@@ -1023,14 +1032,14 @@ class user_apis extends REST_Controller{
                    'Total'      =>$count,
                    'Results'    =>$results
             );
-            $this->response($data);
+            return $data;
             
         }else{
             $data =  array(
                    'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
-            $this->response($data);
+            return $data;
         }
     }
     
@@ -1048,18 +1057,18 @@ class user_apis extends REST_Controller{
      * Response: JSONObject
      * 
      **/
-    public function update_function_post() {
+    public function update_function($action, $id=null, $name, $code, $desc, 
+                                    $created_date=null, $updated_date=null
+                                    ) {
         
         //  Get param from client
-        $action             = $this->post('action');
-        
-        $id                 = $this->post('id');
-        
-        $name               = $this->post('name');
-        $code               = $this->post('code');
-        $desc               = $this->post('desc');
-        $created_date       = $this->post('created_date');
-        $updated_date       = $this->post('updated_date');
+//        $action             = $this->post('action');
+//        $id                 = $this->post('id');
+//        $name               = $this->post('name');
+//        $code               = $this->post('code');
+//        $desc               = $this->post('desc');
+//        $created_date       = $this->post('created_date');
+//        $updated_date       = $this->post('updated_date');
         $array_value = array(
                         Function_enum::NAME              => $name,
                         Function_enum::CODE              => $code,
@@ -1074,14 +1083,14 @@ class user_apis extends REST_Controller{
                    'Status'     =>Common_enum::MESSAGE_RESPONSE_SUCCESSFUL,
                    'Error'      =>$error
             );
-            $this->response($data);
+            return $data;
         }
         else{
             $data =  array(
                    'Status'     =>  Common_enum::MESSAGE_RESPONSE_FALSE,
                    'Error'      =>$error
             );
-            $this->response($data);
+            return $data;
         }
     }
     

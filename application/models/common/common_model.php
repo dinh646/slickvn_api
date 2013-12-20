@@ -11,7 +11,7 @@ class Common_model extends CI_Model{
         parent::__construct();
         
         $mongodb = 'mongodb://';
-        $host_name = '192.168.0.105';
+        $host_name = '192.168.0.102';
         $port = '27017';
         $database = 'slickvn_test';
         

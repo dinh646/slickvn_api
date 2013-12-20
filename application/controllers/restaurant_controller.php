@@ -17,10 +17,20 @@ class Restaurant_controller extends CI_Controller {
 	 * map to /index.php/welcome/<method_name>
 	 * @see http://codeigniter.com/user_guide/general/urls.html
 	 */
+    
+        public function __construct() {
+            parent::__construct();
+            
+            $this->load->model('restaurant/restaurant_apis');
+            $this->load->model('common/common_apis');
+            $this->load->model('user/user_apis');
+        }
+    
 	public function index()
 	{
-            $this->load->helper("url");
-            $this->load->view('slickvn_apis_view');
+//            echo ($this->load->helper("url"));
+        var_dump($this->user_apis->get_role_by_id('527b512b3fce119ed62d8599'));
+            
 	}
 }
 
